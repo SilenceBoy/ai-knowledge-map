@@ -1,0 +1,751 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="将关于 HTML 作为 agent 输出格式的英文文章翻译并重组为单文件中文 HTML 可视化文档。">
+  <title>为什么 Agent 输出正在从 Markdown 转向 HTML</title>
+  <style>
+:root {
+  --hav-bg: #faf8f5;
+  --hav-surface: #f0ede8;
+  --hav-panel: #fffdfa;
+  --hav-border: #d4cfc7;
+  --hav-text: #2c2825;
+  --hav-muted: #8a837a;
+  --hav-soft: #e3dacc;
+  --hav-accent: #d97757;
+  --hav-accent-dark: #b8602a;
+  --hav-olive: #788c5d;
+  --hav-sky: #6a8caf;
+  --hav-slate: #141413;
+  --hav-danger: #b9524c;
+  --hav-shadow: 0 18px 50px rgba(44, 40, 37, .10);
+  --hav-radius: 18px;
+  --hav-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --hav-serif: Georgia, "Times New Roman", serif;
+  --hav-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hav-bg: #17191c;
+    --hav-surface: #202226;
+    --hav-panel: #111214;
+    --hav-border: #3d3d39;
+    --hav-text: #eee9df;
+    --hav-muted: #aaa49a;
+    --hav-soft: #2e2d2a;
+    --hav-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+  }
+}
+
+body.hav-page {
+  margin: 0;
+  background: var(--hav-bg);
+  color: var(--hav-text);
+  font-family: var(--hav-sans);
+  line-height: 1.55;
+}
+
+.hav-shell {
+  width: min(1120px, calc(100vw - 32px));
+  margin: 0 auto;
+}
+
+.hav-hero {
+  padding: 56px 0 28px;
+  border-bottom: 1px solid var(--hav-border);
+}
+
+.hav-kicker {
+  color: var(--hav-muted);
+  font: 700 12px/1 var(--hav-mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.hav-title {
+  margin: 14px 0 12px;
+  max-width: 920px;
+  font-family: var(--hav-serif);
+  font-size: clamp(40px, 7vw, 80px);
+  line-height: .94;
+  letter-spacing: 0;
+}
+
+.hav-subtitle {
+  max-width: 760px;
+  color: var(--hav-muted);
+  font-size: clamp(18px, 2.4vw, 24px);
+}
+
+.hav-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 18px;
+}
+
+.hav-card {
+  background: var(--hav-panel);
+  border: 1px solid var(--hav-border);
+  border-radius: var(--hav-radius);
+  box-shadow: var(--hav-shadow);
+}
+
+.hav-section {
+  padding: 44px 0;
+}
+
+.hav-section-title {
+  margin: 0 0 18px;
+  font-family: var(--hav-serif);
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.02;
+}
+
+.hav-window {
+  overflow: hidden;
+  background: var(--hav-panel);
+  border: 2px solid var(--hav-border);
+  border-radius: 20px;
+  box-shadow: var(--hav-shadow);
+}
+
+.hav-window-bar {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 42px;
+  padding: 0 16px;
+  background: var(--hav-surface);
+  border-bottom: 1px solid var(--hav-border);
+  color: var(--hav-muted);
+  font: 13px/1 var(--hav-mono);
+}
+
+.hav-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 999px;
+  background: var(--hav-border);
+}
+
+.hav-window-title {
+  flex: 1;
+  text-align: center;
+}
+
+.hav-window-body {
+  padding: 24px;
+}
+
+.hav-feature-card {
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+  padding: 24px;
+  text-align: center;
+  background: var(--hav-panel);
+  border: 1px solid var(--hav-border);
+  border-radius: 14px;
+}
+
+.hav-feature-card h3 {
+  margin: 12px 0 4px;
+  font-family: var(--hav-serif);
+  font-size: 24px;
+}
+
+.hav-feature-card p {
+  margin: 0;
+  color: var(--hav-muted);
+}
+
+.hav-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  color: var(--hav-text);
+  background: var(--hav-surface);
+  border: 1px solid var(--hav-border);
+  border-radius: 999px;
+  font: 13px/1 var(--hav-mono);
+}
+
+.hav-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 18px;
+  color: #fff;
+  background: var(--hav-accent);
+  border: 0;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.hav-button.secondary {
+  color: var(--hav-text);
+  background: transparent;
+  border: 2px solid var(--hav-text);
+}
+
+.hav-code {
+  overflow: auto;
+  padding: 18px;
+  color: #eee9df;
+  background: var(--hav-slate);
+  border-radius: 14px;
+  font: 14px/1.7 var(--hav-mono);
+}
+
+.hav-annotation {
+  border-left: 5px solid var(--hav-accent);
+  padding: 12px 14px;
+  background: color-mix(in srgb, var(--hav-accent) 12%, transparent);
+  border-radius: 0 12px 12px 0;
+}
+
+.hav-flow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 16px;
+  background: var(--hav-surface);
+  border: 1px solid var(--hav-border);
+  border-radius: 14px;
+}
+
+.hav-flow-node {
+  flex: 0 0 auto;
+  min-width: 120px;
+  padding: 13px 16px;
+  text-align: center;
+  background: var(--hav-panel);
+  border: 1px solid var(--hav-border);
+  border-radius: 10px;
+  font: 14px/1 var(--hav-mono);
+}
+
+.hav-flow-arrow {
+  color: var(--hav-muted);
+  font-family: var(--hav-mono);
+}
+
+.hav-copy-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (max-width: 760px) {
+  .hav-shell {
+    width: min(100vw - 20px, 680px);
+  }
+
+  .hav-hero {
+    padding-top: 34px;
+  }
+
+  .hav-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hav-window-body {
+    padding: 16px;
+  }
+}
+
+  </style>
+</head>
+<body class="hav-page">
+  <article>
+    <header class="hav-hero">
+      <div class="hav-shell">
+        <div class="hav-kicker">Article Visualizer</div>
+        <h1 class="hav-title">为什么 Agent 输出正在从 Markdown 转向 HTML</h1>
+        <p class="hav-subtitle">一篇关于信息密度、可读性、分享和双向交互的中文可视化解读。</p>
+      </div>
+    </header>
+    <main class="hav-shell">
+<style>
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .sticky-toc {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    margin: 0 -1px 28px;
+    padding: 12px 0;
+    background: color-mix(in srgb, var(--hav-bg) 88%, transparent);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--hav-border);
+  }
+
+  .toc-row {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 0 2px 4px;
+  }
+
+  .toc-row a {
+    flex: 0 0 auto;
+    color: var(--hav-text);
+    text-decoration: none;
+  }
+
+  .lead-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
+    gap: 18px;
+    align-items: stretch;
+  }
+
+  .lead-panel {
+    padding: 26px;
+  }
+
+  .lead-panel h2,
+  .plain-section h2,
+  .compact-card h3,
+  .scenario h3,
+  .faq-item h3 {
+    margin-top: 0;
+  }
+
+  .plain-section {
+    padding: 42px 0;
+    border-top: 1px solid var(--hav-border);
+  }
+
+  .metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+  }
+
+  .metric {
+    min-height: 106px;
+    padding: 18px;
+    background: var(--hav-panel);
+    border: 1px solid var(--hav-border);
+    border-radius: 14px;
+  }
+
+  .metric strong {
+    display: block;
+    margin-bottom: 7px;
+    font-family: var(--hav-serif);
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  .contrast {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 14px;
+    align-items: stretch;
+  }
+
+  .contrast-side {
+    padding: 22px;
+    min-height: 260px;
+  }
+
+  .contrast-side ul {
+    padding-left: 20px;
+    margin-bottom: 0;
+  }
+
+  .vs-divider {
+    display: grid;
+    place-items: center;
+    color: var(--hav-muted);
+    font: 700 12px/1 var(--hav-mono);
+    text-transform: uppercase;
+  }
+
+  .capability-grid,
+  .scenario-grid,
+  .faq-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .compact-card,
+  .scenario,
+  .faq-item {
+    padding: 20px;
+    background: var(--hav-panel);
+    border: 1px solid var(--hav-border);
+    border-radius: 14px;
+  }
+
+  .compact-card p,
+  .scenario p,
+  .faq-item p,
+  .timeline-step p {
+    margin-bottom: 0;
+    color: var(--hav-muted);
+  }
+
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+
+  .timeline-step {
+    position: relative;
+    padding: 18px;
+    background: var(--hav-surface);
+    border: 1px solid var(--hav-border);
+    border-radius: 14px;
+  }
+
+  .timeline-step strong {
+    display: inline-grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 12px;
+    color: #fff;
+    background: var(--hav-accent);
+    border-radius: 50%;
+    font: 700 13px/1 var(--hav-mono);
+  }
+
+  .prompt-tabs {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 16px;
+  }
+
+  .prompt-list {
+    display: grid;
+    gap: 10px;
+  }
+
+  .prompt-list button {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .prompt-list button[aria-selected="true"] {
+    background: var(--hav-sky);
+  }
+
+  .prompt-panel {
+    display: none;
+    min-width: 0;
+  }
+
+  .prompt-panel.active {
+    display: block;
+  }
+
+  .prompt-tabs > div {
+    min-width: 0;
+  }
+
+  .prompt-panel .hav-code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .source-note {
+    color: var(--hav-muted);
+    font-size: 14px;
+  }
+
+  .svg-wrap {
+    overflow-x: auto;
+    padding: 10px;
+    background: var(--hav-panel);
+    border: 1px solid var(--hav-border);
+    border-radius: 16px;
+  }
+
+  .svg-wrap svg {
+    width: 100%;
+    min-width: 720px;
+    height: auto;
+  }
+
+  @media (max-width: 860px) {
+    .lead-grid,
+    .contrast,
+    .prompt-tabs {
+      grid-template-columns: 1fr;
+    }
+
+    .metric-row,
+    .capability-grid,
+    .scenario-grid,
+    .faq-grid,
+    .timeline {
+      grid-template-columns: 1fr;
+    }
+
+    .vs-divider {
+      padding: 4px 0;
+    }
+  }
+</style>
+
+<nav class="sticky-toc" aria-label="目录">
+  <div class="toc-row">
+    <a class="hav-pill" href="#thesis">中心观点</a>
+    <a class="hav-pill" href="#why">为什么是 HTML</a>
+    <a class="hav-pill" href="#loop">协作闭环</a>
+    <a class="hav-pill" href="#cases">使用场景</a>
+    <a class="hav-pill" href="#prompts">可复制提示词</a>
+    <a class="hav-pill" href="#faq">FAQ</a>
+  </div>
+</nav>
+
+<section id="thesis" class="hav-section">
+  <div class="lead-grid">
+    <div class="hav-card lead-panel">
+      <span class="hav-pill">中心观点</span>
+      <h2 class="hav-section-title">Markdown 适合写，但 HTML 更适合让人真正读进去。</h2>
+      <p>作者的判断是：随着 AI agent 生成的规格、计划、报告和解释越来越长，Markdown 的可读性和表达力开始成为瓶颈。HTML 可以把同样的信息组织成图表、界面、交互控件和可分享页面，让人更容易审阅、比较、反馈，并继续把结果交回给 agent。</p>
+      <div class="hav-annotation">
+        <strong>编辑说明：</strong>以下内容为中文转译与结构化改写，保留原文主张与例子；“1MM context window in Opus 4.7”等产品表述来自原文，未额外核验实时产品状态。
+      </div>
+    </div>
+    <div class="hav-window">
+      <div class="hav-window-bar">
+        <span class="hav-dot"></span><span class="hav-dot"></span><span class="hav-dot"></span>
+        <span class="hav-window-title">阅读路径</span>
+      </div>
+      <div class="hav-window-body">
+        <div class="metric-row" style="grid-template-columns: 1fr 1fr;">
+          <div class="metric"><strong>1</strong>先看 HTML 解决了什么阅读问题</div>
+          <div class="metric"><strong>2</strong>再看 agent 为什么适合生成 HTML</div>
+          <div class="metric"><strong>3</strong>挑一个场景复制提示词试用</div>
+          <div class="metric"><strong>4</strong>用 FAQ 判断取舍和成本</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="plain-section" aria-labelledby="summary-title">
+  <h2 id="summary-title" class="hav-section-title">一句话摘要</h2>
+  <div class="metric-row">
+    <div class="metric"><strong>更密</strong>表格、SVG、CSS、脚本、图片和空间布局能承载比 Markdown 更丰富的信息。</div>
+    <div class="metric"><strong>更清</strong>长规格可以被拆成导航、标签页、图解、注释和折叠细节。</div>
+    <div class="metric"><strong>更易分享</strong>上传一个 HTML 文件即可用链接传播，比 Markdown 附件更容易被打开。</div>
+    <div class="metric"><strong>更可互动</strong>滑块、表单、复制按钮和实时预览能把反馈重新转成 prompt 或配置。</div>
+  </div>
+</section>
+
+<section id="why" class="plain-section">
+  <h2 class="hav-section-title">为什么作者开始偏向 HTML</h2>
+  <div class="contrast">
+    <div class="hav-card contrast-side">
+      <span class="hav-pill">Markdown 的优势</span>
+      <ul>
+        <li>简单、便携、可编辑。</li>
+        <li>适合作为轻量笔记、短计划和文本规格。</li>
+        <li>对 diff 和版本控制更友好。</li>
+      </ul>
+    </div>
+    <div class="vs-divider">tradeoff</div>
+    <div class="hav-card contrast-side">
+      <span class="hav-pill">HTML 的优势</span>
+      <ul>
+        <li>能表达颜色、空间关系、流程、组件、交互和图像。</li>
+        <li>长文更容易导航、分层和移动端阅读。</li>
+        <li>可直接在浏览器打开，也更适合通过链接分享。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="svg-wrap" style="margin-top:18px;" aria-label="Markdown 到 HTML 的表达能力升级图">
+    <svg viewBox="0 0 980 420" role="img">
+      <title>从 Markdown 到 HTML 的表达能力升级</title>
+      <defs>
+        <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L0,6 L9,3 z" fill="#8a837a"></path>
+        </marker>
+      </defs>
+      <rect x="30" y="42" width="300" height="300" rx="18" fill="#fffdfa" stroke="#d4cfc7" stroke-width="2"></rect>
+      <text x="60" y="88" fill="#2c2825" font-size="26" font-family="Georgia, serif">Markdown</text>
+      <text x="60" y="126" fill="#8a837a" font-size="15" font-family="ui-monospace, monospace">linear text / readable diffs</text>
+      <line x1="60" y1="158" x2="300" y2="158" stroke="#d4cfc7"></line>
+      <text x="60" y="198" fill="#2c2825" font-size="18"># 标题</text>
+      <text x="60" y="230" fill="#2c2825" font-size="18">- 列表</text>
+      <text x="60" y="262" fill="#2c2825" font-size="18">```code```</text>
+      <text x="60" y="294" fill="#8a837a" font-size="18">ASCII 图 / 附件 / 长段落</text>
+      <path d="M356 192 C420 150, 470 150, 534 192" fill="none" stroke="#8a837a" stroke-width="3" marker-end="url(#arrow)"></path>
+      <text x="396" y="142" fill="#8a837a" font-size="14" font-family="ui-monospace, monospace">agent 输出变复杂</text>
+      <rect x="570" y="42" width="380" height="300" rx="18" fill="#fffdfa" stroke="#d4cfc7" stroke-width="2"></rect>
+      <text x="602" y="88" fill="#2c2825" font-size="26" font-family="Georgia, serif">HTML Artifact</text>
+      <text x="602" y="126" fill="#8a837a" font-size="15" font-family="ui-monospace, monospace">visual / interactive / shareable</text>
+      <g>
+        <rect x="604" y="158" width="96" height="58" rx="10" fill="#f0ede8" stroke="#d4cfc7"></rect>
+        <text x="624" y="193" fill="#2c2825" font-size="15">表格</text>
+        <rect x="718" y="158" width="96" height="58" rx="10" fill="#f0ede8" stroke="#d4cfc7"></rect>
+        <text x="738" y="193" fill="#2c2825" font-size="15">SVG</text>
+        <rect x="832" y="158" width="82" height="58" rx="10" fill="#f0ede8" stroke="#d4cfc7"></rect>
+        <text x="850" y="193" fill="#2c2825" font-size="15">CSS</text>
+        <rect x="604" y="236" width="126" height="58" rx="10" fill="#f0ede8" stroke="#d4cfc7"></rect>
+        <text x="624" y="271" fill="#2c2825" font-size="15">交互控件</text>
+        <rect x="748" y="236" width="166" height="58" rx="10" fill="#f0ede8" stroke="#d4cfc7"></rect>
+        <text x="768" y="271" fill="#2c2825" font-size="15">流程 / 空间布局</text>
+      </g>
+      <text x="80" y="385" fill="#8a837a" font-size="15">结论：Markdown 仍适合短文本和审查 diff；HTML 更适合长规格、复杂解释和需要被共享的结果。</text>
+    </svg>
+  </div>
+</section>
+
+<section class="plain-section">
+  <h2 class="hav-section-title">HTML 能承载哪些信息</h2>
+  <div class="capability-grid">
+    <div class="compact-card"><h3>结构化文档</h3><p>标题、段落、摘要、目录、链接和章节跳转。</p></div>
+    <div class="compact-card"><h3>数据与表格</h3><p>表格、状态列、评分、对比矩阵和统计摘要。</p></div>
+    <div class="compact-card"><h3>设计表达</h3><p>CSS tokens、色彩、间距、组件状态和响应式布局。</p></div>
+    <div class="compact-card"><h3>图解</h3><p>SVG 流程图、泳道、架构图、时间线和空间示意。</p></div>
+    <div class="compact-card"><h3>代码理解</h3><p>代码片段、diff、旁注、严重程度标记和调用链。</p></div>
+    <div class="compact-card"><h3>交互界面</h3><p>滑块、开关、表单、复制按钮和实时预览。</p></div>
+  </div>
+</section>
+
+<section id="loop" class="plain-section">
+  <h2 class="hav-section-title">真正的变化：从“读文件”变成“参与协作”</h2>
+  <div class="hav-window">
+    <div class="hav-window-bar">
+      <span class="hav-dot"></span><span class="hav-dot"></span><span class="hav-dot"></span>
+      <span class="hav-window-title">Agent 协作闭环</span>
+    </div>
+    <div class="hav-window-body">
+      <div class="timeline">
+        <div class="timeline-step"><strong>01</strong><h3>Agent 汇总上下文</h3><p>读取代码库、文件系统、MCP、浏览器、Git 历史等来源。</p></div>
+        <div class="timeline-step"><strong>02</strong><h3>生成 HTML 解释页</h3><p>把复杂材料组织成图表、标签页、注释和可读结构。</p></div>
+        <div class="timeline-step"><strong>03</strong><h3>人类审阅与调整</h3><p>通过导航、控件、预览和导出结果快速反馈。</p></div>
+        <div class="timeline-step"><strong>04</strong><h3>复制回 Prompt</h3><p>把选择、参数、批注或排序重新导出给 Claude Code。</p></div>
+        <div class="timeline-step"><strong>05</strong><h3>进入实现或验证</h3><p>新会话拿到 HTML 文件后，拥有更完整的上下文。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cases" class="plain-section">
+  <h2 class="hav-section-title">适合改成 HTML 的场景</h2>
+  <div class="scenario-grid">
+    <div class="scenario"><span class="hav-pill">规格 / 规划</span><h3>探索多个方案</h3><p>用网格并排比较不同方向，展示取舍、草图、数据流和实现计划。</p></div>
+    <div class="scenario"><span class="hav-pill">代码审查</span><h3>把 diff 讲清楚</h3><p>渲染真实 diff、行内旁注、风险级别、模块关系和关键逻辑。</p></div>
+    <div class="scenario"><span class="hav-pill">设计 / 原型</span><h3>调动画与组件</h3><p>用滑块、按钮和实时预览找到合适参数，再复制配置。</p></div>
+    <div class="scenario"><span class="hav-pill">报告 / 学习</span><h3>综合多源信息</h3><p>把 Slack、代码、Git、互联网资料整理成领导、团队或自己能快速读懂的报告。</p></div>
+    <div class="scenario"><span class="hav-pill">临时编辑器</span><h3>给一份数据做专用界面</h3><p>拖拽排序、编辑配置、标注文本、筛选数据，最后导出 JSON、Markdown 或 prompt。</p></div>
+    <div class="scenario"><span class="hav-pill">分享材料</span><h3>降低打开成本</h3><p>上传到 S3 或任意静态托管后，一个链接就能让同事打开阅读。</p></div>
+  </div>
+</section>
+
+<section id="prompts" class="plain-section">
+  <div class="hav-copy-row">
+    <h2 class="hav-section-title" style="margin-bottom:0;">可复制的中文提示词</h2>
+    <button class="hav-button secondary" data-copy="#prompt-spec">复制当前提示词</button>
+  </div>
+  <div class="prompt-tabs" style="margin-top:18px;">
+    <div class="prompt-list" role="tablist" aria-label="提示词分类">
+      <button class="hav-button" type="button" role="tab" aria-selected="true" data-tab="prompt-spec">规格规划</button>
+      <button class="hav-button secondary" type="button" role="tab" aria-selected="false" data-tab="prompt-review">代码审查</button>
+      <button class="hav-button secondary" type="button" role="tab" aria-selected="false" data-tab="prompt-editor">临时编辑器</button>
+    </div>
+    <div>
+      <section id="prompt-spec" class="prompt-panel active" role="tabpanel">
+        <pre class="hav-code">我不确定 onboarding 页面该走哪个方向。请生成 6 个明显不同的方案，改变布局、语气和信息密度，并把它们放在一个 HTML 文件的网格里，方便我横向比较。每个方案都标注它选择的取舍。</pre>
+      </section>
+      <section id="prompt-review" class="prompt-panel" role="tabpanel">
+        <pre class="hav-code">帮我审查这个 PR，创建一个 HTML artifact 来解释它。我对 streaming / backpressure 逻辑不熟，所以请重点讲这部分。渲染真实 diff，加上行内旁注，按严重程度给问题上色，并补充必要的流程图。</pre>
+      </section>
+      <section id="prompt-editor" class="prompt-panel" role="tabpanel">
+        <pre class="hav-code">我需要重新排序这 30 个 Linear tickets。请做一个 HTML 文件，把每个 ticket 做成可拖拽卡片，放在 Now / Next / Later / Cut 四列中。先按你的判断预排序，并添加“复制为 Markdown”按钮，导出最终排序和每组一句理由。</pre>
+      </section>
+    </div>
+  </div>
+</section>
+
+<section id="faq" class="plain-section">
+  <h2 class="hav-section-title">常见疑问与取舍</h2>
+  <div class="faq-grid">
+    <div class="faq-item"><h3>Token 会不会更贵？</h3><p>会更占 token，但作者认为 HTML 的表达力和阅读率提升带来更好的总产出；原文还提到大上下文窗口让这点更不明显。</p></div>
+    <div class="faq-item"><h3>Markdown 还用吗？</h3><p>作者几乎停止在多数场景使用 Markdown，但也承认自己可能偏向 HTML 极大化。</p></div>
+    <div class="faq-item"><h3>怎么看 HTML 文件？</h3><p>本地浏览器直接打开，或上传到 S3 等静态存储后分享链接。</p></div>
+    <div class="faq-item"><h3>生成会不会更慢？</h3><p>会。原文估计 HTML 可能比 Markdown 慢 2-4 倍，但结果更值得读。</p></div>
+    <div class="faq-item"><h3>版本控制怎么办？</h3><p>这是明显缺点：HTML diff 噪声更大，审查成本比 Markdown 高。</p></div>
+    <div class="faq-item"><h3>怎么避免做丑？</h3><p>可以使用前端设计插件，或让 Claude 基于代码库生成一个设计系统 HTML，作为后续 artifact 的风格参考。</p></div>
+  </div>
+</section>
+
+<section class="plain-section">
+  <div class="hav-card lead-panel">
+    <span class="hav-pill">结论</span>
+    <h2 class="hav-section-title">HTML 的价值不只是“更漂亮”，而是让人重新进入决策循环。</h2>
+    <p>作者担心过：如果自己不再深入阅读 agent 生成的长计划，就只能把选择权交给 Claude。但 HTML 让复杂输出变得更容易阅读、调整和分享，因此他反而感觉自己比以前更“在循环中”。</p>
+    <p class="source-note">原文中的示例页面：<a href="https://thariqs.github.io/html-effectiveness/" target="_blank" rel="noreferrer">thariqs.github.io/html-effectiveness</a>；双向交互示例：<a href="https://x.com/trq212/status/2017024445244924382" target="_blank" rel="noreferrer">X post</a>。</p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('[data-tab]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const target = button.getAttribute('data-tab');
+      document.querySelectorAll('[data-tab]').forEach((item) => {
+        const selected = item === button;
+        item.setAttribute('aria-selected', selected ? 'true' : 'false');
+        item.classList.toggle('secondary', !selected);
+      });
+      document.querySelectorAll('.prompt-panel').forEach((panel) => {
+        panel.classList.toggle('active', panel.id === target);
+      });
+      const copyButton = document.querySelector('[data-copy^="#prompt-"]');
+      if (copyButton) copyButton.setAttribute('data-copy', '#' + target);
+    });
+  });
+</script>
+
+    </main>
+  </article>
+  <button class="hav-button" data-back-top style="position:fixed;right:18px;bottom:18px;z-index:20">Top</button>
+  <script>
+document.querySelectorAll('[data-copy]').forEach((button) => {
+  button.addEventListener('click', async () => {
+    const target = document.querySelector(button.getAttribute('data-copy'));
+    if (!target) return;
+    await navigator.clipboard.writeText(target.innerText || target.textContent || '');
+    const old = button.textContent;
+    button.textContent = 'Copied';
+    setTimeout(() => { button.textContent = old; }, 1200);
+  });
+});
+document.querySelector('[data-back-top]')?.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+  </script>
+</body>
+</html>
