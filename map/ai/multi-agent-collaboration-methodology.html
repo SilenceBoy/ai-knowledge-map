@@ -1,0 +1,1403 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="用职场比喻讲清楚多智能体协作：什么时候叫人、怎么组织、四款工具像哪种项目经理、最容易踩的七个坑，附决策清单和交办模板。">
+  <title>AI 团队怎么组</title>
+  <style>
+    :root {
+      --hav-bg: #faf8f5;
+      --hav-surface: #f0ede8;
+      --hav-panel: #fffdfa;
+      --hav-border: #d4cfc7;
+      --hav-text: #2c2825;
+      --hav-muted: #8a837a;
+      --hav-soft: #e3dacc;
+      --hav-accent: #d97757;
+      --hav-accent-dark: #b8602a;
+      --hav-olive: #788c5d;
+      --hav-sky: #6a8caf;
+      --hav-slate: #141413;
+      --hav-danger: #b9524c;
+      --hav-shadow: 0 18px 50px rgba(44, 40, 37, .10);
+      --hav-radius: 18px;
+      --hav-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --hav-serif: Georgia, "Times New Roman", serif;
+      --hav-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --hav-bg: #17191c;
+        --hav-surface: #202226;
+        --hav-panel: #111214;
+        --hav-border: #3d3d39;
+        --hav-text: #eee9df;
+        --hav-muted: #aaa49a;
+        --hav-soft: #2e2d2a;
+        --hav-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+      }
+    }
+
+    body.hav-page {
+      margin: 0;
+      background: var(--hav-bg);
+      color: var(--hav-text);
+      font-family: var(--hav-sans);
+      line-height: 1.55;
+    }
+
+    .hav-shell {
+      width: min(1120px, calc(100vw - 32px));
+      margin: 0 auto;
+    }
+
+    .hav-hero {
+      padding: 56px 0 28px;
+      border-bottom: 1px solid var(--hav-border);
+    }
+
+    .hav-kicker {
+      color: var(--hav-muted);
+      font: 700 12px/1 var(--hav-mono);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .hav-title {
+      margin: 14px 0 12px;
+      max-width: 920px;
+      font-family: var(--hav-serif);
+      font-size: clamp(40px, 7vw, 80px);
+      line-height: .94;
+      letter-spacing: 0;
+    }
+
+    .hav-subtitle {
+      max-width: 760px;
+      color: var(--hav-muted);
+      font-size: clamp(18px, 2.4vw, 24px);
+    }
+
+    .hav-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+
+    .hav-card {
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: var(--hav-radius);
+      box-shadow: var(--hav-shadow);
+    }
+
+    .hav-section {
+      padding: 44px 0;
+    }
+
+    .hav-section-title {
+      margin: 0 0 18px;
+      font-family: var(--hav-serif);
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.02;
+    }
+
+    .hav-window {
+      overflow: hidden;
+      background: var(--hav-panel);
+      border: 2px solid var(--hav-border);
+      border-radius: 20px;
+      box-shadow: var(--hav-shadow);
+    }
+
+    .hav-window-bar {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 42px;
+      padding: 0 16px;
+      background: var(--hav-surface);
+      border-bottom: 1px solid var(--hav-border);
+      color: var(--hav-muted);
+      font: 13px/1 var(--hav-mono);
+    }
+
+    .hav-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: var(--hav-border);
+    }
+
+    .hav-window-title {
+      flex: 1;
+      text-align: center;
+    }
+
+    .hav-window-body {
+      padding: 24px;
+    }
+
+    .hav-feature-card {
+      display: grid;
+      place-items: center;
+      min-height: 180px;
+      padding: 24px;
+      text-align: center;
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: 14px;
+    }
+
+    .hav-feature-card h3 {
+      margin: 12px 0 4px;
+      font-family: var(--hav-serif);
+      font-size: 24px;
+    }
+
+    .hav-feature-card p {
+      margin: 0;
+      color: var(--hav-muted);
+    }
+
+    .hav-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      color: var(--hav-text);
+      background: var(--hav-surface);
+      border: 1px solid var(--hav-border);
+      border-radius: 999px;
+      font: 13px/1 var(--hav-mono);
+    }
+
+    .hav-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 18px;
+      color: #fff;
+      background: var(--hav-accent);
+      border: 0;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .hav-button.secondary {
+      color: var(--hav-text);
+      background: transparent;
+      border: 2px solid var(--hav-text);
+    }
+
+    .hav-code {
+      overflow: auto;
+      padding: 18px;
+      color: #eee9df;
+      background: var(--hav-slate);
+      border-radius: 14px;
+      font: 14px/1.7 var(--hav-mono);
+    }
+
+    .hav-annotation {
+      border-left: 5px solid var(--hav-accent);
+      padding: 12px 14px;
+      background: color-mix(in srgb, var(--hav-accent) 12%, transparent);
+      border-radius: 0 12px 12px 0;
+    }
+
+    .hav-flow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      overflow-x: auto;
+      padding: 16px;
+      background: var(--hav-surface);
+      border: 1px solid var(--hav-border);
+      border-radius: 14px;
+    }
+
+    .hav-flow-node {
+      flex: 0 0 auto;
+      min-width: 120px;
+      padding: 13px 16px;
+      text-align: center;
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: 10px;
+      font: 14px/1 var(--hav-mono);
+    }
+
+    .hav-flow-arrow {
+      color: var(--hav-muted);
+      font-family: var(--hav-mono);
+    }
+
+    .hav-copy-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 760px) {
+      .hav-shell {
+        width: min(100vw - 20px, 680px);
+      }
+
+      .hav-hero {
+        padding-top: 34px;
+      }
+
+      .hav-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hav-window-body {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+
+<body class="hav-page">
+  <article>
+    <header class="hav-hero">
+      <div class="hav-shell">
+        <div class="hav-kicker">Multi-Agent · 小白版</div>
+        <h1 class="hav-title">AI 团队怎么组</h1>
+        <p class="hav-subtitle">多智能体协作其实就是带团队——七个常见坑、四种工具性格、一份交办模板，看完就能用。</p>
+      </div>
+    </header>
+    <main class="hav-shell">
+      <style>
+        .ma-toc {
+          position: sticky;
+          top: 0;
+          z-index: 10;
+          margin: 0 -1px 28px;
+          padding: 12px 0;
+          background: color-mix(in srgb, var(--hav-bg) 88%, transparent);
+          backdrop-filter: blur(16px);
+          border-bottom: 1px solid var(--hav-border);
+        }
+
+        .ma-toc-row {
+          display: flex;
+          gap: 10px;
+          overflow-x: auto;
+          padding: 0 2px 4px;
+        }
+
+        .ma-toc-row a {
+          flex: 0 0 auto;
+          color: var(--hav-text);
+          text-decoration: none;
+        }
+
+        /* ─── HERO ANALOGY ─── */
+        .ma-hero-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr);
+          gap: 18px;
+          align-items: stretch;
+        }
+
+        .ma-hero-panel {
+          padding: 28px;
+        }
+
+        .ma-hero-panel h2 {
+          margin-top: 0;
+        }
+
+        .ma-hero-visual {
+          background: var(--hav-panel);
+          border: 1px solid var(--hav-border);
+          border-radius: var(--hav-radius);
+          overflow: hidden;
+          min-height: 100%;
+        }
+
+        .ma-hero-visual img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          min-height: 320px;
+          object-fit: cover;
+        }
+
+        /* ─── SECTION ─── */
+        .ma-section {
+          padding: 48px 0;
+          border-top: 1px solid var(--hav-border);
+        }
+
+        .ma-section-lead {
+          color: var(--hav-muted);
+          font-size: 17px;
+          line-height: 1.6;
+          max-width: 720px;
+          margin-bottom: 28px;
+        }
+
+        .ma-section-lead strong {
+          color: var(--hav-text);
+          background: color-mix(in srgb, var(--hav-accent) 18%, transparent);
+          padding: 1px 4px;
+          border-radius: 4px;
+        }
+
+        /* ─── ANALOGY CARD ─── */
+        .ma-analogy {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          gap: 0;
+          background: var(--hav-panel);
+          border: 1px solid var(--hav-border);
+          border-radius: 16px;
+          overflow: hidden;
+          margin: 16px 0 24px;
+        }
+
+        .ma-analogy-side {
+          padding: 24px;
+        }
+
+        .ma-analogy-side.wrong {
+          background: color-mix(in srgb, var(--hav-danger) 7%, transparent);
+          border-right: 1px solid var(--hav-border);
+        }
+
+        .ma-analogy-side.right {
+          background: color-mix(in srgb, var(--hav-olive) 9%, transparent);
+        }
+
+        .ma-analogy-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 4px 10px;
+          border-radius: 99px;
+          font: 700 11px/1 var(--hav-mono);
+          letter-spacing: .06em;
+          text-transform: uppercase;
+          margin-bottom: 10px;
+        }
+
+        .ma-analogy-tag.wrong {
+          color: var(--hav-danger);
+          background: #fff;
+          border: 1px solid var(--hav-danger);
+        }
+
+        .ma-analogy-tag.right {
+          color: var(--hav-olive);
+          background: #fff;
+          border: 1px solid var(--hav-olive);
+        }
+
+        .ma-analogy-side h3 {
+          font-family: var(--hav-serif);
+          font-size: 19px;
+          margin: 0 0 8px;
+          line-height: 1.3;
+        }
+
+        .ma-analogy-side p {
+          margin: 0;
+          color: var(--hav-text);
+          font-size: 14px;
+          line-height: 1.6;
+        }
+
+        /* ─── METAPHOR CARDS ─── */
+        .ma-meta-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 16px;
+        }
+
+        .ma-meta-card {
+          background: var(--hav-panel);
+          border: 1px solid var(--hav-border);
+          border-radius: 16px;
+          overflow: hidden;
+        }
+
+        .ma-meta-card-visual {
+          height: 160px;
+          background: var(--hav-surface);
+          border-bottom: 1px solid var(--hav-border);
+          display: grid;
+          place-items: center;
+          overflow: hidden;
+        }
+
+        .ma-meta-card-visual img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .ma-meta-card-body {
+          padding: 20px;
+        }
+
+        .ma-meta-card-tag {
+          display: inline-block;
+          margin-bottom: 8px;
+          padding: 3px 10px;
+          background: var(--hav-surface);
+          border: 1px solid var(--hav-border);
+          border-radius: 99px;
+          color: var(--hav-muted);
+          font: 11px/1.2 var(--hav-mono);
+          letter-spacing: .04em;
+        }
+
+        .ma-meta-card-title {
+          font-family: var(--hav-serif);
+          font-size: 19px;
+          margin-bottom: 6px;
+          line-height: 1.3;
+        }
+
+        .ma-meta-card-real {
+          color: var(--hav-muted);
+          font: 12px/1.4 var(--hav-mono);
+          margin-bottom: 10px;
+        }
+
+        .ma-meta-card-desc {
+          font-size: 14px;
+          line-height: 1.55;
+          color: var(--hav-text);
+        }
+
+        .ma-meta-card-when {
+          margin-top: 12px;
+          padding-top: 12px;
+          border-top: 1px solid var(--hav-border);
+          color: var(--hav-muted);
+          font-size: 13px;
+          line-height: 1.5;
+        }
+
+        .ma-meta-card-when strong {
+          color: var(--hav-accent);
+        }
+
+        /* ─── TOOL PERSONA ─── */
+        .ma-tool-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 16px;
+        }
+
+        .ma-tool-card {
+          background: var(--hav-panel);
+          border: 1px solid var(--hav-border);
+          border-radius: 16px;
+          padding: 22px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .ma-tool-avatar {
+          width: 56px;
+          height: 56px;
+          border-radius: 14px;
+          display: grid;
+          place-items: center;
+          overflow: hidden;
+        }
+
+        .ma-tool-avatar img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .ma-tool-name {
+          font-family: var(--hav-serif);
+          font-size: 20px;
+          line-height: 1.2;
+        }
+
+        .ma-tool-tag {
+          color: var(--hav-muted);
+          font: 12px/1 var(--hav-mono);
+          letter-spacing: .04em;
+        }
+
+        .ma-tool-quote {
+          font-style: italic;
+          color: var(--hav-text);
+          font-size: 14px;
+          line-height: 1.55;
+          padding: 10px 14px;
+          background: var(--hav-surface);
+          border-left: 3px solid currentColor;
+          border-radius: 0 8px 8px 0;
+        }
+
+        .ma-tool-when,
+        .ma-tool-not {
+          font-size: 13px;
+          line-height: 1.55;
+        }
+
+        .ma-tool-when strong,
+        .ma-tool-not strong {
+          display: block;
+          margin-bottom: 4px;
+          font: 700 11px/1 var(--hav-mono);
+          letter-spacing: .08em;
+          text-transform: uppercase;
+        }
+
+        .ma-tool-when {
+          color: var(--hav-text);
+        }
+
+        .ma-tool-when strong {
+          color: var(--hav-olive);
+        }
+
+        .ma-tool-not {
+          color: var(--hav-muted);
+        }
+
+        .ma-tool-not strong {
+          color: var(--hav-danger);
+        }
+
+        /* ─── PITFALL ─── */
+        .ma-pitfall-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+          gap: 14px;
+        }
+
+        .ma-pitfall {
+          display: grid;
+          grid-template-columns: 64px minmax(0, 1fr);
+          gap: 36px;
+          padding: 22px;
+          background: var(--hav-panel);
+          border: 1px solid var(--hav-border);
+          border-radius: 14px;
+          align-items: start;
+        }
+
+        .ma-pitfall-icon {
+          width: 64px;
+          height: 64px;
+          background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-surface));
+          border-radius: 14px;
+          display: grid;
+          place-items: center;
+          padding: 12px;
+          overflow: hidden;
+        }
+
+        .ma-pitfall-icon svg {
+          width: 100%;
+          height: 100%;
+          display: block;
+        }
+
+        .ma-pitfall-summary {
+          grid-column: span 2;
+        }
+
+        .ma-pitfall-body {
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+          min-width: 0;
+        }
+
+        .ma-pitfall-num {
+          color: var(--hav-muted);
+          font: 700 10px/1 var(--hav-mono);
+          letter-spacing: .12em;
+        }
+
+        .ma-pitfall-title {
+          font-family: var(--hav-serif);
+          font-size: 17px;
+          line-height: 1.3;
+          overflow-wrap: anywhere;
+        }
+
+        .ma-pitfall-desc {
+          color: var(--hav-muted);
+          font-size: 13px;
+          line-height: 1.55;
+          margin-top: 2px;
+          overflow-wrap: anywhere;
+        }
+
+        /* ─── CHECKLIST ─── */
+        .ma-checklist {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 12px;
+        }
+
+        .ma-check {
+          display: flex;
+          gap: 14px;
+          padding: 18px;
+          background: var(--hav-panel);
+          border: 1px solid var(--hav-border);
+          border-radius: 12px;
+          align-items: flex-start;
+        }
+
+        .ma-check-num {
+          flex-shrink: 0;
+          width: 32px;
+          height: 32px;
+          display: grid;
+          place-items: center;
+          background: color-mix(in srgb, var(--hav-accent) 15%, transparent);
+          color: var(--hav-accent);
+          border-radius: 50%;
+          font: 700 14px/1 var(--hav-mono);
+        }
+
+        .ma-check-body {
+          flex: 1;
+        }
+
+        .ma-check-q {
+          display: block;
+          margin-bottom: 4px;
+          font-family: var(--hav-serif);
+          font-size: 15px;
+          line-height: 1.4;
+          color: var(--hav-text);
+        }
+
+        .ma-check-a {
+          color: var(--hav-muted);
+          font-size: 13px;
+          line-height: 1.55;
+        }
+
+        .ma-check-a em {
+          font-style: normal;
+          color: var(--hav-accent);
+          font-weight: 600;
+        }
+
+        /* ─── TEMPLATE ─── */
+        .ma-tmpl-wrap {
+          display: grid;
+          grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+          gap: 18px;
+          align-items: stretch;
+        }
+
+        .ma-tmpl-explain {
+          padding: 24px;
+        }
+
+        .ma-tmpl-explain h3 {
+          font-family: var(--hav-serif);
+          font-size: 20px;
+          margin: 14px 0 10px;
+        }
+
+        .ma-tmpl-fields {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .ma-tmpl-fields li {
+          padding: 8px 0;
+          border-bottom: 1px dashed var(--hav-border);
+          font-size: 14px;
+          line-height: 1.4;
+        }
+
+        .ma-tmpl-fields li:last-child {
+          border-bottom: 0;
+        }
+
+        .ma-tmpl-fields li strong {
+          color: var(--hav-text);
+          display: block;
+          margin-bottom: 2px;
+        }
+
+        .ma-tmpl-fields li span {
+          color: var(--hav-muted);
+          font-size: 12.5px;
+        }
+
+        .ma-tmpl-code-wrap {
+          position: relative;
+        }
+
+        .ma-tmpl-copy {
+          position: absolute;
+          top: 14px;
+          right: 14px;
+          z-index: 2;
+        }
+
+        /* ─── CONCLUSION ─── */
+        .ma-final {
+          padding: 36px;
+        }
+
+        .ma-final blockquote {
+          margin: 18px 0 0;
+          padding: 18px 22px;
+          background: color-mix(in srgb, var(--hav-accent) 9%, transparent);
+          border-left: 5px solid var(--hav-accent);
+          border-radius: 0 12px 12px 0;
+          font-family: var(--hav-serif);
+          font-size: 19px;
+          line-height: 1.5;
+        }
+
+        /* ─── SOURCE ─── */
+        .ma-source {
+          color: var(--hav-muted);
+          font-size: 13px;
+          margin-top: 14px;
+        }
+
+        .ma-source a {
+          color: var(--hav-accent);
+        }
+
+        @media (max-width: 860px) {
+
+          .ma-hero-grid,
+          .ma-analogy,
+          .ma-tmpl-wrap {
+            grid-template-columns: 1fr;
+          }
+
+          .ma-pitfall-summary {
+            grid-column: auto;
+          }
+
+          .ma-pitfall {
+            grid-template-columns: 56px minmax(0, 1fr);
+            gap: 28px;
+            padding: 18px;
+          }
+
+          .ma-pitfall-icon {
+            width: 56px;
+            height: 56px;
+            padding: 10px;
+          }
+
+          .ma-analogy-side.wrong {
+            border-right: 0;
+            border-bottom: 1px solid var(--hav-border);
+          }
+        }
+      </style>
+
+      <nav class="ma-toc" aria-label="目录">
+        <div class="ma-toc-row">
+          <a class="hav-pill" href="#whatis">这到底是什么？</a>
+          <a class="hav-pill" href="#twoq">两个核心问题</a>
+          <a class="hav-pill" href="#shapes">六种团队结构</a>
+          <a class="hav-pill" href="#tools">四款工具的性格</a>
+          <a class="hav-pill" href="#pitfalls">七种翻车现场</a>
+          <a class="hav-pill" href="#checklist">决策清单</a>
+          <a class="hav-pill" href="#brief">交办模板</a>
+        </div>
+      </nav>
+
+      <!-- ─── HERO ─── -->
+      <section id="whatis" class="hav-section">
+        <div class="ma-hero-grid">
+          <div class="hav-card ma-hero-panel">
+            <span class="hav-pill">先理解一件事</span>
+            <h2 class="hav-section-title">多智能体协作，不是「雇更多人」，而是「带好一支团队」。</h2>
+            <p style="font-size: 16px; line-height: 1.65;">抖音小红书上常这么演：一个 AI 查资料，一个 AI 写代码，一个 AI 跑测试，最后主 AI
+              像项目经理一样把结果收上来。看着很酷。</p>
+            <p style="font-size: 16px; line-height: 1.65; color: var(--hav-muted);">但真做过的人知道：人多 ≠ 效率高。<strong
+                style="color: var(--hav-text);">一个混乱的团队，加更多人只会更混乱。</strong>多智能体真正的难点，从来不是「再开一个 AI」，而是分工、授权、信息同步和最后谁拍板。
+            </p>
+            <div class="hav-annotation">
+              <strong>这篇要回答的：</strong>什么时候该让 AI 一起干？怎么分工才不会乱？四款主流工具（Codex / Claude Code / OpenClaw /
+              Hermes）分别像哪种「团队风格」？普通人怎么避坑？
+            </div>
+          </div>
+
+          <div class="ma-hero-visual" aria-label="多智能体团队协作概念图">
+            <img src="images/multi-agent-team-hero.webp" alt="中心智能体调度多个专业智能体的协作场景" loading="eager" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── SINGLE VS MULTI ─── -->
+      <section class="ma-section">
+        <h2 class="hav-section-title">单 AI vs 多 AI · 用厨房理解一下</h2>
+        <p class="ma-section-lead">想象你开了一家餐厅。「单 AI」就是<strong>一个全能厨子</strong>——他炒菜、切配、洗碗、收银全干。「多
+          AI」就是<strong>一组分工的团队</strong>——主厨、切配、备料、出餐各司其职。</p>
+
+        <div class="ma-analogy">
+          <div class="ma-analogy-side wrong">
+            <span class="ma-analogy-tag wrong">❌ 想当然</span>
+            <h3>「人多力量大」</h3>
+            <p>有事就拆任务。开 10 个 AI 一起做，速度肯定快。<br><br>结果：<br>• 10 个人挤在小厨房里互相撞<br>• 没人知道菜单上「同一桌客人」是谁<br>• 两个人同时炒了同一道菜<br>•
+              老板出去送外卖了，没人收钱</p>
+          </div>
+          <div class="ma-analogy-side right">
+            <span class="ma-analogy-tag right">✅ 真实工程</span>
+            <h3>「分工要先于人数」</h3>
+            <p>先想清楚：<br><br>• 谁负责接单（路由）<br>• 谁能动哪个灶台（权限）<br>• 谁负责出餐前确认（收口）<br>• 出错了谁兜底（恢复）<br><br>这些想清楚，才决定开几个工位。</p>
+          </div>
+        </div>
+
+        <div class="hav-annotation" style="margin-top: 24px;">
+          <strong>核心结论：</strong>大多数失败的多 AI 项目，不是「模型不够聪明」，而是「设计者跳过了团队管理」。把复杂任务直接翻译成「开更多 AI」，是最常见的死法。
+        </div>
+      </section>
+
+      <!-- ─── TWO QUESTIONS ─── -->
+      <section id="twoq" class="ma-section">
+        <h2 class="hav-section-title">先回答两个问题</h2>
+        <p class="ma-section-lead">所有多 AI 系统都在回答这两件事。把它们想清楚，剩下的就是细节。</p>
+
+        <div class="hav-grid" style="grid-template-columns: 1fr 1fr; gap: 18px;">
+          <div class="hav-card" style="padding: 24px;">
+            <span class="hav-pill">问题 1</span>
+            <h3 style="font-family: var(--hav-serif); font-size: 22px; margin: 12px 0 8px;">什么时候叫人帮忙？</h3>
+            <p style="color: var(--hav-muted); margin-bottom: 14px;">叫做 <strong
+                style="color: var(--hav-text);">「触发」</strong>。一个 AI 单干够不够？什么时候才该拆？</p>
+            <ul style="padding-left: 18px; font-size: 14px; line-height: 1.8;">
+              <li><strong>你叫我才动</strong> — 用户明确说「请并行处理」</li>
+              <li><strong>看任务自己判断</strong> — 主 AI 读到「这事得安全审查」，自动叫安全员</li>
+              <li><strong>看来源决定</strong> — 消息从公司群进来，找客服员；从家人群进来，找家政助手</li>
+              <li><strong>排队等</strong> — 任务先写进待办板，有人路过就拉一个出来做</li>
+            </ul>
+          </div>
+
+          <div class="hav-card" style="padding: 24px;">
+            <span class="hav-pill">问题 2</span>
+            <h3 style="font-family: var(--hav-serif); font-size: 22px; margin: 12px 0 8px;">叫来了怎么组织？</h3>
+            <p style="color: var(--hav-muted); margin-bottom: 14px;">叫做 <strong
+                style="color: var(--hav-text);">「拓扑」</strong>。是上下级关系？流水线？还是围成一桌头脑风暴？</p>
+            <ul style="padding-left: 18px; font-size: 14px; line-height: 1.8;">
+              <li><strong>主 + 直接下属</strong> — 最常见，老板派活，员工各自做</li>
+              <li><strong>流水线</strong> — A 做完 B 接着做，强顺序</li>
+              <li><strong>圆桌讨论</strong> — 大家互相挑战、互相补刀</li>
+              <li><strong>前台分诊</strong> — 不同人从不同门进来，去找不同的人</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="hav-annotation" style="margin-top: 24px;">
+          <strong>常见误区：</strong>很多人把这两个问题混在一起。其实「要不要叫人」和「叫来了怎么坐」是两件独立的事，要分开设计。
+        </div>
+      </section>
+
+      <!-- ─── SHAPES ─── -->
+      <section id="shapes" class="ma-section">
+        <h2 class="hav-section-title">六种团队结构 · 选错了再多人也救不了</h2>
+        <p class="ma-section-lead">不同的任务适合不同的「队形」。下面六种，找到和你场景最像的那个就行。</p>
+
+        <div class="ma-meta-grid">
+
+          <!-- 1. Single -->
+          <div class="ma-meta-card">
+            <div class="ma-meta-card-visual">
+              <img src="images/topology-single-agent.webp" alt="单个智能体独立完成任务的概念图" loading="lazy" />
+            </div>
+            <div class="ma-meta-card-body">
+              <span class="ma-meta-card-tag">SINGLE · 单干</span>
+              <div class="ma-meta-card-title">一个人就够</div>
+              <div class="ma-meta-card-real">技术名：单 agent</div>
+              <p class="ma-meta-card-desc">需求模糊、步骤简单、改动很小的时候，一个 AI 反而最稳。</p>
+              <div class="ma-meta-card-when"><strong>什么时候用？</strong>「帮我看下这段代码」「改个错别字」</div>
+            </div>
+          </div>
+
+          <!-- 2. Star -->
+          <div class="ma-meta-card">
+            <div class="ma-meta-card-visual">
+              <img src="images/topology-star-fanout.webp" alt="主智能体向多个 worker 分派任务再收口的概念图" loading="lazy" />
+            </div>
+            <div class="ma-meta-card-body">
+              <span class="ma-meta-card-tag">STAR · 主从</span>
+              <div class="ma-meta-card-title">老板 + 直接下属</div>
+              <div class="ma-meta-card-real">技术名：fan-out / fan-in</div>
+              <p class="ma-meta-card-desc">主 AI 派几个 worker 同时干，结果收回来由主 AI 拍板。最常见。</p>
+              <div class="ma-meta-card-when"><strong>什么时候用？</strong>PR review：开「安全 / 测试 / 性能」三个 worker 同时审</div>
+            </div>
+          </div>
+
+          <!-- 3. Pipeline -->
+          <div class="ma-meta-card">
+            <div class="ma-meta-card-visual">
+              <img src="images/topology-pipeline.webp" alt="多个智能体按顺序交接任务的流水线概念图" loading="lazy" />
+            </div>
+            <div class="ma-meta-card-body">
+              <span class="ma-meta-card-tag">PIPELINE · 流水线</span>
+              <div class="ma-meta-card-title">一棒接一棒</div>
+              <div class="ma-meta-card-real">技术名：chain pipeline</div>
+              <p class="ma-meta-card-desc">A 做完 B 才能做，必须按顺序。硬要并行只会让后面的人在错的基础上空转。</p>
+              <div class="ma-meta-card-when"><strong>什么时候用？</strong>找 bug → 修 → 测 → review</div>
+            </div>
+          </div>
+
+          <!-- 4. Mesh -->
+          <div class="ma-meta-card">
+            <div class="ma-meta-card-visual">
+              <img src="images/topology-team-mesh.webp" alt="多个智能体围绕同一问题互相验证假设的网状协作概念图" loading="lazy" />
+            </div>
+            <div class="ma-meta-card-body">
+              <span class="ma-meta-card-tag">MESH · 圆桌</span>
+              <div class="ma-meta-card-title">大家互相挑战</div>
+              <div class="ma-meta-card-real">技术名：team mesh</div>
+              <p class="ma-meta-card-desc">每个人验证一个假设，互相补刀，覆盖面广。但开销大、容易吵架。</p>
+              <div class="ma-meta-card-when"><strong>什么时候用？</strong>线上故障排查：前端、后端、缓存、配置可能都有锅</div>
+            </div>
+          </div>
+
+          <!-- 5. Gateway -->
+          <div class="ma-meta-card">
+            <div class="ma-meta-card-visual">
+              <img src="images/topology-gateway-routing.webp" alt="多入口消息经过网关路由到不同智能体的概念图" loading="lazy" />
+            </div>
+            <div class="ma-meta-card-body">
+              <span class="ma-meta-card-tag">GATEWAY · 前台分诊</span>
+              <div class="ma-meta-card-title">不同门走不同人</div>
+              <div class="ma-meta-card-real">技术名：gateway routing</div>
+              <p class="ma-meta-card-desc">不是「任务拆给多人」，而是「不同来源进不同 AI」。每个 AI 有自己的权限。</p>
+              <div class="ma-meta-card-when"><strong>什么时候用？</strong>个人助理：公司群 / 家人群 / 私聊各走不同 AI</div>
+            </div>
+          </div>
+
+          <!-- 6. Kanban -->
+          <div class="ma-meta-card">
+            <div class="ma-meta-card-visual">
+              <img src="images/topology-durable-board.webp" alt="智能体任务在持久看板中流转的概念图" loading="lazy" />
+            </div>
+            <div class="ma-meta-card-body">
+              <span class="ma-meta-card-tag">KANBAN · 看板</span>
+              <div class="ma-meta-card-title">长期协作的待办墙</div>
+              <div class="ma-meta-card-real">技术名：durable board</div>
+              <p class="ma-meta-card-desc">任务写在板子上，可以跨天、可以重试、可以等人补充资料。状态持久化。</p>
+              <div class="ma-meta-card-when"><strong>什么时候用？</strong>两天的调研报告：抓资料 → 清洗 → 分析 → 写稿 → 校对</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── TOOLS ─── -->
+      <section id="tools" class="ma-section">
+        <h2 class="hav-section-title">四款工具 · 四种「团队风格」</h2>
+        <p class="ma-section-lead">同样叫多智能体，但 Codex、Claude Code、OpenClaw、Hermes
+          的「管理哲学」完全不同。把它们想象成<strong>四种性格不同的项目经理</strong>。</p>
+
+        <div class="ma-tool-grid">
+
+          <!-- Codex -->
+          <div class="ma-tool-card" style="color: #6a8caf;">
+            <div style="display: flex; gap: 14px; align-items: center;">
+              <div class="ma-tool-avatar" style="background: color-mix(in srgb, #6a8caf 15%, transparent);">
+                <img src="images/tool-codex.webp" alt="" loading="lazy" />
+              </div>
+              <div>
+                <div class="ma-tool-name" style="color: var(--hav-text);">Codex</div>
+                <div class="ma-tool-tag">显式控制派</div>
+              </div>
+            </div>
+            <div class="ma-tool-quote">「你不开口让我叫人，我绝不擅自做主。」</div>
+            <div class="ma-tool-when"><strong>性格</strong>谨慎、可预测、护栏多。等你明确说「请并行处理」才动手。</div>
+            <div class="ma-tool-not"><strong>容易出问题</strong>有时显得过于保守，需要你写很清楚。</div>
+          </div>
+
+          <!-- Claude Code -->
+          <div class="ma-tool-card" style="color: #d97757;">
+            <div style="display: flex; gap: 14px; align-items: center;">
+              <div class="ma-tool-avatar" style="background: color-mix(in srgb, #d97757 15%, transparent);">
+                <img src="images/tool-claude-code.webp" alt="" loading="lazy" />
+              </div>
+              <div>
+                <div class="ma-tool-name" style="color: var(--hav-text);">Claude Code</div>
+                <div class="ma-tool-tag">主动专家派</div>
+              </div>
+            </div>
+            <div class="ma-tool-quote">「你写过我擅长什么，看到对的活我就接。」</div>
+            <div class="ma-tool-when"><strong>性格</strong>主动性强。每个 subagent 有「岗位描述」，主 AI 看任务自动匹配。</div>
+            <div class="ma-tool-not"><strong>容易出问题</strong>「岗位描述」写不好，就会乱接活、抢任务。</div>
+          </div>
+
+          <!-- OpenClaw -->
+          <div class="ma-tool-card" style="color: #788c5d;">
+            <div style="display: flex; gap: 14px; align-items: center;">
+              <div class="ma-tool-avatar" style="background: color-mix(in srgb, #788c5d 15%, transparent);">
+                <img src="images/tool-openclaw.webp" alt="" loading="lazy" />
+              </div>
+              <div>
+                <div class="ma-tool-name" style="color: var(--hav-text);">OpenClaw</div>
+                <div class="ma-tool-tag">前台分诊派</div>
+              </div>
+            </div>
+            <div class="ma-tool-quote">「客人从哪个门进，我就送到哪个房间。」</div>
+            <div class="ma-tool-when"><strong>性格</strong>多入口路由。WhatsApp、Slack、Discord 等不同来源，进入不同 AI 和权限。</div>
+            <div class="ma-tool-not"><strong>容易出问题</strong>路由和权限规则配错，消息进错房间。</div>
+          </div>
+
+          <!-- Hermes -->
+          <div class="ma-tool-card" style="color: #9b6dc7;">
+            <div style="display: flex; gap: 14px; align-items: center;">
+              <div class="ma-tool-avatar" style="background: color-mix(in srgb, #9b6dc7 15%, transparent);">
+                <img src="images/tool-hermes.webp" alt="" loading="lazy" />
+              </div>
+              <div>
+                <div class="ma-tool-name" style="color: var(--hav-text);">Hermes Agent</div>
+                <div class="ma-tool-tag">工程纪律派</div>
+              </div>
+            </div>
+            <div class="ma-tool-quote">「短任务我喊人帮忙，长任务我用看板。」</div>
+            <div class="ma-tool-when"><strong>性格</strong>把「快速并行」和「长期工作流」分成两套工具，生命周期清晰。</div>
+            <div class="ma-tool-not"><strong>容易出问题</strong>把短任务塞看板（笨重），或把长任务塞快接（丢状态）。</div>
+          </div>
+        </div>
+
+        <div class="hav-annotation" style="margin-top: 24px;">
+          <strong>怎么选？</strong>把它们当成四种风格的项目经理：要规矩选 Codex，要灵活选 Claude Code，要多入口隔离选 OpenClaw，要做长期项目选 Hermes。
+        </div>
+      </section>
+
+      <!-- ─── PITFALLS ─── -->
+      <section id="pitfalls" class="ma-section">
+        <h2 class="hav-section-title">七种翻车现场 · 你大概率踩过其中一种</h2>
+        <p class="ma-section-lead">这些不是理论上的失败，而是真实项目里反复发生的事。哪怕没做过多 agent 系统，把它们当成「带团队最容易犯的错」也成立。</p>
+
+        <div class="ma-pitfall-grid">
+
+          <div class="ma-pitfall">
+            <div class="ma-pitfall-icon">
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <circle cx="14" cy="24" r="10" fill="#b9524c" opacity=".85" />
+                <circle cx="24" cy="24" r="10" fill="#b9524c" opacity=".85" />
+                <circle cx="34" cy="24" r="10" fill="#b9524c" opacity=".85" />
+              </svg>
+            </div>
+            <div class="ma-pitfall-body">
+              <div class="ma-pitfall-num">01</div>
+              <div class="ma-pitfall-title">看到任务复杂就拆成多 AI</div>
+              <div class="ma-pitfall-desc">复杂 ≠ 并行。本来要排队的事硬要同时做，后面的人在前面的错答案上空转。</div>
+            </div>
+          </div>
+
+          <div class="ma-pitfall">
+            <div class="ma-pitfall-icon">
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <circle cx="24" cy="18" r="9" fill="#6a8caf" />
+                <path d="M10 44 q14 -20 28 0z" fill="#6a8caf" />
+                <circle cx="36" cy="12" r="9" fill="#fffdfa" stroke="#d4cfc7" stroke-width="1.5" />
+                <text x="36" y="16" text-anchor="middle" font-size="13" font-weight="700" fill="#b9524c" font-family="Georgia, serif">?</text>
+              </svg>
+            </div>
+            <div class="ma-pitfall-body">
+              <div class="ma-pitfall-num">02</div>
+              <div class="ma-pitfall-title">新同事没拿到任务简报</div>
+              <div class="ma-pitfall-desc">只丢一句「修个 bug」给 AI，没说项目路径、报错截图、验收标准——它只能瞎猜。</div>
+            </div>
+          </div>
+
+          <div class="ma-pitfall">
+            <div class="ma-pitfall-icon">
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <rect x="12" y="10" width="24" height="28" rx="2" fill="#fffdfa" stroke="#d4cfc7" stroke-width="1.5" />
+                <line x1="16" y1="18" x2="32" y2="18" stroke="#d4cfc7" stroke-width="1.5" />
+                <line x1="16" y1="24" x2="30" y2="24" stroke="#d4cfc7" stroke-width="1.5" />
+                <line x1="16" y1="30" x2="28" y2="30" stroke="#d4cfc7" stroke-width="1.5" />
+                <circle cx="6" cy="24" r="5" fill="#d97757" />
+                <circle cx="42" cy="24" r="5" fill="#9b6dc7" />
+                <path d="M11 24 L13 24" stroke="#8a837a" stroke-width="1.5"/>
+                <path d="M37 24 L35 24" stroke="#8a837a" stroke-width="1.5"/>
+              </svg>
+            </div>
+            <div class="ma-pitfall-body">
+              <div class="ma-pitfall-num">03</div>
+              <div class="ma-pitfall-title">两个人编辑同一份文档</div>
+              <div class="ma-pitfall-desc">多个 AI 同时改同一段代码，没人说清楚「谁负责哪一块」，最后必然冲突。</div>
+            </div>
+          </div>
+
+          <div class="ma-pitfall">
+            <div class="ma-pitfall-icon">
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <rect x="4" y="8" width="11" height="11" rx="2" fill="#6a8caf" />
+                <rect x="18.5" y="8" width="11" height="11" rx="2" fill="#788c5d" />
+                <rect x="33" y="8" width="11" height="11" rx="2" fill="#9b6dc7" />
+                <path d="M9.5 19 L9.5 30 L24 30" fill="none" stroke="#8a837a" stroke-width="1.5"/>
+                <path d="M24 19 L24 30" fill="none" stroke="#8a837a" stroke-width="1.5"/>
+                <path d="M38.5 19 L38.5 30 L24 30" fill="none" stroke="#8a837a" stroke-width="1.5"/>
+                <circle cx="24" cy="38" r="7" fill="#fffdfa" stroke="#b9524c" stroke-width="1.5"/>
+                <text x="24" y="42" text-anchor="middle" font-size="11" font-weight="700" fill="#b9524c" font-family="Georgia, serif">?</text>
+              </svg>
+            </div>
+            <div class="ma-pitfall-body">
+              <div class="ma-pitfall-num">04</div>
+              <div class="ma-pitfall-title">三个人交了三份答案，没人合并</div>
+              <div class="ma-pitfall-desc">每个 worker 给一个意见，结果是「三个版本」而不是「一个答案」。永远要有 reducer。</div>
+            </div>
+          </div>
+
+          <div class="ma-pitfall">
+            <div class="ma-pitfall-icon">
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <circle cx="14" cy="24" r="11" fill="none" stroke="#6a8caf" stroke-width="2.5"/>
+                <line x1="14" y1="17" x2="14" y2="24" stroke="#6a8caf" stroke-width="2.5" stroke-linecap="round"/>
+                <line x1="14" y1="24" x2="18" y2="27" stroke="#6a8caf" stroke-width="2.5" stroke-linecap="round"/>
+                <rect x="29" y="13" width="15" height="22" rx="2" fill="#fffdfa" stroke="#9b6dc7" stroke-width="2"/>
+                <line x1="32" y1="19" x2="41" y2="19" stroke="#9b6dc7" stroke-width="1.2"/>
+                <line x1="32" y1="24" x2="41" y2="24" stroke="#9b6dc7" stroke-width="1.2"/>
+                <line x1="32" y1="29" x2="38" y2="29" stroke="#9b6dc7" stroke-width="1.2"/>
+              </svg>
+            </div>
+            <div class="ma-pitfall-body">
+              <div class="ma-pitfall-num">05</div>
+              <div class="ma-pitfall-title">短任务用看板，长任务用快接</div>
+              <div class="ma-pitfall-desc">「我等你 5 秒」的事写到待办板，反应慢半天；「跨两天」的事用快接电话，状态丢光。</div>
+            </div>
+          </div>
+
+          <div class="ma-pitfall">
+            <div class="ma-pitfall-icon">
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <circle cx="20" cy="20" r="9" fill="#6a8caf" />
+                <path d="M6 44 q14 -20 28 0z" fill="#6a8caf" />
+                <g transform="translate(28, 26) rotate(35)">
+                  <circle cx="0" cy="0" r="6" fill="none" stroke="#d97757" stroke-width="2.5"/>
+                  <rect x="4" y="-1.5" width="14" height="3" rx=".5" fill="#d97757"/>
+                  <rect x="13" y="-3.5" width="2" height="3" fill="#d97757"/>
+                  <rect x="16" y="-3.5" width="2" height="3" fill="#d97757"/>
+                </g>
+              </svg>
+            </div>
+            <div class="ma-pitfall-body">
+              <div class="ma-pitfall-num">06</div>
+              <div class="ma-pitfall-title">实习生拿到了管理员权限</div>
+              <div class="ma-pitfall-desc">review AI 不该能写文件，家用助手不该能跑公司服务器。权限越宽，事故越大。</div>
+            </div>
+          </div>
+
+          <div class="ma-pitfall">
+            <div class="ma-pitfall-icon">
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <rect x="6" y="10" width="22" height="26" rx="2" fill="#fffdfa" stroke="#d4cfc7" stroke-width="1.5" />
+                <line x1="10" y1="18" x2="24" y2="18" stroke="#d4cfc7" stroke-width="1.2"/>
+                <line x1="10" y1="24" x2="22" y2="24" stroke="#d4cfc7" stroke-width="1.2"/>
+                <line x1="10" y1="30" x2="20" y2="30" stroke="#d4cfc7" stroke-width="1.2"/>
+                <g transform="translate(30, 24)">
+                  <circle cx="0" cy="0" r="8" fill="none" stroke="#b9524c" stroke-width="2.5"/>
+                  <line x1="6" y1="6" x2="13" y2="13" stroke="#b9524c" stroke-width="2.5" stroke-linecap="round"/>
+                  <text x="0" y="3.5" text-anchor="middle" font-size="10" font-weight="700" fill="#b9524c" font-family="Georgia, serif">?</text>
+                </g>
+              </svg>
+            </div>
+            <div class="ma-pitfall-body">
+              <div class="ma-pitfall-num">07</div>
+              <div class="ma-pitfall-title">出事了只能翻聊天记录猜</div>
+              <div class="ma-pitfall-desc">没有日志、没有审计、没有 trace。AI 系统比传统软件更需要可观测性，不然故障无从复盘。</div>
+            </div>
+          </div>
+
+          <div class="ma-pitfall ma-pitfall-summary"
+            style="background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-panel)); border-color: color-mix(in srgb, var(--hav-accent) 35%, var(--hav-border));">
+            <div class="ma-pitfall-icon" style="background: color-mix(in srgb, var(--hav-accent) 12%, transparent);">
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <text x="32" y="44" text-anchor="middle" font-size="32" fill="#d97757">💡</text>
+              </svg>
+            </div>
+            <div class="ma-pitfall-body">
+              <div class="ma-pitfall-num" style="color: var(--hav-accent);">总结</div>
+              <div class="ma-pitfall-title">先想边界，再想人数</div>
+              <div class="ma-pitfall-desc">每一条反模式的核心都一样：人们急着加 AI，却没花时间想清楚他们之间的协作规则。</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── CHECKLIST ─── -->
+      <section id="checklist" class="ma-section">
+        <h2 class="hav-section-title">决策清单 · 加 AI 前先问这八个问题</h2>
+        <p class="ma-section-lead">按顺序问。能在第 1 题就停下，就别走到第 8 题。</p>
+
+        <div class="ma-checklist">
+          <div class="ma-check">
+            <div class="ma-check-num">1</div>
+            <div class="ma-check-body">
+              <span class="ma-check-q">一个 AI 能搞定吗？</span>
+              <span class="ma-check-a">能 → <em>就用一个</em>。别为了「显得高级」而拆。</span>
+            </div>
+          </div>
+          <div class="ma-check">
+            <div class="ma-check-num">2</div>
+            <div class="ma-check-body">
+              <span class="ma-check-q">主 AI 的上下文会被搞乱吗？</span>
+              <span class="ma-check-a">会（大量日志/搜索）→ <em>派只读小弟去查</em>，结果摘要返回。</span>
+            </div>
+          </div>
+          <div class="ma-check">
+            <div class="ma-check-num">3</div>
+            <div class="ma-check-body">
+              <span class="ma-check-q">子任务之间有先后顺序吗？</span>
+              <span class="ma-check-a">有 → <em>用流水线</em>；没有 → 可以并行。</span>
+            </div>
+          </div>
+          <div class="ma-check">
+            <div class="ma-check-num">4</div>
+            <div class="ma-check-body">
+              <span class="ma-check-q">结果必须在本轮对话里回来吗？</span>
+              <span class="ma-check-a">必须 → <em>快接</em>；可以等 → <em>后台任务</em>；跨天 → <em>看板</em>。</span>
+            </div>
+          </div>
+          <div class="ma-check">
+            <div class="ma-check-num">5</div>
+            <div class="ma-check-body">
+              <span class="ma-check-q">workers 需要互相挑战吗？</span>
+              <span class="ma-check-a">需要 → <em>圆桌讨论</em>；不需要 → 主从就够。</span>
+            </div>
+          </div>
+          <div class="ma-check">
+            <div class="ma-check-num">6</div>
+            <div class="ma-check-body">
+              <span class="ma-check-q">多人会同时写文件吗？</span>
+              <span class="ma-check-a">会 → <em>先划分谁负责哪个目录</em>，否则别并行。</span>
+            </div>
+          </div>
+          <div class="ma-check">
+            <div class="ma-check-num">7</div>
+            <div class="ma-check-body">
+              <span class="ma-check-q">消息来自多个来源吗？</span>
+              <span class="ma-check-a">是 → <em>前台分诊</em>，不同来源走不同 AI 和权限。</span>
+            </div>
+          </div>
+          <div class="ma-check">
+            <div class="ma-check-num">8</div>
+            <div class="ma-check-body">
+              <span class="ma-check-q">失败了怎么恢复？</span>
+              <span class="ma-check-a">提前设计 retry / 阻塞 / 交接 / 审计，否则上线必出事。</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── BRIEF TEMPLATE ─── -->
+      <section id="brief" class="ma-section">
+        <h2 class="hav-section-title">交办模板 · 像给实习生写工作交接</h2>
+        <p class="ma-section-lead">这是整篇文章最值得抄走的东西。下次让 AI 帮你做事，按这八条说，效果会立刻不一样。</p>
+
+        <div class="ma-tmpl-wrap">
+          <div class="hav-card ma-tmpl-explain">
+            <span class="hav-pill">八条简报</span>
+            <h3>把 AI 当新同事</h3>
+            <p style="color: var(--hav-muted); font-size: 14px; line-height: 1.6; margin: 0 0 14px;">
+              想象你周一上班，把活交给一个刚入职的实习生——他啥都不知道。下面这八条都得写清楚。</p>
+            <ul class="ma-tmpl-fields">
+              <li><strong>① 角色</strong><span>「你是只读 explorer」「你是局部 worker」</span></li>
+              <li><strong>② 目标</strong><span>到底要回答什么、做出什么</span></li>
+              <li><strong>③ 背景</strong><span>项目路径、相关文件、报错截图</span></li>
+              <li><strong>④ 能做什么</strong><span>能读哪些文件，能不能跑命令</span></li>
+              <li><strong>⑤ 负责范围</strong><span>只能改哪个目录</span></li>
+              <li><strong>⑥ 禁止事项</strong><span>不要改 X，不要重构 Y</span></li>
+              <li><strong>⑦ 输出格式</strong><span>要 diff、要表格、还是要摘要</span></li>
+              <li><strong>⑧ 何时收工</strong><span>满足什么条件算完成，遇到什么情况要停下来报告</span></li>
+            </ul>
+          </div>
+          <div class="ma-tmpl-code-wrap">
+            <button class="hav-button ma-tmpl-copy" data-copy="#ma-tmpl-code">复制模板</button>
+            <pre class="hav-code" id="ma-tmpl-code">角色（Role）：
+  你是 [只读 explorer / 局部 worker / 安全 reviewer]
+
+目标（Goal）：
+  完成什么 / 回答什么，边界是什么。
+
+背景（Context）：
+  项目路径：
+  相关文件：
+  错误现场：
+  已有判断：
+
+可以做（Allowed）：
+  能读：
+  能跑：
+  能写：[或注明只读]
+
+负责范围（Ownership）：
+  只能写：[目录或文件]
+
+禁止事项（Forbidden）：
+  不要改 …
+  不要重构 …
+  不要继续 spawn 更多 agent
+
+输出格式（Output Format）：
+  返回 [diff / 摘要 / 表格 / patch]
+
+何时收工（Stop Condition）：
+  完成条件：
+  遇到阻塞时：</pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── FINAL ─── -->
+      <section class="ma-section">
+        <div class="hav-card ma-final">
+          <span class="hav-pill">底线</span>
+          <h2 class="hav-section-title" style="margin-top: 14px;">先设计边界，再增加 AI 数量。</h2>
+          <p style="color: var(--hav-text); font-size: 16px; line-height: 1.7;">
+            多智能体协作不是越多越好，也不是越自动越好。真正的生产力飞跃，来自<strong>把正确的问题交给正确的 AI，在正确的边界内执行，并由清晰的责任人收口</strong>。</p>
+          <p style="color: var(--hav-muted); font-size: 15px; line-height: 1.7;">这听起来不性感，但它就是真实世界里能跑下去的方式。</p>
+          <blockquote>一个 AI 做不好的事，多个 AI 只会做得更糟糕——除非你先把团队规则写清楚。</blockquote>
+          <p class="ma-source">原文：<a href="https://x.com/Russell3402/status/2056331558223786416" target="_blank"
+              rel="noreferrer">@Russell3402 · 多智能体协作调查</a>。本文为基于原帖的小白向重构与可视化整理。</p>
+        </div>
+      </section>
+
+    </main>
+  </article>
+  <button class="hav-button" data-back-top style="position:fixed;right:18px;bottom:18px;z-index:20">Top</button>
+  <script>
+    document.querySelectorAll('[data-copy]').forEach((button) => {
+      button.addEventListener('click', async () => {
+        const target = document.querySelector(button.getAttribute('data-copy'));
+        if (!target) return;
+        await navigator.clipboard.writeText(target.innerText || target.textContent || '');
+        const old = button.textContent;
+        button.textContent = 'Copied';
+        setTimeout(() => { button.textContent = old; }, 1200);
+      });
+    });
+    document.querySelector('[data-back-top]')?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+</body>
+
+</html>

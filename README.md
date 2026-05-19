@@ -25,6 +25,13 @@
 | ⚙️ 运营 | `map/ops/` | 业务运营、增长、流程优化 |
 | 🌱 个人成长 | `map/growth/` | 学习方法、思维模型、职业发展 |
 
+## 文章列表
+
+| 标题 | 分类 | 日期 |
+|------|------|------|
+| [为什么 Agent 输出正在从 Markdown 转向 HTML](map/ai/html-as-agent-output-format.html) | AI & 工程 | 2025-05-13 |
+| [AI 团队怎么组（多智能体协作小白版）](map/ai/multi-agent-collaboration-methodology.html) | AI & 工程 | 2026-05-18 |
+
 ## 目录结构
 
 ```
