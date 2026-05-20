@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>05 模仿参考 · AI 八大使用场景</title>
+  <style>
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f5;
+  --surface: #f0ede8;
+  --surface-2: #fffdf9;
+  --text: #2c2825;
+  --muted: #746d64;
+  --border: #d4cfc7;
+  --clay: #d97757;
+  --olive: #788c5d;
+  --sky: #6a8caf;
+  --ink: #141413;
+  --rose: #c66060;
+  --amber: #b07c30;
+  --teal: #4a9585;
+  --shadow: 0 18px 60px rgba(44, 40, 37, .10);
+}
+[data-theme="dark"] {
+  --bg: #171615;
+  --surface: #23211f;
+  --surface-2: #2c2926;
+  --text: #f4efe8;
+  --muted: #b8afa4;
+  --border: #49433d;
+  --clay: #e79678;
+  --olive: #a9bc88;
+  --sky: #9bb8d5;
+  --ink: #f8f4ed;
+  --rose: #e07d7d;
+  --amber: #d4a050;
+  --teal: #6dbdab;
+  --shadow: 0 18px 60px rgba(0, 0, 0, .28);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(74, 149, 133, .10), transparent 32%),
+    radial-gradient(circle at 88% 100%, rgba(106, 140, 175, .08), transparent 30%),
+    linear-gradient(135deg, var(--bg), var(--surface));
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* ============ 顶栏 ============ */
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+.topbar-inner {
+  min-height: 56px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+.brand-mark {
+  width: 30px; height: 30px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  display: grid; place-items: center; border-radius: 8px;
+  color: var(--teal); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+}
+.nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn {
+  min-height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  padding: 6px 12px; border-radius: 8px; cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03); font-size: 14px;
+}
+.btn:hover { border-color: var(--teal); }
+.btn-mini { min-height: 30px; padding: 4px 10px; font-size: 13px; }
+
+/* ============ 进度条 ============ */
+.progress { display: flex; align-items: center; gap: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--muted); }
+.progress-dots { display: flex; gap: 5px; }
+.progress-dots i { display: block; width: 18px; height: 4px; background: var(--border); border-radius: 2px; transition: background .2s ease, transform .2s ease; cursor: pointer; }
+.progress-dots i.active { background: var(--teal); transform: scaleY(1.4); }
+.progress-dots i.done { background: var(--olive); }
+
+/* ============ 翻页轨道 ============ */
+.deck { position: relative; width: 100%; }
+.slide { min-height: calc(100vh - 58px); padding: 48px 0 100px; display: none; animation: slideIn .35s ease; }
+.slide.active { display: block; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ============ 通用语义类 ============ */
+.kicker { color: var(--teal); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.eyebrow { color: var(--muted); font-size: 14px; }
+h1.slide-title { font-family: Georgia, "Times New Roman", "Songti SC", serif; font-size: clamp(40px, 6.6vw, 78px); line-height: 1.02; margin: 14px 0 18px; letter-spacing: 0; }
+h2.section-title { font-family: Georgia, "Times New Roman", "Songti SC", serif; font-size: clamp(28px, 4.2vw, 46px); line-height: 1.1; margin: 12px 0 14px; letter-spacing: 0; }
+.lead { font-size: clamp(17px, 2vw, 21px); color: var(--muted); max-width: 760px; }
+
+.card, .prompt-box, .panel { border: 1px solid var(--border); background: color-mix(in srgb, var(--surface-2) 90%, transparent); box-shadow: var(--shadow); border-radius: 12px; }
+.panel { padding: 22px; }
+.card { padding: 18px; }
+.card h3 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0; color: var(--muted); }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag { display: inline-flex; align-items: center; min-height: 28px; border: 1px solid var(--border); border-radius: 999px; padding: 3px 11px; color: var(--muted); background: var(--surface); font-size: 13px; }
+.tag.clay  { color: var(--clay);  border-color: color-mix(in srgb, var(--clay)  50%, var(--border)); }
+.tag.olive { color: var(--olive); border-color: color-mix(in srgb, var(--olive) 50%, var(--border)); }
+.tag.sky   { color: var(--sky);   border-color: color-mix(in srgb, var(--sky)   50%, var(--border)); }
+.tag.teal  { color: var(--teal);  border-color: color-mix(in srgb, var(--teal)  50%, var(--border)); }
+.tag.rose  { color: var(--rose);  border-color: color-mix(in srgb, var(--rose)  50%, var(--border)); }
+
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.prompt-box { overflow: hidden; }
+.prompt-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.prompt-head strong { font-size: 14px; }
+pre { margin: 0; padding: 18px; overflow: auto; white-space: pre-wrap; color: var(--surface-2); background: var(--ink); line-height: 1.6; font-size: 14px; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+.warning { border-left: 4px solid var(--rose); padding: 14px 16px; background: color-mix(in srgb, var(--rose) 10%, var(--surface-2)); border-radius: 8px; }
+.note { border-left: 4px solid var(--olive); padding: 14px 16px; background: color-mix(in srgb, var(--olive) 10%, var(--surface-2)); border-radius: 8px; }
+.info { border-left: 4px solid var(--teal); padding: 14px 16px; background: color-mix(in srgb, var(--teal) 10%, var(--surface-2)); border-radius: 8px; }
+
+/* ============ Slide 1 封面 ============ */
+.cover-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .8fr); gap: 32px; align-items: center; }
+.cover-stats { padding: 22px; }
+.cover-stats .stat { border-top: 1px solid var(--border); padding: 14px 0; }
+.cover-stats .stat:first-of-type { border-top: 0; padding-top: 0; }
+.cover-stats .stat b { font-family: Georgia, serif; font-size: 28px; display: block; line-height: 1.15; }
+.cover-stats .stat span { color: var(--muted); font-size: 13px; }
+.audience-list { list-style: none; margin: 18px 0 0; padding: 0; }
+.audience-list li { border-top: 1px dashed var(--border); padding: 10px 0; color: var(--muted); font-size: 15px; }
+.audience-list li::before { content: "·  "; color: var(--teal); }
+
+/* ============ Slide 2 核心认知 ============ */
+.tailor-grid { display: grid; grid-template-columns: 1fr 60px 1fr; gap: 16px; align-items: center; margin: 28px 0 20px; }
+.tailor-side { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface-2); }
+.tailor-side.bad  { border-top: 4px solid var(--rose); }
+.tailor-side.good { border-top: 4px solid var(--teal); }
+.tailor-head { padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--surface); font-size: 13px; }
+.tailor-head .who { font-weight: 700; }
+.tailor-side.bad  .who { color: var(--rose); }
+.tailor-side.good .who { color: var(--teal); }
+.tailor-body { padding: 18px; }
+.tailor-step { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 14px; line-height: 1.55; }
+.tailor-step:last-child { border-bottom: 0; padding-bottom: 0; }
+.step-num { flex: 0 0 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; font-weight: 700; }
+.bad .step-num  { background: color-mix(in srgb, var(--rose)  20%, var(--surface)); color: var(--rose); }
+.good .step-num { background: color-mix(in srgb, var(--teal) 20%, var(--surface)); color: var(--teal); }
+.tailor-vs { display: flex; align-items: center; justify-content: center; font-family: Georgia, serif; font-size: 22px; font-weight: 700; color: var(--muted); }
+.big-conclusion { text-align: center; padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); font-family: Georgia, "Songti SC", serif; font-size: clamp(20px, 3vw, 30px); line-height: 1.3; }
+.big-conclusion b { color: var(--teal); }
+
+/* ============ Slide 3 三种姿势 ============ */
+.method-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+.method-card { border: 1px solid var(--border); border-radius: 14px; padding: 22px 20px 24px; background: var(--surface-2); display: flex; flex-direction: column; gap: 10px; }
+.method-card.m1 { border-top: 4px solid var(--sky); }
+.method-card.m2 { border-top: 4px solid var(--olive); }
+.method-card.m3 { border-top: 4px solid var(--teal); }
+.method-num { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; font-family: Georgia, serif; font-size: 22px; font-weight: 700; }
+.m1 .method-num { background: color-mix(in srgb, var(--sky)   20%, var(--surface)); color: var(--sky); }
+.m2 .method-num { background: color-mix(in srgb, var(--olive) 20%, var(--surface)); color: var(--olive); }
+.m3 .method-num { background: color-mix(in srgb, var(--teal)  20%, var(--surface)); color: var(--teal); }
+.method-card h3 { margin: 0; font-size: 22px; }
+.method-card .m-state { font-family: ui-monospace, monospace; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.method-card .m-desc { color: var(--muted); font-size: 14px; line-height: 1.55; flex: 1; margin: 0; }
+.method-trigger { margin-top: auto; padding: 10px 12px; border: 1px dashed var(--border); border-radius: 8px; background: color-mix(in srgb, var(--ink) 4%, var(--surface)); font-size: 13px; font-style: italic; color: var(--text); line-height: 1.5; }
+.trigger-label { display: block; font-style: normal; font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 5px; }
+
+/* ============ Slide 4 两步法对比 ============ */
+.chat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.chat-pane { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface-2); display: flex; flex-direction: column; }
+.chat-pane .chat-head { padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--surface); font-size: 13px; }
+.chat-pane .chat-head .who { font-weight: 700; }
+.chat-pane.bad  .chat-head .who { color: var(--rose); }
+.chat-pane.good .chat-head .who { color: var(--teal); }
+.chat-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 14.5px; min-height: 340px; }
+.bubble { padding: 10px 12px; border-radius: 12px; max-width: 94%; white-space: pre-wrap; line-height: 1.55; }
+.bubble.user { align-self: flex-end; background: color-mix(in srgb, var(--teal) 18%, var(--surface)); color: var(--text); border: 1px solid color-mix(in srgb, var(--teal) 35%, var(--border)); }
+.bubble.ai { align-self: flex-start; background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+.bubble.ai .ai-mini-h { color: var(--muted); font-size: 12px; margin-bottom: 4px; font-family: ui-monospace, monospace; }
+.step-badge { display: inline-block; background: color-mix(in srgb, var(--teal) 20%, var(--surface)); color: var(--teal); border: 1px solid color-mix(in srgb, var(--teal) 30%, var(--border)); border-radius: 5px; padding: 1px 7px; font-size: 12px; font-weight: 700; font-family: ui-monospace, monospace; margin-bottom: 6px; }
+.diff-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+.diff-bar > div { padding: 10px 14px; border-radius: 10px; font-size: 13.5px; font-family: ui-monospace, monospace; }
+.diff-bar .bad-meter  { background: color-mix(in srgb, var(--rose)  15%, var(--surface)); border: 1px solid color-mix(in srgb, var(--rose)  30%, var(--border)); color: var(--rose); }
+.diff-bar .good-meter { background: color-mix(in srgb, var(--teal)  15%, var(--surface)); border: 1px solid color-mix(in srgb, var(--teal)  30%, var(--border)); color: var(--teal); }
+
+/* ============ Slide 5 三种仿法 ============ */
+.trio-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 22px; }
+.trio-card { border: 1px solid var(--border); border-radius: 14px; padding: 20px; background: var(--surface-2); display: flex; flex-direction: column; gap: 10px; }
+.trio-card.t1 { border-top: 4px solid var(--clay); }
+.trio-card.t2 { border-top: 4px solid var(--sky); }
+.trio-card.t3 { border-top: 4px solid var(--olive); }
+.trio-card .tc-label { font-family: ui-monospace, monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 2px; }
+.t1 .tc-label { color: var(--clay); }
+.t2 .tc-label { color: var(--sky); }
+.t3 .tc-label { color: var(--olive); }
+.trio-card h3 { margin: 0; font-size: 20px; }
+.trio-card .tc-desc { color: var(--muted); font-size: 13.5px; line-height: 1.55; flex: 1; margin: 0; }
+.tc-prompt { padding: 10px 12px; background: color-mix(in srgb, var(--ink) 4%, var(--surface)); border: 1px dashed var(--border); border-radius: 8px; font-size: 13px; line-height: 1.55; color: var(--text); font-style: italic; margin-top: auto; }
+.tc-badge { display: inline-block; font-size: 12px; font-style: normal; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; color: var(--muted); }
+.trio-note { margin-top: 18px; border-left: 4px solid var(--teal); padding: 14px 16px; background: color-mix(in srgb, var(--teal) 8%, var(--surface-2)); border-radius: 8px; font-size: 15px; line-height: 1.65; }
+.trio-note b { color: var(--teal); }
+
+/* ============ Slide 6 仿图像 ============ */
+.img-scene-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }
+.img-scene-card { border: 1px solid var(--border); border-radius: 14px; padding: 20px; background: var(--surface-2); display: flex; flex-direction: column; gap: 10px; }
+.img-scene-card .is-icon { font-size: 30px; }
+.img-scene-card h3 { margin: 0; font-size: 18px; }
+.img-scene-card .is-desc { color: var(--muted); font-size: 13.5px; line-height: 1.55; flex: 1; margin: 0; }
+.is-prompt { padding: 11px 13px; background: color-mix(in srgb, var(--ink) 5%, var(--surface)); border: 1px dashed var(--border); border-radius: 8px; font-size: 13px; line-height: 1.55; font-style: italic; color: var(--text); }
+.is-tool { font-family: ui-monospace, monospace; font-size: 11.5px; color: var(--muted); margin-top: 6px; }
+.tip-box { margin-top: 20px; padding: 18px 20px; border: 1px solid color-mix(in srgb, var(--teal) 40%, var(--border)); background: color-mix(in srgb, var(--teal) 8%, var(--surface-2)); border-radius: 12px; font-size: 15px; line-height: 1.7; }
+.tip-box .tip-label { font-family: ui-monospace, monospace; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--teal); font-weight: 700; margin-bottom: 8px; }
+.tip-box p { margin: 0; color: var(--text); }
+
+/* ============ Slide 7 误区 + 红线 ============ */
+.redline-list { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+.redline-item { border: 1px solid color-mix(in srgb, var(--rose) 35%, var(--border)); border-left: 4px solid var(--rose); border-radius: 10px; padding: 16px 18px; background: color-mix(in srgb, var(--rose) 6%, var(--surface-2)); }
+.redline-item .rl-num { font-family: ui-monospace, monospace; font-size: 12px; font-weight: 700; color: var(--rose); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+.redline-item h3 { margin: 0 0 6px; font-size: 17px; }
+.redline-item p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.safe-prompt { margin-top: 20px; }
+.myth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.myth-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface-2); }
+.myth-row { padding: 11px 14px; display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.55; }
+.myth-row + .myth-row { border-top: 1px solid var(--border); }
+.myth-label { flex: 0 0 34px; padding: 2px 6px; border-radius: 5px; font-size: 12px; font-weight: 700; text-align: center; font-family: ui-monospace, monospace; }
+.myth-label.bad  { background: color-mix(in srgb, var(--rose)  20%, var(--surface)); color: var(--rose); }
+.myth-label.good { background: color-mix(in srgb, var(--teal)  20%, var(--surface)); color: var(--teal); }
+.myth-card.full { grid-column: span 2; }
+
+/* ============ Slide 8 收束 ============ */
+.takeaway-list { list-style: none; padding: 0; margin: 22px 0; display: flex; flex-direction: column; gap: 14px; }
+.takeaway-list li { display: flex; gap: 16px; align-items: flex-start; border: 1px solid var(--border); border-radius: 12px; padding: 18px; background: var(--surface-2); }
+.takeaway-list .num { flex: 0 0 36px; height: 36px; border-radius: 10px; background: var(--ink); color: var(--bg); display: grid; place-items: center; font-family: Georgia, serif; font-size: 18px; font-weight: 700; }
+.takeaway-list .body h3 { margin: 0 0 4px; font-size: 18px; }
+.takeaway-list .body p  { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+.next-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); margin-top: 14px; }
+.next-row h3 { margin: 6px 0 0; font-size: 17px; }
+
+/* ============ 浮动翻页 ============ */
+.deck-nav { position: fixed; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 4px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); z-index: 20; overflow: hidden; }
+.deck-nav button { border: 0; background: transparent; cursor: pointer; padding: 9px 14px; font-size: 14px; color: var(--text); border-radius: 0; }
+.deck-nav button:hover { background: var(--surface); }
+.deck-nav .counter { padding: 6px 10px; color: var(--muted); font-family: ui-monospace, monospace; font-size: 13px; }
+
+/* ============ 帮助蒙层 ============ */
+.help { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: color-mix(in srgb, var(--ink) 65%, transparent); z-index: 40; }
+.help.open { display: flex; }
+.help-panel { width: min(420px, 86vw); background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; padding: 22px; box-shadow: var(--shadow); }
+.help-panel h3 { margin: 0 0 12px; }
+.kb { display: grid; grid-template-columns: 120px 1fr; gap: 8px 14px; font-size: 14px; }
+.kb code { background: var(--surface); border: 1px solid var(--border); padding: 2px 8px; border-radius: 6px; font-size: 12.5px; }
+
+/* ============ 响应式 ============ */
+@media (max-width: 920px) {
+  .cover-grid, .chat-grid, .tailor-grid { grid-template-columns: 1fr; }
+  .tailor-vs { display: none; }
+  .method-grid, .trio-grid, .img-scene-grid { grid-template-columns: 1fr 1fr; }
+  .myth-grid { grid-template-columns: 1fr; }
+  .diff-bar { grid-template-columns: 1fr; }
+  .deck-nav { right: 10px; bottom: 10px; }
+  h1.slide-title { font-size: 40px; }
+  .myth-card.full { grid-column: span 1; }
+}
+@media (max-width: 560px) {
+  .method-grid, .trio-grid, .img-scene-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="index.html" aria-label="返回首页">
+      <span class="brand-mark">AI</span>
+      <span>八大使用场景 · 05 模仿参考</span>
+    </a>
+    <div class="progress" aria-label="演讲进度">
+      <span id="counter-text">01 / 08</span>
+      <span class="progress-dots" id="dots"></span>
+    </div>
+    <nav class="nav-actions">
+      <button class="btn btn-mini" type="button" onclick="toggleTheme()" title="切换主题">明 / 暗</button>
+      <button class="btn btn-mini" type="button" onclick="openHelp()" title="快捷键（?）">?</button>
+      <a class="btn btn-mini" href="index.html">首页</a>
+    </nav>
+  </div>
+</header>
+
+<main class="deck" id="deck">
+
+  <!-- ============ Slide 1 · 封面 ============ -->
+  <section class="slide active shell" data-title="封面 · 钩子句">
+    <div class="kicker">Scene 05 / 08 · 模仿参考模式</div>
+    <div class="cover-grid">
+      <div>
+        <h1 class="slide-title">风格说不清，<br>直接贴样本。</h1>
+        <p class="lead">与其憋半天描述"那种感觉"，不如把一段你喜欢的文字、一张你喜欢的图直接递给 AI——样本比描述省 10 倍力气。</p>
+        <div class="tag-row" style="margin-top: 22px;">
+          <span class="tag teal">请学这种风格</span>
+          <span class="tag sky">参考这张图</span>
+          <span class="tag olive">帮我提炼我的写法</span>
+          <span class="tag clay">用同样的结构</span>
+        </div>
+      </div>
+      <aside class="panel cover-stats">
+        <div class="kicker" style="margin-bottom: 14px;">这一章的成色</div>
+        <div class="stat"><b>3 段以上</b><span>文字风格提炼的最低样本量</span></div>
+        <div class="stat"><b>1–3 张</b><span>图像参考图，比纯文字描述准 10 倍</span></div>
+        <div class="stat"><b>30 分钟</b><span>建一份个人风格档案，吃十年</span></div>
+        <ul class="audience-list" aria-label="适合的人">
+          <li>想写出"某博主那种感觉"，却说不出他好在哪的人</li>
+          <li>喜欢某个视觉风格但描述不出来的人</li>
+          <li>第一次写公文、合同、报告，不知道格式怎么搭的人</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ Slide 2 · 核心认知 ============ -->
+  <section class="slide shell" data-title="核心认知 · 贴样本 vs 描述">
+    <div class="kicker">核心认知 · 最省力的路径</div>
+    <h2 class="section-title">你说得清风格，<br>但 AI 理解的不是你想的那个。</h2>
+    <p class="lead">描述风格是最低效的方法。你说"文艺一点"——AI 有一万种理解；你贴三段文章——AI 直接知道你要什么。</p>
+
+    <div class="tailor-grid">
+      <div class="tailor-side bad">
+        <div class="tailor-head">
+          <span class="who">描述法（低效）</span>
+          <span class="tag rose" style="font-size:12px;">迷路</span>
+        </div>
+        <div class="tailor-body">
+          <div class="tailor-step">
+            <span class="step-num">1</span>
+            <span>你脑子里有一件"那种感觉"的衣服，很模糊</span>
+          </div>
+          <div class="tailor-step">
+            <span class="step-num">2</span>
+            <span>你试图用语言描述："要那种……有点文艺、不太甜、很自然……"</span>
+          </div>
+          <div class="tailor-step">
+            <span class="step-num">3</span>
+            <span>AI / 裁缝接收到 100 种可能，选了一个</span>
+          </div>
+          <div class="tailor-step">
+            <span class="step-num">4</span>
+            <span>做出来——根本不是你想的那件。反复返工，越改越乱。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tailor-vs">VS</div>
+
+      <div class="tailor-side good">
+        <div class="tailor-head">
+          <span class="who">贴样本法（高效）</span>
+          <span class="tag teal" style="font-size:12px;">一次到位</span>
+        </div>
+        <div class="tailor-body">
+          <div class="tailor-step">
+            <span class="step-num">1</span>
+            <span>你找到一篇你喜欢的文章 / 一张你喜欢的图</span>
+          </div>
+          <div class="tailor-step">
+            <span class="step-num">2</span>
+            <span>直接递给 AI："学这个的风格 / 参考这张图的氛围"</span>
+          </div>
+          <div class="tailor-step">
+            <span class="step-num">3</span>
+            <span>AI 从样本里提取真实特征，没有猜测，没有歧义</span>
+          </div>
+          <div class="tailor-step">
+            <span class="step-num">4</span>
+            <span>输出方向一下子就对了。样本即标准，标准即质量。</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="big-conclusion">
+      <b>描述风格是最难的事，贴样本是最聪明的事。</b>
+    </div>
+  </section>
+
+  <!-- ============ Slide 3 · 三种模仿姿势总览 ============ -->
+  <section class="slide shell" data-title="三种模仿姿势总览">
+    <div class="kicker">方法论 · 三种姿势</div>
+    <h2 class="section-title">三种姿势，<br>对应三种"说不清"。</h2>
+    <p class="lead">不同的"说不清"，用不同的姿势解决。先搞清楚你的场景属于哪一种，再选对应方法。</p>
+
+    <div class="method-grid">
+      <div class="method-card m1">
+        <div class="method-num">文</div>
+        <h3>仿文字</h3>
+        <div class="m-state">你的状态：想要某博主 / 某篇文的感觉</div>
+        <p class="m-desc">贴 1–3 段范文，让 AI 学风格再写新内容。AI 会提炼句式、语气、结构节奏，再用于新主题。最适合：公众号、小红书、朋友圈文案。</p>
+        <div class="method-trigger">
+          <span class="trigger-label">触发词</span>
+          "请学这种语气和结构，写一篇关于 [新主题] 的内容。"
+        </div>
+      </div>
+
+      <div class="method-card m2">
+        <div class="method-num">图</div>
+        <h3>仿图像</h3>
+        <div class="m-state">你的状态：想要某张图的风格 / 构图 / 氛围</div>
+        <p class="m-desc">上传参考图，让 AI 描述其视觉特征或重新生成。省掉所有关键词翻译损耗。最适合：生图、海报、AI 写真、视觉风格迁移。</p>
+        <div class="method-trigger">
+          <span class="trigger-label">触发词</span>
+          "参考这张图的风格、色调和氛围，生成 [新内容]。"
+        </div>
+      </div>
+
+      <div class="method-card m3">
+        <div class="method-num">式</div>
+        <h3>仿格式</h3>
+        <div class="m-state">你的状态：没写过这种文档，不知道格式</div>
+        <p class="m-desc">贴一份示例文档，让 AI 套结构写新内容。不用学文档规范，不用研究格式，找个"长得像样"的范本直接给 AI 看。</p>
+        <div class="method-trigger">
+          <span class="trigger-label">触发词</span>
+          "照这个结构帮我写，内容换成 [新内容]。"
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 4 · 仿文字两步法 ============ -->
+  <section class="slide shell" data-title="仿文字 · 两步法对比">
+    <div class="kicker">仿文字 · 菜鸟 vs 老手</div>
+    <h2 class="section-title">同一个需求，<br>一步法学到皮毛，两步法学到精髓。</h2>
+
+    <div class="chat-grid" style="margin-top: 22px;">
+      <div class="chat-pane bad">
+        <div class="chat-head">
+          <span class="who">PATH A · 菜鸟一步法</span>
+          <span class="tag rose">表面模仿</span>
+        </div>
+        <div class="chat-body">
+          <div class="bubble user">用 @某博主 的风格写一篇关于"咖啡"的笔记。</div>
+          <div class="bubble ai">
+            <div class="ai-mini-h">AI 回复</div>
+            清晨的第一杯咖啡，是给自己的一份温柔……
+
+氤氲的雾气升腾，香气在空气中弥漫，这一刻，时间仿佛都慢了下来。一杯好咖啡，是对生活最好的致敬。
+
+#咖啡日记 #生活美学 #慢生活
+          </div>
+          <div class="bubble user" style="opacity:.5">感觉像，但又不太对……</div>
+          <div class="bubble ai" style="opacity:.5">
+            <div class="ai-mini-h">问题所在</div>
+            AI 靠猜"那种博主风格"，学到的是模糊印象，不是真实特征。像而不是。无法复用。
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-pane good">
+        <div class="chat-head">
+          <span class="who">PATH B · 老手两步法</span>
+          <span class="tag teal">精髓 + 可复用</span>
+        </div>
+        <div class="chat-body">
+          <div class="bubble user"><span class="step-badge">步骤 1 · 提炼风格</span>
+请阅读下面 3 段文字，提炼：
+① 句式特点  ② 语气情绪
+③ 结构逻辑  ④ 高频句式
+⑤ 给这种风格起一个名字
+
+[粘贴 3 段你喜欢的文章/笔记]</div>
+          <div class="bubble ai">
+            <div class="ai-mini-h">AI 提炼结果</div>
+            风格名：「城市散漫派」
+① 句式：短句为主，多用省略号制造停顿
+② 语气：自嘲+温柔，没有说教
+③ 结构：场景开头→情绪推进→轻收尾
+④ 高频：「其实」「不过」「大概」「算了」
+          </div>
+          <div class="bubble user"><span class="step-badge">步骤 2 · 生成新内容</span>
+请用上面提炼的「城市散漫派」风格，写一篇关于"独自喝咖啡"的笔记。内容是新的，风格保持一致。</div>
+          <div class="bubble ai">
+            <div class="ai-mini-h">AI 输出</div>
+            其实我不太会点单。
+每次站在菜单前，盯着那堆名字，最后还是点老样子。
+
+不过今天不一样。我点了个不认识的，坐在角落等。大概是想换换。
+
+端上来的时候，我喝了一口。算了，也挺好的。
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-bar">
+      <div class="bad-meter">模仿深度：皮毛 · 可复用：否 · 风格档案：无</div>
+      <div class="good-meter">模仿深度：到位 · 可复用：是 · 顺带产出风格档案</div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 5 · 仿自己 + 仿博主 + 仿格式 ============ -->
+  <section class="slide shell" data-title="仿自己 · 仿博主 · 仿格式">
+    <div class="kicker">三种模仿对象</div>
+    <h2 class="section-title">最值钱的模仿对象——<br>是你自己。</h2>
+    <p class="lead">不只是学别人，把你自己的写作风格档案化，才是 AI 帮你解决"人味"问题的根本答案。</p>
+
+    <div class="trio-grid">
+      <div class="trio-card t1">
+        <div class="tc-label">仿自己</div>
+        <h3>建立个人风格档案</h3>
+        <p class="tc-desc">把你写过的 5 篇内容丢给 AI，提炼"我的风格档案"——语气、结构偏好、口头禅、句式、避免的词。以后所有创作都基于这个档案，AI 写的东西就有你的味道。</p>
+        <div class="tc-prompt">
+          <span class="tc-badge">示例 Prompt</span>
+          下面 5 篇是我写过的笔记。提炼我的风格做成档案：语气、结构偏好、口头禅、句式、避免的词。以后写作请基于这个档案。
+        </div>
+      </div>
+
+      <div class="trio-card t2">
+        <div class="tc-label">仿博主</div>
+        <h3>学他写法，写你内容</h3>
+        <p class="tc-desc">挑喜欢的博主 3 篇代表作，让 AI 提炼：标题套路 / 开头写法 / 段落节奏 / 互动话术。再用这个提炼出来的"风格档案"写你自己的内容——风格是他的，内容和观点是你的。</p>
+        <div class="tc-prompt">
+          <span class="tc-badge">适合人群</span>
+          内容创作者、公众号运营、小红书博主，想系统学习某个标杆账号的写法
+        </div>
+      </div>
+
+      <div class="trio-card t3">
+        <div class="tc-label">仿格式</div>
+        <h3>不懂格式？找一份范本</h3>
+        <p class="tc-desc">第一次写 PPT 大纲、周报、PRD、公文通知、复盘文档——不用学格式规范，找一份"长得像样"的范本，让 AI 套结构写你的版本。格式问题一秒解决。</p>
+        <div class="tc-prompt">
+          <span class="tc-badge">适合场景</span>
+          PPT 大纲 / 周报月报 / PRD 需求文档 / 公文通知 / 项目复盘 / 合同条款参考
+        </div>
+      </div>
+    </div>
+
+    <div class="trio-note">
+      <b>模板 + AI = 一次投入、长期收益。</b> 每种场景只需建一次格式模板或风格档案，以后永远复用。30 分钟建档案，吃十年红利。
+    </div>
+  </section>
+
+  <!-- ============ Slide 6 · 仿图像 ============ -->
+  <section class="slide shell" data-title="仿图像 · 视觉参考">
+    <div class="kicker">仿图像 · 视觉参考</div>
+    <h2 class="section-title">图像模仿不是描述关键词，<br>是给一张"我要这种感觉"的参考图。</h2>
+    <p class="lead">你说"赛博朋克风格"——每个 AI 都有自己的理解；你上传一张图——AI 立刻知道你说的"赛博朋克"是哪一种。</p>
+
+    <div class="img-scene-grid">
+      <div class="img-scene-card">
+        <div class="is-icon">🎨</div>
+        <h3>风格迁移</h3>
+        <p class="is-desc">上传一张你喜欢的参考图，让 AI 提取其色调、光线、氛围、笔触，再应用到你的新内容上。不需要会描述，直接给它看。</p>
+        <div class="is-prompt">
+          "参考这张图的色调、灯光、氛围、笔触，画一只在霓虹街角的猫，3:4 竖图。"
+        </div>
+        <div class="is-tool">工具：即梦 / MidJourney / Recraft / Flux</div>
+      </div>
+
+      <div class="img-scene-card">
+        <div class="is-icon">🪞</div>
+        <h3>人物一致性（AI 写真）</h3>
+        <p class="is-desc">上传一张人物底图，让 AI 保持这个人的长相和气质，同时切换场景、服装、光线或风格。适合做个人 AI 写真、虚拟形象应用。</p>
+        <div class="is-prompt">
+          "保持这个人的长相和气质，换成日系街头风格，自然光，3:4 竖图。"
+        </div>
+        <div class="is-tool">工具：NanoBanana / Flux Kontext / 即梦 / Kling</div>
+      </div>
+
+      <div class="img-scene-card">
+        <div class="is-icon">🗂️</div>
+        <h3>版式参考</h3>
+        <p class="is-desc">上传一张你喜欢的海报或版式，让 AI 描述其构图逻辑、字体层级、图文比例，再基于这套版式逻辑设计你的新海报或页面结构说明。</p>
+        <div class="is-prompt">
+          "描述这张海报的构图、字体、图文比例，再基于这个版式逻辑给我做一张 [新主题] 海报的版式文字说明。"
+        </div>
+        <div class="is-tool">工具：Claude / GPT-4o + 图像上传功能</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <div class="tip-label">为什么参考图比关键词准？</div>
+      <p>因为你对风格的识别能力远超你的描述能力——看到就知道，说不清楚。把识别转化成描述，中间会有大量信息损耗。直接给 AI 看参考图，省掉所有翻译环节，让 AI 的"眼睛"替你说话。</p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 7 · 模仿边界 + 误区 ============ -->
+  <section class="slide shell" data-title="模仿边界 · 误区纠偏">
+    <div class="kicker">模仿边界 · 三条红线</div>
+    <h2 class="section-title">模仿 ≠ 抄袭，<br>但有三条红线不能碰。</h2>
+
+    <div class="redline-list">
+      <div class="redline-item">
+        <div class="rl-num">红线 ①</div>
+        <h3>风格可以学，整段不能抄</h3>
+        <p>学语气 / 结构 / 节奏完全没问题，那是学习手法；逐句复刻是抄袭，即使经过"改写"也可能构成侵权。两步法的核心正是"提炼特征再创作"，而不是"改写原文"。</p>
+      </div>
+      <div class="redline-item">
+        <div class="rl-num">红线 ②</div>
+        <h3>公开素材可以参考，未授权 IP 不能商用</h3>
+        <p>个人学习、练习用途问题不大；商业发布、对外传播则须注意版权授权。用知名 IP 风格生成商业图片，不是"学风格"，可能是侵权。</p>
+      </div>
+      <div class="redline-item">
+        <div class="rl-num">红线 ③</div>
+        <h3>模仿风格的内容是你的，但别声称是"原创独立观点"</h3>
+        <p>你用 A 博主的结构写了一篇文章，文章是你的，但如果观点、论据、案例都来自 A——说"这是我独立思考的"就不诚实了。风格借鉴 OK，思想剽窃不行。</p>
+      </div>
+    </div>
+
+    <div class="safe-prompt">
+      <div class="prompt-box">
+        <div class="prompt-head">
+          <strong>保命提示词 · 防止 AI 直接复制原文</strong>
+          <button class="btn btn-mini" type="button" onclick="copyPrompt('prompt-safe', this)">复制</button>
+        </div>
+<pre><code id="prompt-safe">请基于上述风格创作，但不要直接复制原文中的任何一句话，所有句子都要是全新的表达。</code></pre>
+      </div>
+    </div>
+
+    <div class="kicker" style="margin: 20px 0 10px;">常见误区纠偏</div>
+    <div class="myth-grid">
+      <div class="myth-card">
+        <div class="myth-row"><span class="myth-label bad">误区</span><span>"贴样本就是让 AI 抄，是作弊。"</span></div>
+        <div class="myth-row"><span class="myth-label good">真相</span><span>贴样本是给 AI 一个参照标准，就像给设计师一张参考图。学手法不是作弊，是最高效的学习方式。</span></div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row"><span class="myth-label bad">误区</span><span>"一步贴样本就能完美模仿。"</span></div>
+        <div class="myth-row"><span class="myth-label good">真相</span><span>一步法只学表面特征。两步法（先提炼再生成）才能学到真正的结构逻辑，输出更稳定、更可复用。</span></div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row"><span class="myth-label bad">误区</span><span>"样本越多越好，多多益善。"</span></div>
+        <div class="myth-row"><span class="myth-label good">真相</span><span>3–5 段高质量范文远优于 20 段杂乱样本。质量比数量重要，选你最喜欢、最有代表性的。</span></div>
+      </div>
+      <div class="myth-card full">
+        <div class="myth-row"><span class="myth-label bad">误区</span><span>"仿图像就是输入一堆风格关键词。"</span></div>
+        <div class="myth-row"><span class="myth-label good">真相</span><span>关键词是二次翻译，信息损耗大。直接上传参考图让 AI 看，比你用语言描述精准得多——你的识别能力远超你的描述能力。</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 8 · 收束 ============ -->
+  <section class="slide shell" data-title="3 句话带走这一章">
+    <div class="kicker">本场景结束 · 行动清单</div>
+    <h2 class="section-title">3 句话，<br>带走这一章。</h2>
+
+    <ol class="takeaway-list">
+      <li>
+        <span class="num">1</span>
+        <div class="body">
+          <h3>样本比描述省 10 倍力气。你说不清的，直接给 AI 看。</h3>
+          <p>无论文字、图像、格式——找到一个你喜欢的样本，比反复描述"那种感觉"高效得多。把挑样本的时间用上，把描述的时间省掉。</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">2</span>
+        <div class="body">
+          <h3>两步法：先提炼风格档案，再生成新内容。一步法只学皮毛。</h3>
+          <p>步骤 1：让 AI 提炼样本的句式、语气、结构、高频词，给风格起名。步骤 2：用这份档案生成新内容。档案一旦建好，可以复用无数次。</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">3</span>
+        <div class="body">
+          <h3>最值钱的模仿对象是你自己——30 分钟建个人风格档案，吃十年。</h3>
+          <p>把你写过的 5 篇内容丢给 AI，提炼出"我的写作风格档案"。以后让 AI 基于这个档案创作，人味问题从根本上解决，不需要每次都说"写得人一点"。</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="prompt-box" style="margin-top: 20px;">
+      <div class="prompt-head">
+        <strong>随身携带 · 两步法通用模板</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('prompt-two-step', this)">复制模板</button>
+      </div>
+<pre><code id="prompt-two-step">【步骤 1 · 提炼风格档案】
+请阅读下面 [N] 段文字，提炼以下内容：
+① 句式特点（长短、节奏、标点习惯）
+② 语气情绪（轻松 / 自嘲 / 专业 / 温柔…）
+③ 结构逻辑（开头方式、段落推进、结尾方式）
+④ 高频句式和口头禅
+⑤ 给这种风格起一个名字
+
+[粘贴你的范文 / 博主原文]
+
+---
+
+【步骤 2 · 生成新内容】
+请用上面提炼的「[风格名]」，写一篇关于 [新主题] 的 [内容类型，如：小红书笔记 / 朋友圈 / 公众号文]。
+
+要求：
+- 内容是全新的，不复制原文任何一句话
+- 风格（语气、句式、结构）保持一致
+- 字数约 [范围]</code></pre>
+    </div>
+
+    <div class="next-row">
+      <div>
+        <div class="kicker">下一场景</div>
+        <h3>06 · 苏格拉底反思 —— 让 AI 帮你看清自己的盲点</h3>
+      </div>
+      <a class="btn" href="scene-06-socratic-reflection.html">下一页 →</a>
+    </div>
+    <div class="next-row">
+      <div>
+        <span class="eyebrow">上一场景</span>
+        <h3>04 · 创作生成</h3>
+      </div>
+      <a class="btn" href="scene-04-content-generation.html">← 上一页</a>
+    </div>
+    <div class="next-row" style="border-style: dashed;">
+      <div>
+        <span class="eyebrow">回到</span>
+        <h3>八大场景目录</h3>
+      </div>
+      <a class="btn" href="index.html">返回首页</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- 浮动翻页 -->
+<nav class="deck-nav" aria-label="翻页">
+  <button type="button" onclick="prevSlide()" title="上一页（← / PgUp）">‹ 上一页</button>
+  <span class="counter"><span id="cur">1</span> / <span id="total">8</span></span>
+  <button type="button" onclick="nextSlide()" title="下一页（→ / PgDn / Space）">下一页 ›</button>
+</nav>
+
+<!-- 帮助蒙层 -->
+<div class="help" id="help" onclick="if(event.target===this)closeHelp()">
+  <div class="help-panel" role="dialog" aria-modal="true" aria-label="快捷键">
+    <h3>键盘快捷键</h3>
+    <div class="kb">
+      <code>← / PgUp</code><span>上一页</span>
+      <code>→ / PgDn / Space</code><span>下一页</span>
+      <code>Home / End</code><span>跳到首页 / 末页</span>
+      <code>T</code><span>切换明暗主题</span>
+      <code>1 - 8</code><span>直接跳到对应页</span>
+      <code>?</code><span>显示这个面板</span>
+      <code>Esc</code><span>关闭这个面板</span>
+    </div>
+    <div style="margin-top: 16px; text-align: right;">
+      <button class="btn btn-mini" type="button" onclick="closeHelp()">知道了</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dotsBox = document.getElementById('dots');
+const curEl = document.getElementById('cur');
+const totalEl = document.getElementById('total');
+const counterText = document.getElementById('counter-text');
+let idx = 0;
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function renderDots() {
+  dotsBox.innerHTML = '';
+  slides.forEach((s, i) => {
+    const dot = document.createElement('i');
+    if (i === idx) dot.classList.add('active');
+    else if (i < idx) dot.classList.add('done');
+    dot.title = s.dataset.title || ('第 ' + (i+1) + ' 屏');
+    dot.addEventListener('click', () => goTo(i));
+    dotsBox.appendChild(dot);
+  });
+}
+function goTo(i) {
+  if (i < 0 || i >= slides.length) return;
+  slides[idx].classList.remove('active');
+  idx = i;
+  slides[idx].classList.add('active');
+  curEl.textContent = idx + 1;
+  totalEl.textContent = slides.length;
+  counterText.textContent = pad(idx+1) + ' / ' + pad(slides.length);
+  renderDots();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+function nextSlide() { goTo(Math.min(idx + 1, slides.length - 1)); }
+function prevSlide() { goTo(Math.max(idx - 1, 0)); }
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('ai8-theme', next); } catch(e) {}
+}
+function openHelp()  { document.getElementById('help').classList.add('open'); }
+function closeHelp() { document.getElementById('help').classList.remove('open'); }
+
+function copyPrompt(id, btn) {
+  const node = document.getElementById(id);
+  if (!node) return;
+  navigator.clipboard.writeText(node.innerText).then(() => {
+    if (!btn) return;
+    const old = btn.innerText;
+    btn.innerText = '已复制 ✓';
+    setTimeout(() => btn.innerText = old, 1300);
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('help').classList.contains('open')) {
+    if (e.key === 'Escape') closeHelp();
+    return;
+  }
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch (e.key) {
+    case 'ArrowRight': case 'PageDown': case ' ':
+      e.preventDefault(); nextSlide(); break;
+    case 'ArrowLeft': case 'PageUp':
+      e.preventDefault(); prevSlide(); break;
+    case 'Home': e.preventDefault(); goTo(0); break;
+    case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
+    case 't': case 'T': toggleTheme(); break;
+    case '?': case '/': openHelp(); break;
+    default:
+      if (/^[1-9]$/.test(e.key)) {
+        const n = parseInt(e.key, 10) - 1;
+        if (n < slides.length) goTo(n);
+      }
+  }
+});
+
+(function init() {
+  try {
+    const saved = localStorage.getItem('ai8-theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+  } catch(e) {}
+  totalEl.textContent = slides.length;
+  curEl.textContent = 1;
+  counterText.textContent = pad(1) + ' / ' + pad(slides.length);
+  renderDots();
+})();
+</script>
+</body>
+</html>

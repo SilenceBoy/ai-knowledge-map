@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>07 翻译转化 · AI 八大使用场景</title>
+  <style>
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f5;
+  --surface: #f0ede8;
+  --surface-2: #fffdf9;
+  --text: #2c2825;
+  --muted: #746d64;
+  --border: #d4cfc7;
+  --clay: #d97757;
+  --olive: #788c5d;
+  --sky: #6a8caf;
+  --ink: #141413;
+  --rose: #c66060;
+  --amber: #b07c30;
+  --shadow: 0 18px 60px rgba(44, 40, 37, .10);
+}
+[data-theme="dark"] {
+  --bg: #171615;
+  --surface: #23211f;
+  --surface-2: #2c2926;
+  --text: #f4efe8;
+  --muted: #b8afa4;
+  --border: #49433d;
+  --clay: #e79678;
+  --olive: #a9bc88;
+  --sky: #9bb8d5;
+  --ink: #f8f4ed;
+  --rose: #e07d7d;
+  --amber: #d4a050;
+  --shadow: 0 18px 60px rgba(0, 0, 0, .28);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(176, 124, 48, .10), transparent 32%),
+    radial-gradient(circle at 90% 100%, rgba(176, 124, 48, .07), transparent 30%),
+    linear-gradient(135deg, var(--bg), var(--surface));
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* ===== 顶栏 ===== */
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+.topbar-inner {
+  min-height: 56px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+.brand-mark {
+  width: 30px; height: 30px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  display: grid; place-items: center; border-radius: 8px;
+  color: var(--amber); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+}
+.nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn {
+  min-height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  padding: 6px 12px; border-radius: 8px; cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03); font-size: 14px;
+}
+.btn:hover { border-color: var(--amber); }
+.btn-mini { min-height: 30px; padding: 4px 10px; font-size: 13px; }
+
+/* ===== 进度条 ===== */
+.progress { display: flex; align-items: center; gap: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--muted); }
+.progress-dots { display: flex; gap: 5px; }
+.progress-dots i { display: block; width: 18px; height: 4px; background: var(--border); border-radius: 2px; transition: background .2s ease, transform .2s ease; cursor: pointer; }
+.progress-dots i.active { background: var(--amber); transform: scaleY(1.4); }
+.progress-dots i.done { background: var(--olive); }
+
+/* ===== 翻页轨道 ===== */
+.deck { position: relative; width: 100%; }
+.slide { min-height: calc(100vh - 58px); padding: 48px 0 100px; display: none; animation: slideIn .35s ease; }
+.slide.active { display: block; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===== 通用语义类 ===== */
+.kicker { color: var(--amber); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.eyebrow { color: var(--muted); font-size: 14px; }
+h1.slide-title { font-family: Georgia, "Times New Roman", "Songti SC", serif; font-size: clamp(40px, 6.6vw, 78px); line-height: 1.02; margin: 14px 0 18px; letter-spacing: 0; }
+h2.section-title { font-family: Georgia, "Times New Roman", "Songti SC", serif; font-size: clamp(28px, 4.2vw, 46px); line-height: 1.1; margin: 12px 0 14px; letter-spacing: 0; }
+.lead { font-size: clamp(17px, 2vw, 21px); color: var(--muted); max-width: 760px; }
+
+.card, .prompt-box, .panel { border: 1px solid var(--border); background: color-mix(in srgb, var(--surface-2) 90%, transparent); box-shadow: var(--shadow); border-radius: 12px; }
+.panel { padding: 22px; }
+.card { padding: 18px; }
+.card h3 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0; color: var(--muted); }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.tag { display: inline-flex; align-items: center; min-height: 28px; border: 1px solid var(--border); border-radius: 999px; padding: 3px 11px; color: var(--muted); background: var(--surface); font-size: 13px; }
+.tag.clay   { color: var(--clay);   border-color: color-mix(in srgb, var(--clay)   50%, var(--border)); }
+.tag.olive  { color: var(--olive);  border-color: color-mix(in srgb, var(--olive)  50%, var(--border)); }
+.tag.sky    { color: var(--sky);    border-color: color-mix(in srgb, var(--sky)    50%, var(--border)); }
+.tag.amber  { color: var(--amber);  border-color: color-mix(in srgb, var(--amber)  50%, var(--border)); }
+
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.prompt-box { overflow: hidden; }
+.prompt-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.prompt-head strong { font-size: 14px; }
+pre { margin: 0; padding: 18px; overflow: auto; white-space: pre-wrap; color: var(--surface-2); background: var(--ink); line-height: 1.6; font-size: 14px; border-radius: 0 0 12px 12px; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+.note    { border-left: 4px solid var(--olive); padding: 14px 16px; background: color-mix(in srgb, var(--olive)  10%, var(--surface-2)); border-radius: 8px; font-size: 14.5px; line-height: 1.7; }
+.info    { border-left: 4px solid var(--sky);   padding: 14px 16px; background: color-mix(in srgb, var(--sky)    10%, var(--surface-2)); border-radius: 8px; font-size: 14.5px; line-height: 1.7; }
+.warning { border-left: 4px solid var(--clay);  padding: 14px 16px; background: color-mix(in srgb, var(--clay)   10%, var(--surface-2)); border-radius: 8px; font-size: 14.5px; line-height: 1.7; }
+.amber-note { border-left: 4px solid var(--amber); padding: 14px 16px; background: color-mix(in srgb, var(--amber) 10%, var(--surface-2)); border-radius: 8px; font-size: 14.5px; line-height: 1.7; }
+
+/* ===== Slide 1 封面 ===== */
+.cover-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .8fr); gap: 32px; align-items: start; }
+.cover-stats { padding: 22px; }
+.cover-stats .stat { border-top: 1px solid var(--border); padding: 14px 0; }
+.cover-stats .stat:first-of-type { border-top: 0; padding-top: 0; }
+.cover-stats .stat b { font-family: Georgia, serif; font-size: 28px; display: block; line-height: 1.15; color: var(--amber); }
+.cover-stats .stat span { color: var(--muted); font-size: 13px; }
+.audience-list { list-style: none; margin: 18px 0 0; padding: 0; }
+.audience-list li { border-top: 1px dashed var(--border); padding: 10px 0; color: var(--muted); font-size: 15px; }
+.audience-list li::before { content: "·  "; color: var(--amber); }
+
+/* ===== 翻译地图 ===== */
+.trans-map { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin: 22px 0; }
+.trans-card { border: 1px solid var(--border); border-radius: 12px; padding: 16px 14px; background: var(--surface-2); }
+.trans-card .tc-icon { font-size: 26px; margin-bottom: 8px; }
+.trans-card h4 { margin: 0 0 6px; font-size: 15px; font-weight: 700; }
+.trans-card p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+.analogy-box { padding: 18px 20px; border: 1px dashed var(--border); border-radius: 12px; background: color-mix(in srgb, var(--amber) 6%, var(--surface-2)); font-size: 15.5px; line-height: 1.75; }
+.analogy-box strong { color: var(--amber); }
+
+/* ===== 对比表格 ===== */
+.rule-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14.5px; }
+.rule-table th { text-align: left; padding: 10px 14px; background: var(--surface); border-bottom: 2px solid var(--border); color: var(--muted); font-family: ui-monospace, monospace; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+.rule-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.rule-table tr:last-child td { border-bottom: none; }
+.rule-table tr:hover td { background: color-mix(in srgb, var(--amber) 4%, var(--surface-2)); }
+.pill-good { display: inline-block; background: color-mix(in srgb, var(--olive) 18%, var(--surface)); color: var(--olive); border: 1px solid color-mix(in srgb, var(--olive) 40%, var(--border)); border-radius: 999px; padding: 2px 9px; font-size: 12.5px; }
+.pill-mid  { display: inline-block; background: color-mix(in srgb, var(--amber) 15%, var(--surface)); color: var(--amber); border: 1px solid color-mix(in srgb, var(--amber) 40%, var(--border)); border-radius: 999px; padding: 2px 9px; font-size: 12.5px; }
+.pill-bad  { display: inline-block; background: color-mix(in srgb, var(--rose) 15%, var(--surface)); color: var(--rose);  border: 1px solid color-mix(in srgb, var(--rose)  40%, var(--border)); border-radius: 999px; padding: 2px 9px; font-size: 12.5px; }
+
+/* ===== 聊天气泡 ===== */
+.chat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.chat-pane { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface-2); display: flex; flex-direction: column; }
+.chat-head { padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--surface); font-size: 13px; }
+.chat-head .who { font-weight: 700; }
+.chat-pane.bad  .who { color: var(--rose); }
+.chat-pane.good .who { color: var(--amber); }
+.chat-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.bubble { padding: 10px 12px; border-radius: 12px; max-width: 94%; white-space: pre-wrap; line-height: 1.55; }
+.bubble.user { align-self: flex-end; background: color-mix(in srgb, var(--amber) 18%, var(--surface)); color: var(--text); border: 1px solid color-mix(in srgb, var(--amber) 30%, var(--border)); }
+.bubble.ai { align-self: flex-start; background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+.bubble .ai-lbl { color: var(--muted); font-size: 12px; margin-bottom: 4px; font-family: ui-monospace, monospace; }
+.bubble.dim-b { opacity: .5; font-size: 13px; }
+.diff-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+.diff-bar > div { padding: 10px 14px; border-radius: 10px; font-size: 13px; font-family: ui-monospace, monospace; }
+.bad-meter  { background: color-mix(in srgb, var(--rose)  15%, var(--surface)); border: 1px solid color-mix(in srgb, var(--rose)  30%, var(--border)); color: var(--rose); }
+.good-meter { background: color-mix(in srgb, var(--amber) 15%, var(--surface)); border: 1px solid color-mix(in srgb, var(--amber) 30%, var(--border)); color: var(--amber); }
+
+/* ===== 图文/文档 Slide 5 ===== */
+.doc-card { border: 1px solid var(--border); border-radius: 14px; padding: 20px; background: var(--surface-2); }
+.doc-card h3 { margin: 0 0 12px; font-size: 17px; }
+.scene-list { list-style: none; margin: 0; padding: 0; }
+.scene-list li { display: flex; gap: 8px; align-items: flex-start; padding: 8px 0; border-top: 1px dashed var(--border); font-size: 14px; }
+.scene-list li:first-child { border-top: none; }
+.scene-list li .sc-num { font-family: ui-monospace, monospace; font-size: 11px; color: var(--amber); margin-top: 3px; flex-shrink: 0; }
+.tool-list { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.tool-chip { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); font-size: 12.5px; font-family: ui-monospace, monospace; color: var(--muted); }
+
+/* ===== 误区 ===== */
+.myth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 22px 0; }
+.myth-card { border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: var(--surface-2); }
+.myth-card.full { grid-column: 1 / -1; }
+.myth-row { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; font-size: 14.5px; line-height: 1.6; }
+.myth-row:first-child { padding-top: 0; }
+.myth-label { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 6px; font-size: 12px; font-family: ui-monospace, monospace; white-space: nowrap; flex-shrink: 0; margin-top: 1px; }
+.myth-label.bad  { background: color-mix(in srgb, var(--rose)  18%, var(--surface)); color: var(--rose);  border: 1px solid color-mix(in srgb, var(--rose)  30%, var(--border)); }
+.myth-label.good { background: color-mix(in srgb, var(--olive) 18%, var(--surface)); color: var(--olive); border: 1px solid color-mix(in srgb, var(--olive) 30%, var(--border)); }
+
+/* ===== 收束 ===== */
+.takeaway-list { list-style: none; margin: 22px 0; padding: 0; display: flex; flex-direction: column; gap: 14px; }
+.takeaway-list li { display: flex; gap: 14px; align-items: flex-start; border: 1px solid var(--border); border-radius: 12px; padding: 18px; background: var(--surface-2); }
+.takeaway-list .num { width: 36px; height: 36px; border-radius: 10px; background: color-mix(in srgb, var(--amber) 18%, var(--surface)); color: var(--amber); font-family: Georgia, serif; font-size: 20px; font-weight: 700; display: grid; place-items: center; flex-shrink: 0; }
+.takeaway-list .body h3 { margin: 0 0 6px; font-size: 16px; }
+.takeaway-list .body p { margin: 0; color: var(--muted); font-size: 14px; }
+.next-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 28px; padding: 20px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface-2); }
+.next-row h3 { margin: 6px 0 0; font-size: 17px; }
+
+/* ===== 翻页导航 ===== */
+.deck-nav {
+  position: fixed; bottom: 24px; right: 24px; z-index: 20;
+  display: flex; align-items: center; gap: 0;
+  border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  background: color-mix(in srgb, var(--surface-2) 92%, transparent);
+  backdrop-filter: blur(12px); box-shadow: 0 4px 20px rgba(44,40,37,.12);
+}
+.deck-nav button { min-width: 44px; min-height: 44px; border: none; background: transparent; color: var(--text); cursor: pointer; font-size: 20px; padding: 0 10px; }
+.deck-nav button:hover { background: var(--surface); }
+.deck-nav .counter { padding: 0 12px; font-family: ui-monospace, monospace; font-size: 13px; color: var(--muted); border-left: 1px solid var(--border); border-right: 1px solid var(--border); white-space: nowrap; }
+
+/* ===== 帮助蒙层 ===== */
+.help { position: fixed; inset: 0; z-index: 50; background: rgba(20,20,19,.65); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; }
+.help.open { display: flex; }
+.help-panel { background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 28px; max-width: 440px; width: 90%; box-shadow: var(--shadow); }
+.help-panel h3 { margin: 0 0 18px; font-family: Georgia, serif; font-size: 22px; }
+.kb { display: grid; grid-template-columns: auto 1fr; gap: 10px 18px; align-items: center; font-size: 14px; }
+.kb code { padding: 4px 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; font-family: ui-monospace, monospace; font-size: 12.5px; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+<!-- ===== 顶栏 ===== -->
+<header class="topbar" role="banner">
+  <div class="shell">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">AI</div>
+        <span>八大使用场景 · <strong>07 翻译转化</strong></span>
+      </div>
+      <div class="progress">
+        <span id="counter-text">01 / 08</span>
+        <div class="progress-dots" id="dots"></div>
+      </div>
+      <div class="nav-actions">
+        <button class="btn btn-mini" type="button" onclick="toggleTheme()" title="切换主题 (T)">◑ 主题</button>
+        <button class="btn btn-mini" type="button" onclick="openHelp()" title="帮助 (?)">? 帮助</button>
+        <a class="btn btn-mini" href="index.html" title="返回首页">⌂ 首页</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="deck">
+
+<!-- ====================================================
+     Slide 1 · 封面
+==================================================== -->
+<section class="slide active" data-title="封面 · 钩子句">
+  <div class="shell">
+    <p class="kicker">Scene 07 / 08 · 翻译转化模式</p>
+    <div class="cover-grid">
+      <div>
+        <h1 class="slide-title">「人话、代码、图、文档，<br>AI 全懂。」</h1>
+        <p class="lead">翻译不只是中英互译。任何信息形态之间的切换都是翻译——AI 是一个通用翻译器，它认得人间所有的信息形态。</p>
+        <div class="tag-row">
+          <span class="tag amber">「翻成大白话」</span>
+          <span class="tag clay">「帮我写个脚本」</span>
+          <span class="tag olive">「和这份 PDF 对话」</span>
+          <span class="tag sky">「翻译+解释一起」</span>
+        </div>
+      </div>
+      <div class="panel cover-stats">
+        <div class="stat">
+          <b>4 条主线</b>
+          <span>人类语言 · 人机语言 · 图文 · 文档对话</span>
+        </div>
+        <div class="stat">
+          <b>30 分钟</b>
+          <span>写出你第一个 AI 代码小工具</span>
+        </div>
+        <div class="stat">
+          <b>100 页 PDF</b>
+          <span>一次对话读完，1 小时顶过去一周</span>
+        </div>
+        <ul class="audience-list">
+          <li>经常要读英文文档但英文不够强的人</li>
+          <li>想解释代码/合同/图表，但讲不明白的人</li>
+          <li>想做个小工具，完全不会编程的人</li>
+          <li>想把专业的变通俗、口语的变正式的人</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 2 · 核心认知
+==================================================== -->
+<section class="slide" data-title="核心认知 · 翻译的扩展定义">
+  <div class="shell">
+    <p class="kicker">核心认知</p>
+    <h2 class="section-title">「翻译不只是<br>中文 ↔ 英文。」</h2>
+    <p class="lead">只要你心里冒出"能不能换一种形式呈现这个东西"——那就是翻译转化的场景。</p>
+
+    <div class="trans-map">
+      <div class="trans-card">
+        <div class="tc-icon">🌐</div>
+        <h4>人类语言互译</h4>
+        <p>中↔英↔日↔法，支持风格与语气指定，不只是字对字</p>
+      </div>
+      <div class="trans-card">
+        <div class="tc-icon">💻</div>
+        <h4>自然语言 ↔ 代码</h4>
+        <p>人话写程序 / 解释代码逻辑，编程门槛归零</p>
+      </div>
+      <div class="trans-card">
+        <div class="tc-icon">🖼️</div>
+        <h4>图 ↔ 文字</h4>
+        <p>看图说话 / 解读架构图流程图公式截图</p>
+      </div>
+      <div class="trans-card">
+        <div class="tc-icon">📄</div>
+        <h4>文档 ↔ 对话</h4>
+        <p>和 PDF / Word / Excel 聊天，百页报告变问答框</p>
+      </div>
+      <div class="trans-card">
+        <div class="tc-icon">🔬</div>
+        <h4>专业 ↔ 大白话</h4>
+        <p>医学论文 → 小孩能听懂的语言，专业壁垒消失</p>
+      </div>
+      <div class="trans-card">
+        <div class="tc-icon">📐</div>
+        <h4>长 ↔ 短</h4>
+        <p>1000字 → 1句 slogan / slogan → 500字品牌故事</p>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      🔀 类比：AI 就像一个<strong>「通用翻译器」</strong>——它认得人间所有的信息形态，并能在它们之间自由切换。你只需要说清楚：<strong>从哪种，翻到哪种</strong>。
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 3 · 人类语言互译
+==================================================== -->
+<section class="slide" data-title="人类语言互译 · AI vs 传统翻译">
+  <div class="shell">
+    <p class="kicker">主线一 · 人类语言互译</p>
+    <h2 class="section-title">「AI 翻译比传统工具<br>多了什么？」</h2>
+    <p class="lead">不只是"字对字"——AI 能同时保留语气、调整风格、解释文化背景。</p>
+
+    <table class="rule-table">
+      <thead>
+        <tr>
+          <th>能力维度</th>
+          <th>传统翻译软件</th>
+          <th>AI 翻译</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>直译准确性</td>
+          <td><span class="pill-good">✅ 强</span></td>
+          <td><span class="pill-good">✅ 强</span></td>
+        </tr>
+        <tr>
+          <td>上下文理解</td>
+          <td><span class="pill-mid">⚠️ 弱</span></td>
+          <td><span class="pill-good">✅ 强</span></td>
+        </tr>
+        <tr>
+          <td>风格调整（口语化 / 正式）</td>
+          <td><span class="pill-bad">❌ 不支持</span></td>
+          <td><span class="pill-good">✅ 可指定</span></td>
+        </tr>
+        <tr>
+          <td>解释 + 翻译同步输出</td>
+          <td><span class="pill-bad">❌ 不支持</span></td>
+          <td><span class="pill-good">✅ 为什么这么翻 + 文化背景</span></td>
+        </tr>
+        <tr>
+          <td>行业术语适配</td>
+          <td><span class="pill-mid">⚠️ 一般</span></td>
+          <td><span class="pill-good">✅ 告诉行业自动适配</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="prompt-box" style="margin-bottom:16px">
+      <div class="prompt-head">
+        <strong>老手翻译提示词模板</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p-translate', this)">复制</button>
+      </div>
+      <pre id="p-translate">请将以下英文翻译成中文。要求：
+1. 文章类型：[XX 类型的文章]
+2. 目标读者：[XX 人群]
+3. 翻译风格：[口语化/正式/学术/自媒体]
+4. 行业术语保持中文圈通用译法（不确定时附原文）
+5. 不要直译，要符合中文表达习惯
+
+英文原文：[粘贴]</pre>
+    </div>
+
+    <div class="note">
+      <strong>进阶玩法：双语对照学外语</strong> — 让 AI 输出「英文原句 | 中文翻译 | 重要词汇/语法解释」三栏表格，翻译 + 学习一次完成。
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 4 · Vibe Coding
+==================================================== -->
+<section class="slide" data-title="Vibe Coding · 不会编程也能写代码">
+  <div class="shell">
+    <p class="kicker">主线二 · 人机语言互译</p>
+    <h2 class="section-title">「不会编程，<br>也能让 AI 帮你写出能跑的代码。」</h2>
+    <p class="lead">自然语言已经成为一种编程方式。你只需要描述你想要什么——AI 负责写代码、写注释、教你运行。</p>
+
+    <div class="chat-grid">
+      <div class="chat-pane bad">
+        <div class="chat-head">
+          <span class="who">❌ 菜鸟提问</span>
+          <span style="color:var(--muted);font-size:12px">没指定细节</span>
+        </div>
+        <div class="chat-body">
+          <div class="bubble user">帮我写个 Python 脚本</div>
+          <div class="bubble ai">
+            <div class="ai-lbl">AI 回复</div>
+            给了一段没有注释的代码，没说怎么运行，也没解释每一步在做什么。
+          </div>
+          <div class="bubble user dim-b">这怎么用？报错了……</div>
+        </div>
+      </div>
+      <div class="chat-pane good">
+        <div class="chat-head">
+          <span class="who">✅ 老手提问</span>
+          <span style="color:var(--muted);font-size:12px">说清楚了一切</span>
+        </div>
+        <div class="chat-body">
+          <div class="bubble user">我想要一个 Python 脚本：读取文件夹里所有 .jpg 图片，给每张图片加右下角时间水印，输出到新文件夹。我完全不会 Python，请给我：① 完整可运行代码，② 每步在做什么（用我能懂的话），③ 怎么安装运行，④ 可能遇到的坑</div>
+          <div class="bubble ai">
+            <div class="ai-lbl">AI 回复</div>
+            完整代码 + 中文注释 + pip 安装命令 + 运行步骤 + 常见报错排查
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-bar">
+      <div class="bad-meter">能用性：不能直接用 · 需要追问</div>
+      <div class="good-meter">能用性：30 分钟独立跑起来</div>
+    </div>
+
+    <div class="info" style="margin-top:16px">
+      <strong>Vibe Coding 三原则</strong><br>
+      ① 从自用小工具开始（整理桌面 / 批量改图 / 抓网页数据）；<br>
+      ② 完全用自然语言，不用担心"不专业"；<br>
+      ③ 遇到报错，把报错原样贴给 AI 让它继续修。<br>
+      <span style="color:var(--muted);font-size:13px;margin-top:6px;display:block">代表工具：Claude Code · Cursor · Windsurf · v0</span>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 5 · 图↔文字 + 文档↔对话
+==================================================== -->
+<section class="slide" data-title="图↔文字 · 文档↔对话">
+  <div class="shell">
+    <p class="kicker">主线三四 · 图文互译 + 文档对话</p>
+    <h2 class="section-title">「看不懂的图，<br>读不完的 PDF，<br>都能变成对话。」</h2>
+
+    <div class="grid grid-2" style="margin-top:20px">
+      <div class="doc-card">
+        <h3>🖼️ 图 ↔ 文字：把图丢给 AI，让它帮你看懂</h3>
+        <ul class="scene-list">
+          <li><span class="sc-num">01</span><span><strong>描述</strong>：生成图片的 alt 文本或完整说明</span></li>
+          <li><span class="sc-num">02</span><span><strong>讲解</strong>：架构图 / 流程图 / 公式截图 → 逐步解读</span></li>
+          <li><span class="sc-num">03</span><span><strong>改写</strong>：图里的英文 → 中文翻译</span></li>
+          <li><span class="sc-num">04</span><span><strong>理解创意</strong>：分析海报/广告在传达什么情绪</span></li>
+        </ul>
+        <div class="prompt-box" style="margin-top:12px">
+          <div class="prompt-head">
+            <strong>看图提示词</strong>
+            <button class="btn btn-mini" type="button" onclick="copyPrompt('p-image', this)">复制</button>
+          </div>
+          <pre id="p-image">[上传图]。请你描述：
+① 最关键的视觉元素；
+② 想传递的核心信息或情绪；
+③ 站在 [我的身份] 视角，
+   这张图对我意味着什么？</pre>
+        </div>
+      </div>
+
+      <div class="doc-card">
+        <h3>📄 文档 ↔ 对话：1 小时读完本来要花一周的 100 页报告</h3>
+        <p style="font-size:14px;color:var(--muted);margin:0 0 8px">推荐工具：</p>
+        <div class="tool-list">
+          <span class="tool-chip">NotebookLM</span>
+          <span class="tool-chip">ChatPDF</span>
+          <span class="tool-chip">Kimi</span>
+          <span class="tool-chip">元宝</span>
+          <span class="tool-chip">DeepSeek</span>
+          <span class="tool-chip">DeepWiki</span>
+        </div>
+        <div class="prompt-box" style="margin-top:12px">
+          <div class="prompt-head">
+            <strong>财报对话示例</strong>
+            <button class="btn btn-mini" type="button" onclick="copyPrompt('p-pdf', this)">复制</button>
+          </div>
+          <pre id="p-pdf">上传 100 页财报后提问：
+
+· 核心结论是什么？
+· 收入同比变化主因？
+· 管理层表达了哪些担忧？
+· 如果我是投资人，
+  最该关心哪 3 个数字？</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:16px">
+      <strong>DeepWiki</strong>（deepwiki.com）是另一个神器——把 GitHub 代码库自动生成可对话的百科，对码农来说是图书馆级别的工具。注意是 DeepWiki，不是 DeepMaking。
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 6 · 风格/密度/形态翻译
+==================================================== -->
+<section class="slide" data-title="形态翻译 · 更大的翻译地图">
+  <div class="shell">
+    <p class="kicker">主线补充 · 风格与形态的翻译</p>
+    <h2 class="section-title">「"换一种说法"<br>也是翻译。」</h2>
+    <p class="lead">从专业到大白话、从口语到正式、从长到短——只要说清楚"从哪种翻到哪种"，AI 都能做。</p>
+
+    <table class="rule-table">
+      <thead>
+        <tr>
+          <th>翻译类型</th>
+          <th>触发词示例（可直接用）</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>专业 → 大白话</strong></td>
+          <td>「把这段医学论文翻成 10 岁小孩能听懂的话」</td>
+        </tr>
+        <tr>
+          <td><strong>大白话 → 专业</strong></td>
+          <td>「把这段口语化产品想法写成正式 PRD 语言」</td>
+        </tr>
+        <tr>
+          <td><strong>长 → 短</strong></td>
+          <td>「把这 1000 字浓缩成 1 句 slogan」</td>
+        </tr>
+        <tr>
+          <td><strong>短 → 长</strong></td>
+          <td>「基于这个 slogan，写 500 字品牌故事」</td>
+        </tr>
+        <tr>
+          <td><strong>正式 → 口语</strong></td>
+          <td>「把这份公告改成朋友圈风格」</td>
+        </tr>
+        <tr>
+          <td><strong>口语 → 正式</strong></td>
+          <td>「把这段聊天整理成会议纪要措辞」</td>
+        </tr>
+        <tr>
+          <td><strong>第三人称 → 第一人称</strong></td>
+          <td>「把产品介绍改成创始人自述口吻」</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="warning">
+      <strong>关键提示词：永远先说清"从哪种翻到哪种"</strong>，而不是只说"改一下"。"改一下"等于没有指令——AI 不知道你要的是更正式、更短、还是换人称。
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 7 · 误区
+==================================================== -->
+<section class="slide" data-title="误区纠偏">
+  <div class="shell">
+    <p class="kicker">误区纠偏</p>
+    <h2 class="section-title">「5 个让 AI 翻译<br>踩坑的认知误区。」</h2>
+
+    <div class="myth-grid">
+      <div class="myth-card">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>AI 翻译比专业翻译差</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>一般场景已不输。高严谨场景（法律 / 医学 / 合同）仍建议人工审核关键信息。</span>
+        </div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>我不会编程，AI 写的代码我也用不了</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>完全可以从零开始让 AI 帮你写小工具，第一步就是迈出去。</span>
+        </div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>代码就是要专业人写</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>专业人写专业产品；<strong>自用小工具完全可以 Vibe Coding</strong>。</span>
+        </div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>AI 看图就是 OCR 提字</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>OCR 只提字，理解模型能看懂图的意思、推理、判断图传达的内容。</span>
+        </div>
+      </div>
+      <div class="myth-card full">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>PDF 太长 AI 看不完</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>现在主流 AI 支持 10 万–100 万字上下文，100 页 PDF 早就不是问题。<strong>但 AI 可能编造引用内容</strong>——让它附上「原文出处 / 页码」方便你核对。</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 8 · 收束
+==================================================== -->
+<section class="slide" data-title="3 句话带走这一章">
+  <div class="shell">
+    <p class="kicker">本场景结束 · 行动清单</p>
+    <h2 class="section-title">「3 句话，<br>带走这一章。」</h2>
+
+    <ul class="takeaway-list">
+      <li>
+        <div class="num">1</div>
+        <div class="body">
+          <h3>翻译不只是语言互译</h3>
+          <p>人↔机器、图↔文字、专业↔通俗，都是翻译。只要心里有"换一种形式"的念头，就开始用。</p>
+        </div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div class="body">
+          <h3>不会编程也能让 AI 帮你写代码</h3>
+          <p>从一个 30 分钟的自用小脚本开始，迈出去就赢了。遇到报错，把报错原样贴给 AI 让它继续修。</p>
+        </div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div class="body">
+          <h3>和 PDF / Word / 网站 / 代码库对话是当代最值钱的"读"</h3>
+          <p>把长文档变成对话框，效率几十倍。100 页报告，一次对话读完。</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="prompt-box" style="margin-bottom:20px">
+      <div class="prompt-head">
+        <strong>Vibe Coding 入门模板</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p-vibe', this)">复制</button>
+      </div>
+      <pre id="p-vibe">我想要一个 [Python/其他语言] 小工具：
+- 功能：[用大白话描述功能，比如"读取文件夹里
+  所有图片，批量压缩到1MB以下"]
+- 输入：[是什么文件/数据]
+- 输出：[结果保存在哪/显示什么]
+
+我完全不会编程。请给我：
+1. 完整可运行的代码（附中文注释）
+2. 怎么安装运行（从头开始）
+3. 可能遇到的问题和解决方法</pre>
+    </div>
+
+    <div class="next-row">
+      <div>
+        <p class="eyebrow" style="margin:0">上一场景</p>
+        <h3><a href="scene-06-socratic-reflection.html">06 · 深思反问</a></h3>
+      </div>
+      <a class="btn" href="index.html">返回总览</a>
+      <div style="text-align:right">
+        <p class="eyebrow" style="margin:0">下一场景</p>
+        <h3><a href="scene-08-analysis-research.html">08 · 分析研究</a></h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- 浮动翻页 -->
+<nav class="deck-nav" aria-label="翻页控制">
+  <button type="button" onclick="prevSlide()" title="上一页 (←)">&#8592;</button>
+  <span class="counter" id="nav-counter">1 / 8</span>
+  <button type="button" onclick="nextSlide()" title="下一页 (→)">&#8594;</button>
+</nav>
+
+<!-- 帮助蒙层 -->
+<div class="help" id="help" role="dialog" aria-modal="true" aria-label="快捷键帮助">
+  <div class="help-panel">
+    <h3>快捷键</h3>
+    <div class="kb">
+      <code>← / →</code><span>上一页 / 下一页</span>
+      <code>Space / PgDn</code><span>下一页</span>
+      <code>PgUp</code><span>上一页</span>
+      <code>Home / End</code><span>第一页 / 最后一页</span>
+      <code>1 - 8</code><span>直接跳到对应页</span>
+      <code>T</code><span>切换明暗主题</span>
+      <code>?</code><span>显示这个面板</span>
+      <code>Esc</code><span>关闭这个面板</span>
+    </div>
+    <div style="margin-top: 16px; text-align: right;">
+      <button class="btn btn-mini" type="button" onclick="closeHelp()">知道了</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dotsBox = document.getElementById('dots');
+const counterText = document.getElementById('counter-text');
+const navCounter = document.getElementById('nav-counter');
+let idx = 0;
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+function renderDots() {
+  dotsBox.innerHTML = '';
+  slides.forEach(function(s, i) {
+    const dot = document.createElement('i');
+    if (i === idx) dot.classList.add('active');
+    else if (i < idx) dot.classList.add('done');
+    dot.title = s.dataset.title || ('第 ' + (i + 1) + ' 屏');
+    dot.addEventListener('click', function() { goTo(i); });
+    dotsBox.appendChild(dot);
+  });
+}
+
+function goTo(i) {
+  if (i < 0 || i >= slides.length) return;
+  slides[idx].classList.remove('active');
+  idx = i;
+  slides[idx].classList.add('active');
+  counterText.textContent = pad(idx + 1) + ' / ' + pad(slides.length);
+  navCounter.textContent = (idx + 1) + ' / ' + slides.length;
+  renderDots();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function nextSlide() { goTo(Math.min(idx + 1, slides.length - 1)); }
+function prevSlide() { goTo(Math.max(idx - 1, 0)); }
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('ai8-theme', next); } catch(e) {}
+}
+
+function openHelp()  { document.getElementById('help').classList.add('open'); }
+function closeHelp() { document.getElementById('help').classList.remove('open'); }
+
+function copyPrompt(id, btn) {
+  const node = document.getElementById(id);
+  if (!node) return;
+  navigator.clipboard.writeText(node.innerText).then(function() {
+    if (!btn) return;
+    const old = btn.innerText;
+    btn.innerText = '已复制 ✓';
+    setTimeout(function() { btn.innerText = old; }, 1300);
+  });
+}
+
+document.addEventListener('keydown', function(e) {
+  if (document.getElementById('help').classList.contains('open')) {
+    if (e.key === 'Escape') closeHelp();
+    return;
+  }
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch (e.key) {
+    case 'ArrowRight': case 'PageDown': case ' ':
+      e.preventDefault(); nextSlide(); break;
+    case 'ArrowLeft': case 'PageUp':
+      e.preventDefault(); prevSlide(); break;
+    case 'Home': e.preventDefault(); goTo(0); break;
+    case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
+    case 't': case 'T': toggleTheme(); break;
+    case '?': case '/': openHelp(); break;
+    default:
+      if (/^[1-9]$/.test(e.key)) {
+        const n = parseInt(e.key, 10) - 1;
+        if (n < slides.length) goTo(n);
+      }
+  }
+});
+
+(function init() {
+  try {
+    const t = localStorage.getItem('ai8-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  } catch(e) {}
+  counterText.textContent = pad(1) + ' / ' + pad(slides.length);
+  navCounter.textContent = '1 / ' + slides.length;
+  renderDots();
+})();
+</script>
+</body>
+</html>

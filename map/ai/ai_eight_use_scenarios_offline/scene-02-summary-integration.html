@@ -1,0 +1,1250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>02 总结整合 · AI 八大使用场景</title>
+  <style>
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f5;
+  --surface: #f0ede8;
+  --surface-2: #fffdf9;
+  --text: #2c2825;
+  --muted: #746d64;
+  --border: #d4cfc7;
+  --clay: #d97757;
+  --olive: #788c5d;
+  --sky: #6a8caf;
+  --ink: #141413;
+  --rose: #c66060;
+  --shadow: 0 18px 60px rgba(44, 40, 37, .10);
+}
+[data-theme="dark"] {
+  --bg: #171615;
+  --surface: #23211f;
+  --surface-2: #2c2926;
+  --text: #f4efe8;
+  --muted: #b8afa4;
+  --border: #49433d;
+  --clay: #e79678;
+  --olive: #a9bc88;
+  --sky: #9bb8d5;
+  --ink: #f8f4ed;
+  --rose: #e07d7d;
+  --shadow: 0 18px 60px rgba(0, 0, 0, .28);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(217, 119, 87, .10), transparent 32%),
+    radial-gradient(circle at 86% 100%, rgba(106, 140, 175, .08), transparent 30%),
+    linear-gradient(135deg, var(--bg), var(--surface));
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* ============ 顶栏 ============ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+.topbar-inner {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+.brand-mark {
+  width: 30px; height: 30px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  display: grid; place-items: center;
+  border-radius: 8px;
+  color: var(--clay);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+}
+.nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03);
+  font-size: 14px;
+}
+.btn:hover { border-color: var(--clay); }
+.btn-mini { min-height: 30px; padding: 4px 10px; font-size: 13px; }
+
+/* ============ 进度条 ============ */
+.progress {
+  display: flex; align-items: center; gap: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+.progress-dots { display: flex; gap: 5px; }
+.progress-dots i {
+  display: block;
+  width: 18px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  transition: background .2s ease, transform .2s ease;
+  cursor: pointer;
+}
+.progress-dots i.active { background: var(--clay); transform: scaleY(1.4); }
+.progress-dots i.done { background: var(--olive); }
+
+/* ============ 翻页轨道 ============ */
+.deck { position: relative; width: 100%; }
+.slide {
+  min-height: calc(100vh - 58px);
+  padding: 48px 0 100px;
+  display: none;
+  animation: slideIn .35s ease;
+}
+.slide.active { display: block; }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ 通用语义类 ============ */
+.kicker {
+  color: var(--clay);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.eyebrow { color: var(--muted); font-size: 14px; }
+h1.slide-title {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: clamp(40px, 6.6vw, 78px);
+  line-height: 1.02;
+  margin: 14px 0 18px;
+  letter-spacing: 0;
+}
+h2.section-title {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: clamp(28px, 4.2vw, 46px);
+  line-height: 1.1;
+  margin: 12px 0 14px;
+  letter-spacing: 0;
+}
+.lead { font-size: clamp(17px, 2vw, 21px); color: var(--muted); max-width: 760px; }
+
+/* 卡片、窗口 */
+.card, .prompt-box, .panel {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+}
+.panel { padding: 22px; }
+.card { padding: 18px; }
+.card h3 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0; color: var(--muted); }
+
+/* 标签 */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 11px;
+  color: var(--muted);
+  background: var(--surface);
+  font-size: 13px;
+}
+.tag.clay  { color: var(--clay); border-color: color-mix(in srgb, var(--clay) 50%, var(--border)); }
+.tag.olive { color: var(--olive); border-color: color-mix(in srgb, var(--olive) 50%, var(--border)); }
+.tag.sky   { color: var(--sky); border-color: color-mix(in srgb, var(--sky) 50%, var(--border)); }
+.tag.rose  { color: var(--rose); border-color: color-mix(in srgb, var(--rose) 50%, var(--border)); }
+
+/* grid */
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+/* 提示词区域 */
+.prompt-box { overflow: hidden; }
+.prompt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.prompt-head strong { font-size: 14px; }
+pre {
+  margin: 0;
+  padding: 18px;
+  overflow: auto;
+  white-space: pre-wrap;
+  color: var(--surface-2);
+  background: var(--ink);
+  line-height: 1.6;
+  font-size: 14px;
+}
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+/* 警示 */
+.warning {
+  border-left: 4px solid var(--clay);
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--clay) 12%, var(--surface-2));
+  border-radius: 8px;
+}
+.note {
+  border-left: 4px solid var(--olive);
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--olive) 10%, var(--surface-2));
+  border-radius: 8px;
+}
+
+/* ============ slide 1 封面 ============ */
+.cover-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, .8fr);
+  gap: 32px;
+  align-items: center;
+}
+.cover-stats { padding: 22px; }
+.cover-stats .stat { border-top: 1px solid var(--border); padding: 14px 0; }
+.cover-stats .stat:first-of-type { border-top: 0; padding-top: 0; }
+.cover-stats .stat b {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  display: block;
+  line-height: 1.15;
+}
+.cover-stats .stat span { color: var(--muted); font-size: 13px; }
+.audience-list { list-style: none; margin: 18px 0 0; padding: 0; }
+.audience-list li {
+  border-top: 1px dashed var(--border);
+  padding: 10px 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+.audience-list li::before { content: "·  "; color: var(--clay); }
+
+/* ============ slide 2 菜鸟 vs 老手（对话气泡） ============ */
+.chat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.chat-pane {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--surface-2);
+  display: flex; flex-direction: column;
+}
+.chat-pane .chat-head {
+  padding: 10px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+}
+.chat-pane .chat-head .who { font-weight: 700; }
+.chat-pane.bad .chat-head .who  { color: var(--rose); }
+.chat-pane.good .chat-head .who { color: var(--olive); }
+.chat-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 14.5px; min-height: 280px; }
+.bubble {
+  padding: 10px 12px;
+  border-radius: 12px;
+  max-width: 92%;
+  white-space: pre-wrap;
+  line-height: 1.55;
+}
+.bubble.user {
+  align-self: flex-end;
+  background: color-mix(in srgb, var(--sky) 22%, var(--surface));
+  color: var(--text);
+  border: 1px solid color-mix(in srgb, var(--sky) 35%, var(--border));
+}
+.bubble.ai {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.bubble.ai .ai-mini-h { color: var(--muted); font-size: 12px; margin-bottom: 4px; font-family: ui-monospace, monospace; }
+
+/* 厨子类比 */
+.chef-line {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 20px;
+}
+.chef-card {
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--olive);
+  border-radius: 12px;
+  padding: 16px 18px;
+  background: var(--surface-2);
+}
+.chef-card .scene-lbl {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.chef-card h4 { margin: 6px 0 8px; font-size: 17px; }
+.chef-card p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+/* ============ slide 3 三档浓缩 ============ */
+.tier-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+.tier {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 20px 22px;
+  background: var(--surface-2);
+  position: relative;
+  display: flex; flex-direction: column;
+  min-height: 320px;
+}
+.tier .lvl {
+  font-family: Georgia, serif;
+  font-size: 36px;
+  line-height: 1;
+  margin-bottom: 8px;
+  color: var(--clay);
+}
+.tier h3 { margin: 0 0 6px; font-size: 18px; }
+.tier .meta {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.tier .sample {
+  margin-top: auto;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ink) 5%, var(--surface));
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.55;
+  border: 1px dashed var(--border);
+}
+.tier.l1 { border-top: 4px solid var(--sky); }
+.tier.l2 { border-top: 4px solid var(--olive); }
+.tier.l3 { border-top: 4px solid var(--clay); }
+
+/* ============ slide 4 五形态 ============ */
+.shape-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+.shape {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 14px;
+  background: var(--surface-2);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.shape .ico {
+  width: 56px; height: 56px;
+  border-radius: 12px;
+  display: grid; place-items: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+.shape .ico svg { width: 30px; height: 30px; }
+.shape h3 { margin: 0; font-size: 16px; }
+.shape p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.55; }
+.shape .kw {
+  font-family: ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--clay) 12%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--clay) 30%, var(--border));
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+/* ============ slide 5 评论 → 表格 ============ */
+.demo-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 20px;
+  margin-top: 14px;
+}
+.raw-comments {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 14px 16px;
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.65;
+  max-height: 460px;
+  overflow: auto;
+}
+.raw-comments .stamp {
+  display: inline-block;
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--surface-2);
+  border: 1px dashed var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin-bottom: 10px;
+}
+.raw-comments p { margin: 6px 0; }
+.raw-comments b { color: var(--text); font-weight: 600; }
+
+.flip-arrow {
+  display: flex; align-items: center; justify-content: center;
+  margin: 6px 0;
+  color: var(--clay);
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+}
+
+.demo-table-wrap {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+  overflow: hidden;
+}
+.demo-table-wrap .tbl-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+}
+table.demo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+table.demo-table th, table.demo-table td {
+  text-align: left;
+  padding: 9px 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+table.demo-table th {
+  background: color-mix(in srgb, var(--clay) 8%, var(--surface));
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--text);
+}
+table.demo-table tr:last-child td { border-bottom: 0; }
+.sentiment {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.sentiment.pos { color: var(--olive); border-color: color-mix(in srgb, var(--olive) 45%, var(--border)); }
+.sentiment.neg { color: var(--rose);  border-color: color-mix(in srgb, var(--rose) 45%, var(--border)); }
+.sentiment.neu { color: var(--muted); }
+
+/* ============ slide 6 会议纪要 SOP ============ */
+.sop-flow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  align-items: stretch;
+  margin-top: 16px;
+}
+.sop-step {
+  position: relative;
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--clay);
+  border-radius: 12px;
+  padding: 16px 16px 18px;
+  background: var(--surface-2);
+}
+.sop-step .idx {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 6px;
+}
+.sop-step h3 { margin: 0 0 6px; font-size: 17px; }
+.sop-step p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+.sop-step .tools {
+  margin-top: 10px;
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.sop-step .tools span {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 12px;
+  color: var(--text);
+}
+
+.outcome-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 18px;
+}
+.outcome {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  background: var(--surface);
+  font-size: 13.5px;
+}
+.outcome b { display: block; color: var(--clay); font-size: 12px; font-family: ui-monospace, monospace; margin-bottom: 4px; text-transform: uppercase; }
+
+/* ============ slide 7 三大陷阱 ============ */
+.trap-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 14px;
+}
+.trap {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+  padding: 18px 18px 20px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.trap .row { display: grid; grid-template-columns: 64px 1fr; gap: 10px; padding: 8px 0; }
+.trap .row + .row { border-top: 1px dashed var(--border); }
+.trap .lbl {
+  font-family: ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--muted);
+  align-self: start;
+  padding-top: 3px;
+}
+.trap .lbl.bad  { color: var(--rose); }
+.trap .lbl.good { color: var(--olive); }
+.trap .txt { font-size: 14px; line-height: 1.55; }
+.trap .counter {
+  margin-top: auto;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--clay) 10%, var(--surface));
+  border: 1px dashed color-mix(in srgb, var(--clay) 40%, var(--border));
+  font-size: 12.5px;
+  font-family: ui-monospace, monospace;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+/* ============ slide 8 收束 ============ */
+.takeaway-list { list-style: none; margin: 14px 0 0; padding: 0; }
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  align-items: start;
+}
+.takeaway-list li:first-child { border-top: 0; }
+.takeaway-list li .num {
+  font-family: Georgia, serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--clay);
+}
+.takeaway-list li .body h3 { margin: 0 0 4px; font-size: 19px; }
+.takeaway-list li .body p { margin: 0; color: var(--muted); font-size: 15px; }
+.next-row {
+  margin-top: 24px;
+  padding: 16px 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+/* ============ 底部翻页 ============ */
+.deck-nav {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 25;
+  display: flex; gap: 6px;
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px;
+  box-shadow: var(--shadow);
+}
+.deck-nav button {
+  border: 0; background: transparent; padding: 6px 10px; cursor: pointer;
+  border-radius: 999px; color: var(--text);
+  font-family: ui-monospace, monospace; font-size: 13px;
+}
+.deck-nav button:hover { background: var(--surface); }
+.deck-nav .counter { padding: 6px 10px; color: var(--muted); font-family: ui-monospace, monospace; font-size: 13px; }
+
+/* ============ 帮助蒙层 ============ */
+.help {
+  position: fixed; inset: 0;
+  display: none; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--ink) 65%, transparent);
+  z-index: 40;
+}
+.help.open { display: flex; }
+.help-panel {
+  width: min(420px, 86vw);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+.help-panel h3 { margin: 0 0 12px; }
+.kb { display: grid; grid-template-columns: 70px 1fr; gap: 8px 14px; font-size: 14px; }
+.kb code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12.5px;
+}
+
+/* ============ 响应式 ============ */
+@media (max-width: 1020px) {
+  .shape-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .sop-flow { grid-template-columns: 1fr 1fr; }
+  .outcome-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 920px) {
+  .cover-grid, .chat-grid, .demo-grid { grid-template-columns: 1fr; }
+  .tier-grid, .trap-grid, .chef-line { grid-template-columns: 1fr; }
+  .deck-nav { right: 10px; bottom: 10px; }
+  h1.slide-title { font-size: 40px; }
+}
+@media (max-width: 560px) {
+  .shape-grid { grid-template-columns: 1fr 1fr; }
+  .sop-flow, .outcome-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="index.html" aria-label="返回首页">
+      <span class="brand-mark">AI</span>
+      <span>八大使用场景 · 02 总结整合</span>
+    </a>
+    <div class="progress" aria-label="演讲进度">
+      <span id="counter-text">01 / 08</span>
+      <span class="progress-dots" id="dots"></span>
+    </div>
+    <nav class="nav-actions">
+      <button class="btn btn-mini" type="button" onclick="toggleTheme()" title="切换主题">明 / 暗</button>
+      <button class="btn btn-mini" type="button" onclick="openHelp()" title="快捷键（?）">?</button>
+      <a class="btn btn-mini" href="index.html">首页</a>
+    </nav>
+  </div>
+</header>
+
+<main class="deck" id="deck">
+
+  <!-- ============ Slide 1 · 封面 ============ -->
+  <section class="slide active shell" data-title="封面 · 钩子句">
+    <div class="kicker">Scene 02 / 08 · 总结整合模式</div>
+    <div class="cover-grid">
+      <div>
+        <h1 class="slide-title">总结不是删字，<br>是换密度。</h1>
+        <p class="lead">同一份原文，可以变成 10 种交付物：朋友圈一句话、给老板的金字塔汇报、给同事的存档表格、给自己的思维导图——关键是你先想清楚<b>给谁看、要几个字、什么格式</b>。</p>
+        <div class="tag-row" style="margin-top: 22px;">
+          <span class="tag clay">3 档浓缩</span>
+          <span class="tag olive">5 种重组</span>
+          <span class="tag sky">同 1 份原文 × N 种输出</span>
+        </div>
+      </div>
+      <aside class="panel cover-stats">
+        <div class="kicker" style="margin-bottom: 14px;">这一章的成色</div>
+        <div class="stat"><b>1 份原文</b><span>→ 10 种交付物</span></div>
+        <div class="stat"><b>3 档浓缩</b><span>L1 一句话 / L2 要点 / L3 精读</span></div>
+        <div class="stat"><b>5 种形态</b><span>表格 · 要点 · 流程图 · 时间线 · 思维导图</span></div>
+        <ul class="audience-list" aria-label="适合的人">
+          <li>信息过载，公众号 30 篇 + 群消息 500 条根本看不完</li>
+          <li>开完会忘录音、忘做纪要、回头被领导追问</li>
+          <li>复制了一堆文字下来，懒得手动整理成表格</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ Slide 2 · 核心认知 ============ -->
+  <section class="slide shell" data-title="核心认知 · 摆盘的厨子">
+    <div class="kicker">核心认知</div>
+    <h2 class="section-title">AI 总结的真相，<br>是「会摆盘的厨子」。</h2>
+    <p class="lead">同一份食材：你说"我要吃便当"，他帮你装盒；你说"我要宴请客户"，他给你摆精致小份；你说"我要发朋友圈"，他给你拍美图。<b>AI 总结也是一样</b>——同一份原文，能不能装出 N 种菜，全看你怎么下单。</p>
+
+    <div class="chat-grid" style="margin-top: 22px;">
+      <div class="chat-pane bad">
+        <div class="chat-head"><span class="who">PATH A · 菜鸟下单</span><span class="tag rose">一份模糊总结</span></div>
+        <div class="chat-body">
+          <div class="bubble user">帮我总结一下这篇文章。</div>
+          <div class="bubble ai">
+            <div class="ai-mini-h">AI 回复</div>
+            本文主要讨论了 XX 的现状和趋势，作者认为……（一段 500 字中规中矩、谁都能写出来的总结）
+          </div>
+          <div class="bubble user" style="opacity:.55">…然后呢？我要拿这个干嘛？</div>
+        </div>
+      </div>
+      <div class="chat-pane good">
+        <div class="chat-head"><span class="who">PATH B · 老手下单</span><span class="tag olive">3 档 + 表格 + 引用</span></div>
+        <div class="chat-body">
+          <div class="bubble user">请基于以下文章，<b>同时</b>给我 4 个版本：
+1. L1 一句话（30 字内）发群里勾兴趣；
+2. L2 要点版（3-5 条）让我决定要不要细读；
+3. L3 精读版（300 字）替代原文；
+4. 关键事实做成表格：事件 / 时间 / 数字 / 出处。
+每个要点附原文一句话引用，方便我核对。
+
+文章：[原文]</div>
+          <div class="bubble ai">
+            <div class="ai-mini-h">AI 回复（节选）</div>
+            <b>L1：</b>「同一份原文，能拆出 4 种用法。」<br>
+            <b>L2：</b>① 总结 = 重新组织；② 浓缩走三档；③ 重组走五形态；④ 三大陷阱要核原文。<br>
+            <b>L3：</b>……（300 字精读）<br>
+            <b>表格：</b>事件 · 时间 · 数字 · 出处<br>
+            <b>引用：</b>「<i>"总结的本质不是变短，而是换密度"</i>」——原文 §2
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chef-line">
+      <div class="chef-card">
+        <div class="scene-lbl">情境 A · 给同事</div>
+        <h4>便当：3 个 bullet + 一个结论</h4>
+        <p>同事 30 秒读完知道下一步。</p>
+      </div>
+      <div class="chef-card">
+        <div class="scene-lbl">情境 B · 给老板</div>
+        <h4>宴席：结论先行 + 3 个论据</h4>
+        <p>金字塔结构，老板抬眼就抓住要点。</p>
+      </div>
+      <div class="chef-card">
+        <div class="scene-lbl">情境 C · 给群里</div>
+        <h4>朋友圈：一句话 + 三句话两层</h4>
+        <p>勾起兴趣，让别人主动来问。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 3 · 三档浓缩 ============ -->
+  <section class="slide shell" data-title="三档浓缩法">
+    <div class="kicker">浓缩 · 把长变短</div>
+    <h2 class="section-title">先想清楚一件事：<br>这个总结是<u>给谁看</u>的。</h2>
+    <p class="lead">按"给谁看"分三档。提前告诉 AI 想要哪一档，效果天差地别。</p>
+
+    <div class="tier-grid">
+      <div class="tier l1">
+        <div class="lvl">L1</div>
+        <h3>一句话</h3>
+        <div class="meta">≤ 30 字 · 给群友 / 朋友圈</div>
+        <p style="color: var(--muted); margin: 0 0 10px;">标题党式抓眼球，让别人主动来问"在哪？发我"。</p>
+        <div class="sample">「同一份原文，AI 能给你 10 种交付物，关键是你先想清楚下单方式。」</div>
+      </div>
+      <div class="tier l2">
+        <div class="lvl">L2</div>
+        <h3>要点版</h3>
+        <div class="meta">3 - 5 条 · 每条 ≤ 20 字 · 给自己快速浏览</div>
+        <p style="color: var(--muted); margin: 0 0 10px;">决定"要不要继续深读"的过滤器。一次能筛 20 篇，省下时间深读 3 篇。</p>
+        <div class="sample">
+          ① 总结 = 重新组织，不是删字<br>
+          ② 浓缩走三档：一句 / 要点 / 精读<br>
+          ③ 重组走五形态：表 / 点 / 流 / 线 / 图<br>
+          ④ 三大陷阱：数字 / 中段 / 情绪
+        </div>
+      </div>
+      <div class="tier l3">
+        <div class="lvl">L3</div>
+        <h3>精读版</h3>
+        <div class="meta">200 - 500 字 · 替代原文 · 给汇报 / 存档</div>
+        <p style="color: var(--muted); margin: 0 0 10px;">保留核心结论 + 最关键的 1-2 个论据，让别人不用看原文也能用。</p>
+        <div class="sample">本文核心论点是：AI 总结的能力不在"变短"，而在"换密度"。作者用厨子摆盘做类比……（保留关键论据 1-2 个）……</div>
+      </div>
+    </div>
+
+    <div class="prompt-box" style="margin-top: 20px;">
+      <div class="prompt-head">
+        <strong>三档浓缩 · 一次发出</strong>
+        <button class="btn btn-mini" type="button" data-copy-target="prompt-tier" onclick="copyPrompt('prompt-tier', this)">复制</button>
+      </div>
+<pre><code id="prompt-tier">请基于以下文章，分别输出三档总结：
+L1：一句话（30 字内），适合发群里勾起兴趣；
+L2：3-5 个要点（每条不超过 20 字），让我判断要不要细看；
+L3：精读版（300 字内），保留核心结论和最关键的 1-2 个论据。
+
+文章：【粘贴原文】</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ Slide 4 · 五种形态 ============ -->
+  <section class="slide shell" data-title="五种重组形态">
+    <div class="kicker">重组 · 换形态</div>
+    <h2 class="section-title">5 种"换菜方式"，<br>对应 5 种使用场景。</h2>
+    <p class="lead">关心"读什么"用三档浓缩，关心"怎么读"就选这五种重组形态。两者可以一次提示一起要。</p>
+
+    <div class="shape-grid">
+      <div class="shape">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="16" rx="2"/>
+            <path d="M3 10h18M3 16h18M9 4v16M15 4v16"/>
+          </svg>
+        </div>
+        <h3>表格</h3>
+        <p>多对象 / 多维度对比。把零散文字变成结构化的飞书表格。</p>
+        <div class="kw">"整理成表格，列为…，行为…"</div>
+      </div>
+      <div class="shape">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="5" cy="6" r="1.5"/><circle cx="5" cy="12" r="1.5"/><circle cx="5" cy="18" r="1.5"/>
+            <path d="M10 6h10M10 12h10M10 18h10"/>
+          </svg>
+        </div>
+        <h3>要点</h3>
+        <p>分条阅读，便于扫读 / 引用 / 转发。</p>
+        <div class="kw">"提炼为 N 个要点，每条不超 X 字"</div>
+      </div>
+      <div class="shape">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="7" height="5" rx="1"/>
+            <rect x="14" y="4" width="7" height="5" rx="1"/>
+            <rect x="3" y="15" width="7" height="5" rx="1"/>
+            <rect x="14" y="15" width="7" height="5" rx="1"/>
+            <path d="M10 6.5h4M10 17.5h4M6.5 9v6M17.5 9v6"/>
+          </svg>
+        </div>
+        <h3>流程图</h3>
+        <p>描述步骤、因果链。用 Mermaid 输出，贴飞书 / Obsidian 直接渲染。</p>
+        <div class="kw">"用 Mermaid 流程图表示"</div>
+      </div>
+      <div class="shape">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 12h18"/>
+            <circle cx="6" cy="12" r="2"/>
+            <circle cx="12" cy="12" r="2"/>
+            <circle cx="18" cy="12" r="2"/>
+            <path d="M6 8v-2M12 16v2M18 8v-2"/>
+          </svg>
+        </div>
+        <h3>时间线</h3>
+        <p>历史事件、项目进度、版本演化。</p>
+        <div class="kw">"按时间排成时间线"</div>
+      </div>
+      <div class="shape">
+        <div class="ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="2.5"/>
+            <path d="M12 9.5V5M12 14.5V19M9.5 12H5M14.5 12H19M8 8l-2-2M16 8l2-2M8 16l-2 2M16 16l2 2"/>
+          </svg>
+        </div>
+        <h3>思维导图</h3>
+        <p>概念关系 / 知识结构。Mermaid mindmap 直接渲染。</p>
+        <div class="kw">"用 Mermaid mindmap 输出"</div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top: 20px;">
+      <strong>一个小贴士：</strong>Mermaid 是一种用<b>文字描述图</b>的语法。AI 输出代码 → 你贴进飞书文档 / Obsidian / Notion / VS Code，图<b>自动渲染</b>出来。不用任何画图工具。
+    </div>
+  </section>
+
+  <!-- ============ Slide 5 · 评论 → 表格 ============ -->
+  <section class="slide shell" data-title="演示 · 30 条评论变表格">
+    <div class="kicker">现场演示 · 30 秒手动一小时</div>
+    <h2 class="section-title">把"乱"的一团评论，<br>30 秒变成可直接用的表格。</h2>
+    <p class="lead">这是这一章最容易"啊~"的演示。原本要手动一行一行整理一小时，现在 30 秒。</p>
+
+    <div class="demo-grid" style="margin-top: 8px;">
+      <div>
+        <div class="raw-comments" aria-label="模拟评论原文">
+          <span class="stamp">paste · 30 条评论 · 来自 App Store</span>
+          <p><b>用户 A：</b>这个新版本卡死好几次，转账页面直接闪退，根本没法用，差评！</p>
+          <p><b>用户 B：</b>界面好看了一点，但每次启动都强制更新，烦死了。</p>
+          <p><b>用户 C：</b>客服态度不错，问题解决也快，给个赞。</p>
+          <p><b>用户 D：</b>夜间模式终于来了，等了一年，泪目！</p>
+          <p><b>用户 E：</b>充值后没到账，等了 3 小时还没解决，再不退钱我就投诉了。</p>
+          <p><b>用户 F：</b>开屏广告关不掉，烦人。</p>
+          <p><b>用户 G：</b>新版本 UI 简洁清爽，操作顺手，五星。</p>
+          <p><b>用户 H：</b>搜索功能找不到我想要的，老版本搜得到，新版本搜不到。</p>
+          <p><b>用户 I：</b>充值到账秒级，比 XX 银行强多了。</p>
+          <p><b>用户 J：</b>更新后字体小了，老人家根本看不清。</p>
+          <p style="opacity:.6">…剩余 20 条略</p>
+        </div>
+      </div>
+
+      <div>
+        <div class="flip-arrow">↓ &nbsp; 一句话提示词 &nbsp; ↓</div>
+        <div class="demo-table-wrap">
+          <div class="tbl-head">
+            <strong>AI 输出 · 结构化表格（可直接贴飞书 / Notion）</strong>
+            <span class="tag olive">30 秒</span>
+          </div>
+          <table class="demo-table">
+            <thead>
+              <tr><th>#</th><th>评论核心（≤30 字）</th><th>情感</th><th>功能点</th><th>用户类型</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>转账页面闪退，根本没法用</td><td><span class="sentiment neg">负面</span></td><td>转账 / 稳定性</td><td>重度使用者</td></tr>
+              <tr><td>2</td><td>每次启动强制更新很烦</td><td><span class="sentiment neg">负面</span></td><td>启动流程</td><td>普通用户</td></tr>
+              <tr><td>3</td><td>客服响应快、问题处理利索</td><td><span class="sentiment pos">正面</span></td><td>客服</td><td>问题型用户</td></tr>
+              <tr><td>4</td><td>夜间模式终于上线，等了一年</td><td><span class="sentiment pos">正面</span></td><td>视觉 / 夜间模式</td><td>深度用户</td></tr>
+              <tr><td>5</td><td>充值 3 小时未到账，要求退款</td><td><span class="sentiment neg">负面</span></td><td>充值到账</td><td>付费用户</td></tr>
+              <tr><td>6</td><td>开屏广告无法关闭</td><td><span class="sentiment neg">负面</span></td><td>开屏广告</td><td>普通用户</td></tr>
+              <tr><td>7</td><td>新版 UI 简洁清爽、操作顺手</td><td><span class="sentiment pos">正面</span></td><td>UI / 体验</td><td>新装用户</td></tr>
+              <tr><td>8</td><td>搜索功能搜不到老版可以搜到的内容</td><td><span class="sentiment neg">负面</span></td><td>搜索</td><td>老用户</td></tr>
+              <tr><td>9</td><td>充值秒到账，体验好</td><td><span class="sentiment pos">正面</span></td><td>充值到账</td><td>付费用户</td></tr>
+              <tr><td>10</td><td>字体太小，长辈看不清</td><td><span class="sentiment neu">中性</span></td><td>字体 / 可访问性</td><td>家庭用户</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-box" style="margin-top: 18px;">
+      <div class="prompt-head">
+        <strong>提示词 · 评论 → 结构化表格</strong>
+        <button class="btn btn-mini" type="button" data-copy-target="prompt-table" onclick="copyPrompt('prompt-table', this)">复制</button>
+      </div>
+<pre><code id="prompt-table">下面是我从 App Store / 后台 / 公众号评论里复制的 30 条用户反馈。
+请整理成一个表格，列为：
+| 编号 | 评论核心（截取 30 字内） | 情感倾向（正面 / 负面 / 中性） | 涉及功能点 | 用户类型推测 |
+
+要求：
+1. 评论核心要保留原文用词，不要美化；
+2. 情感倾向严格三选一，不要写"偏正面"这种；
+3. 功能点用简短词组，不要写一句话；
+4. 不确定的用户类型写"未知"。
+
+评论：【粘贴 30 条评论】</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ Slide 6 · 会议纪要 SOP ============ -->
+  <section class="slide shell" data-title="会议纪要 SOP">
+    <div class="kicker">高频办公场景 · 会议纪要</div>
+    <h2 class="section-title">开会 1 小时，<br>纪要 5 分钟出。</h2>
+    <p class="lead">"语音转文字 + AI 总结" 是一条标准链路。会的人 5 分钟交付，不会的人加班到 11 点。</p>
+
+    <div class="sop-flow">
+      <div class="sop-step">
+        <span class="idx">STEP 01</span>
+        <h3>录音 / 录屏</h3>
+        <p>会议时打开手机录音；远程会议用工具自带录制。</p>
+      </div>
+      <div class="sop-step">
+        <span class="idx">STEP 02</span>
+        <h3>语音 → 文字稿</h3>
+        <p>把录音丢给转写工具，几分钟拿到文字稿。</p>
+        <div class="tools"><span>通义听悟</span><span>飞书妙记</span><span>Notta</span><span>Whisper</span></div>
+      </div>
+      <div class="sop-step">
+        <span class="idx">STEP 03</span>
+        <h3>AI 出纪要</h3>
+        <p>把文字稿粘进 AI，配下面这条提示词，让它出 4 模块标准纪要。</p>
+      </div>
+      <div class="sop-step">
+        <span class="idx">STEP 04</span>
+        <h3>人工核对 + 发出</h3>
+        <p>重点核对：决议事项、负责人、截止日期、人名数字。然后丢群里 / 邮件发出。</p>
+      </div>
+    </div>
+
+    <div class="outcome-grid">
+      <div class="outcome"><b>模块 1</b>会议主题与背景（2-3 句）</div>
+      <div class="outcome"><b>模块 2</b>关键讨论点（按议题分组）</div>
+      <div class="outcome"><b>模块 3</b>决议事项（表格：决议 / 负责人 / 截止）</div>
+      <div class="outcome"><b>模块 4</b>待跟进 / 待澄清问题</div>
+    </div>
+
+    <div class="prompt-box" style="margin-top: 20px;">
+      <div class="prompt-head">
+        <strong>提示词 · 会议纪要 4 模块</strong>
+        <button class="btn btn-mini" type="button" data-copy-target="prompt-meeting" onclick="copyPrompt('prompt-meeting', this)">复制</button>
+      </div>
+<pre><code id="prompt-meeting">下面是一场 60 分钟会议的文字稿。请整理成会议纪要，包含 4 个模块：
+
+1. **会议主题与背景**（2-3 句话）
+2. **关键讨论点**（按议题分组，每个议题写：议题 + 主要观点 + 是否达成共识）
+3. **决议事项**（表格：决议内容 | 负责人 | 截止日期）
+4. **待跟进 / 待澄清问题**（列表）
+
+要求：
+- 所有人名、数字、日期与原文一致，不得四舍五入；
+- 没有明确负责人 / 截止日期的，写"未明确"，不要编造；
+- 末尾附上一句"以上由 AI 整理，请相关同事在 24 小时内确认"。
+
+文字稿：【粘贴】</code></pre>
+    </div>
+  </section>
+
+  <!-- ============ Slide 7 · 三大陷阱 ============ -->
+  <section class="slide shell" data-title="三大陷阱">
+    <div class="kicker">保命提醒 · 重要场合必看</div>
+    <h2 class="section-title">AI 总结不是无损的。<br>有 3 个洞，你得知道。</h2>
+    <p class="lead">"给自己看可以；<b>给老板、给客户、给媒体的内容，至少要核三件事</b>：数字、人名、关键结论。"</p>
+
+    <div class="trap-grid">
+      <div class="trap">
+        <div class="row">
+          <span class="lbl bad">陷阱 1</span>
+          <span class="txt"><b>数字 / 数据容易被漏或被改。</b><br>AI 为了"通顺"会把「43.7%」简化成「约 44%」，金额、日期也会被四舍五入。</span>
+        </div>
+        <div class="row">
+          <span class="lbl good">对策</span>
+          <span class="txt">在提示词里硬性约束 AI 不动数字。重要场合最好让 AI 把<b>关键数字另列一张表</b>，便于人眼比对。</span>
+        </div>
+        <div class="counter">"总结中所有数字、金额、日期，必须与原文完全一致，不得四舍五入。"</div>
+      </div>
+
+      <div class="trap">
+        <div class="row">
+          <span class="lbl bad">陷阱 2</span>
+          <span class="txt"><b>长文中段容易被一笔带过。</b><br>很多模型对开头和结尾敏感，中段"略过"，看上去全文都覆盖，实际中间几章被吃了。</span>
+        </div>
+        <div class="row">
+          <span class="lbl good">对策</span>
+          <span class="txt">按章节顺序逐段总结，或拆段分别送进 AI。<b>不要一口气喂太长。</b></span>
+        </div>
+        <div class="counter">"请按文章的章节顺序，每个章节都给一段总结，不要跳过任何章节。"</div>
+      </div>
+
+      <div class="trap">
+        <div class="row">
+          <span class="lbl bad">陷阱 3</span>
+          <span class="txt"><b>原文情绪会被「温柔化」。</b><br>原文是强烈批评、激烈反对，AI 总结往往写成"作者持保留意见"——你完全 get 不到作者真正的态度。</span>
+        </div>
+        <div class="row">
+          <span class="lbl good">对策</span>
+          <span class="txt">主动要求保留情绪强度。<b>把"语气"也当成一个被保护的信号。</b></span>
+        </div>
+        <div class="counter">"请保留原文的情绪强度。如果作者是强烈批评，总结里也要保留批评的语气。"</div>
+      </div>
+    </div>
+
+    <div class="warning" style="margin-top: 22px;">
+      <strong>保命习惯：</strong>给每个要点附上原文一句话引用——「每个总结要点后面，请附上原文中最能支撑该要点的一句话（用 &gt; 引用），方便我核对」。这一行加上去，你<b>抽查的成本从 30 分钟降到 30 秒</b>。
+    </div>
+  </section>
+
+  <!-- ============ Slide 8 · 收束 ============ -->
+  <section class="slide shell" data-title="3 句话带走这一章">
+    <div class="kicker">本场景结束 · 行动清单</div>
+    <h2 class="section-title">3 句话，<br>带走这一章。</h2>
+
+    <ol class="takeaway-list">
+      <li>
+        <span class="num">1</span>
+        <div class="body">
+          <h3>总结是「换密度」，不是「删字」。</h3>
+          <p>同一份原文可以变成 10 种样子。开口前先想清楚：给谁看、要几个字、什么格式。</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">2</span>
+        <div class="body">
+          <h3>浓缩走三档，重组走五形态。</h3>
+          <p>L1 / L2 / L3 一次发出最划算；表格 / 要点 / 流程图 / 时间线 / 思维导图 按需点单。</p>
+        </div>
+      </li>
+      <li>
+        <span class="num">3</span>
+        <div class="body">
+          <h3>警惕三大陷阱：数字、中段、情绪。</h3>
+          <p>给老板 / 客户 / 媒体的总结，必核三件事——数字、人名、关键结论。</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="next-row">
+      <div>
+        <div class="kicker">下一场景</div>
+        <h3 style="margin: 6px 0 0;">03 · 创意启发 —— 没思路时，让 AI 先撒一大网</h3>
+      </div>
+      <a class="btn" href="scene-03-creative-ideation.html">下一页 →</a>
+    </div>
+
+    <div class="next-row" style="margin-top: 12px;">
+      <div>
+        <span class="eyebrow">回到</span>
+        <h3 style="margin: 6px 0 0;">八大场景目录</h3>
+      </div>
+      <a class="btn" href="index.html">返回首页</a>
+    </div>
+  </section>
+
+</main>
+
+<!-- 浮动翻页 -->
+<nav class="deck-nav" aria-label="翻页">
+  <button type="button" onclick="prevSlide()" title="上一页（← / PgUp）">‹ 上一页</button>
+  <span class="counter"><span id="cur">1</span> / <span id="total">8</span></span>
+  <button type="button" onclick="nextSlide()" title="下一页（→ / PgDn / Space）">下一页 ›</button>
+</nav>
+
+<!-- 帮助蒙层 -->
+<div class="help" id="help" onclick="if(event.target===this)closeHelp()">
+  <div class="help-panel" role="dialog" aria-modal="true" aria-label="快捷键">
+    <h3>键盘快捷键</h3>
+    <div class="kb">
+      <code>← / PgUp</code><span>上一页</span>
+      <code>→ / PgDn / Space</code><span>下一页</span>
+      <code>Home / End</code><span>跳到首页 / 末页</span>
+      <code>T</code><span>切换明暗主题</span>
+      <code>1 - 8</code><span>直接跳到对应页</span>
+      <code>?</code><span>显示这个面板</span>
+      <code>Esc</code><span>关闭这个面板</span>
+    </div>
+    <div style="margin-top: 16px; text-align: right;">
+      <button class="btn btn-mini" type="button" onclick="closeHelp()">知道了</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dotsBox = document.getElementById('dots');
+const curEl = document.getElementById('cur');
+const totalEl = document.getElementById('total');
+const counterText = document.getElementById('counter-text');
+let idx = 0;
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function renderDots() {
+  dotsBox.innerHTML = '';
+  slides.forEach((s, i) => {
+    const dot = document.createElement('i');
+    if (i === idx) dot.classList.add('active');
+    else if (i < idx) dot.classList.add('done');
+    dot.title = s.dataset.title || ('第 ' + (i+1) + ' 屏');
+    dot.addEventListener('click', () => goTo(i));
+    dotsBox.appendChild(dot);
+  });
+}
+function goTo(i) {
+  if (i < 0 || i >= slides.length) return;
+  slides[idx].classList.remove('active');
+  idx = i;
+  slides[idx].classList.add('active');
+  curEl.textContent = idx + 1;
+  totalEl.textContent = slides.length;
+  counterText.textContent = pad(idx+1) + ' / ' + pad(slides.length);
+  renderDots();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+function nextSlide() { goTo(Math.min(idx + 1, slides.length - 1)); }
+function prevSlide() { goTo(Math.max(idx - 1, 0)); }
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('ai8-theme', next); } catch(e) {}
+}
+function openHelp()  { document.getElementById('help').classList.add('open'); }
+function closeHelp() { document.getElementById('help').classList.remove('open'); }
+
+function copyPrompt(id, btn) {
+  const node = document.getElementById(id);
+  if (!node) return;
+  navigator.clipboard.writeText(node.innerText).then(() => {
+    if (!btn) return;
+    const old = btn.innerText;
+    btn.innerText = '已复制 ✓';
+    setTimeout(() => btn.innerText = old, 1300);
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('help').classList.contains('open')) {
+    if (e.key === 'Escape') closeHelp();
+    return;
+  }
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch (e.key) {
+    case 'ArrowRight':
+    case 'PageDown':
+    case ' ':
+      e.preventDefault(); nextSlide(); break;
+    case 'ArrowLeft':
+    case 'PageUp':
+      e.preventDefault(); prevSlide(); break;
+    case 'Home': e.preventDefault(); goTo(0); break;
+    case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
+    case 't': case 'T': toggleTheme(); break;
+    case '?': case '/': openHelp(); break;
+    default:
+      if (/^[1-9]$/.test(e.key)) {
+        const n = parseInt(e.key, 10) - 1;
+        if (n < slides.length) goTo(n);
+      }
+  }
+});
+
+(function init() {
+  try {
+    const t = localStorage.getItem('ai8-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  } catch(e) {}
+  renderDots();
+  totalEl.textContent = slides.length;
+  counterText.textContent = pad(1) + ' / ' + pad(slides.length);
+})();
+</script>
+</body>
+</html>

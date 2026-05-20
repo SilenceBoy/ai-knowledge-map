@@ -32,6 +32,8 @@
 | [为什么 Agent 输出正在从 Markdown 转向 HTML](map/ai/html-as-agent-output-format.html) | AI & 工程 | 2025-05-13 |
 | [AI 团队怎么组（多智能体协作小白版）](map/ai/multi-agent-collaboration-methodology.html) | AI & 工程 | 2026-05-18 |
 | [代码作为 Agent Harness — 极致工程化探索](map/ai/code-as-agent-harness-visual.html) | AI & 工程 | 2026-05-20 |
+| [AI 八大使用场景 · 线下分享专题](map/ai/ai_eight_use_scenarios_offline/index.html) | AI & 工程 | 2026-05-20 |
+
 
 ## 目录结构
 

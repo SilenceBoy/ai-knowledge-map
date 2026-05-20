@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 八大使用场景 · 线下分享</title>
+  <style>
+/* ============ 变量（与子页面完全一致） ============ */
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f5;
+  --surface: #f0ede8;
+  --surface-2: #fffdf9;
+  --text: #2c2825;
+  --muted: #746d64;
+  --border: #d4cfc7;
+  --clay: #d97757;
+  --olive: #788c5d;
+  --sky: #6a8caf;
+  --violet: #8a6faf;
+  --rose: #c66060;
+  --ink: #141413;
+  --shadow: 0 18px 60px rgba(44, 40, 37, .10);
+}
+[data-theme="dark"] {
+  --bg: #171615;
+  --surface: #23211f;
+  --surface-2: #2c2926;
+  --text: #f4efe8;
+  --muted: #b8afa4;
+  --border: #49433d;
+  --clay: #e79678;
+  --olive: #a9bc88;
+  --sky: #9bb8d5;
+  --violet: #b09ad4;
+  --rose: #e07d7d;
+  --ink: #f8f4ed;
+  --shadow: 0 18px 60px rgba(0,0,0,.28);
+}
+
+/* ============ 基础重置（与子页面一致） ============ */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(circle at 14% 0%,  rgba(217,119,87,.10), transparent 32%),
+    radial-gradient(circle at 86% 100%, rgba(106,140,175,.08), transparent 30%),
+    linear-gradient(135deg, var(--bg), var(--surface));
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* ============ 顶栏（与子页面一致） ============ */
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+.topbar-inner {
+  min-height: 56px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+.brand-mark {
+  width: 30px; height: 30px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  display: grid; place-items: center; border-radius: 8px;
+  color: var(--clay);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+}
+.nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn {
+  min-height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  padding: 6px 12px; border-radius: 8px; cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03); font-size: 14px;
+}
+.btn:hover { border-color: var(--clay); }
+
+/* ============ 通用语义类（与子页面一致） ============ */
+.kicker {
+  color: var(--clay);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+}
+h1.slide-title {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: clamp(40px, 6.6vw, 78px); line-height: 1.02; margin: 14px 0 18px;
+}
+h2.section-title {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: clamp(28px, 4.2vw, 46px); line-height: 1.1; margin: 0 0 14px;
+}
+.lead { font-size: clamp(16px, 2vw, 20px); color: var(--muted); max-width: 720px; margin: 0; }
+
+/* ============ 卡片 / 窗口（与子页面一致） ============ */
+.card, .window, .panel {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+}
+.panel { padding: 22px; }
+.card  { padding: 18px; }
+.card h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.3; }
+.card p  { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+/* ============ 标签（与子页面一致） ============ */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  display: inline-flex; align-items: center;
+  min-height: 28px; border: 1px solid var(--border); border-radius: 999px;
+  padding: 3px 11px; color: var(--muted); background: var(--surface); font-size: 13px;
+}
+.tag.clay   { color: var(--clay);   border-color: color-mix(in srgb, var(--clay)   50%, var(--border)); }
+.tag.olive  { color: var(--olive);  border-color: color-mix(in srgb, var(--olive)  50%, var(--border)); }
+.tag.sky    { color: var(--sky);    border-color: color-mix(in srgb, var(--sky)    50%, var(--border)); }
+.tag.violet { color: var(--violet); border-color: color-mix(in srgb, var(--violet) 50%, var(--border)); }
+
+/* ============ 栅格（与子页面一致） ============ */
+.grid   { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+
+/* ============ 警示 / 注释（与子页面一致） ============ */
+.warning {
+  border-left: 4px solid var(--clay); padding: 14px 16px;
+  background: color-mix(in srgb, var(--clay) 12%, var(--surface-2)); border-radius: 8px;
+}
+.note {
+  border-left: 4px solid var(--olive); padding: 14px 16px;
+  background: color-mix(in srgb, var(--olive) 10%, var(--surface-2)); border-radius: 8px;
+}
+
+/* ============ 窗口条（与子页面一致） ============ */
+.window { overflow: hidden; }
+.window-bar {
+  height: 38px; display: flex; align-items: center; gap: 7px;
+  padding: 0 14px; border-bottom: 1px solid var(--border); background: var(--surface);
+}
+.dot-win { width: 10px; height: 10px; border-radius: 50%; background: var(--clay); }
+.dot-win:nth-child(2) { background: var(--olive); }
+.dot-win:nth-child(3) { background: var(--sky); }
+.window-title { margin-left: 8px; color: var(--muted); font-size: 13px; }
+.window-body  { padding: 18px; }
+
+/* ============ 页面布局 ============ */
+.section { padding: 36px 0; }
+.section-head { margin-bottom: 24px; }
+
+/* Hero */
+.hero {
+  padding: 52px 0 36px;
+  display: grid; grid-template-columns: minmax(0,1.2fr) minmax(300px,.8fr);
+  gap: 28px; align-items: center;
+}
+.stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 18px; }
+.stat {
+  border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: var(--surface);
+}
+.stat b { display: block; font-size: 26px; line-height: 1.1; font-family: Georgia, serif; }
+.stat span { color: var(--muted); font-size: 13px; }
+
+/* TOC */
+.toc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+.toc a {
+  border: 1px solid var(--border); background: var(--surface-2);
+  border-radius: 999px; padding: 6px 12px; color: var(--muted); font-size: 13px;
+}
+.toc a:hover { color: var(--clay); border-color: var(--clay); }
+
+/* ============================================================
+   四象限矩阵
+   ============================================================ */
+.quad-grid-wrap {
+  display: grid;
+  grid-template-columns: 64px 1fr 1fr;
+  grid-template-rows: 38px minmax(210px,auto) minmax(210px,auto);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+.quad-corner {
+  background: var(--surface);
+  position: relative;
+}
+.quad-corner::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom right,
+    transparent calc(50% - 0.5px),
+    var(--border) calc(50% - 0.5px),
+    var(--border) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px)
+  );
+}
+.quad-col-label {
+  display: flex; align-items: center; justify-content: center;
+  background: var(--surface);
+  font-size: 13px; font-weight: 700; color: var(--muted); letter-spacing: .02em; gap: 5px;
+}
+.quad-col-label .arr { font-size: 14px; opacity: .45; }
+.quad-row-label {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: var(--surface);
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  text-align: center; padding: 8px 4px; line-height: 1.5; gap: 3px;
+}
+.quad-row-label .rl-arr { font-size: 13px; opacity: .4; }
+.quad-row-label .rl-sub { font-size: 10px; font-weight: 400; opacity: .6; }
+.quadrant { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.quadrant.q-sky    { background: color-mix(in srgb, var(--sky)    9%, var(--surface-2)); }
+.quadrant.q-olive  { background: color-mix(in srgb, var(--olive)  9%, var(--surface-2)); }
+.quadrant.q-clay   { background: color-mix(in srgb, var(--clay)   9%, var(--surface-2)); }
+.quadrant.q-violet { background: color-mix(in srgb, var(--violet) 9%, var(--surface-2)); }
+.quad-tag {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--muted); opacity: .65;
+}
+/* 象限内场景卡片：复用 chat-pane 风格 */
+.qchip {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 11px 14px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+  transition: transform .15s, border-color .18s, box-shadow .15s;
+  color: inherit;
+}
+.qchip:hover {
+  transform: translateY(-2px);
+  border-color: var(--clay);
+  box-shadow: 0 4px 16px rgba(0,0,0,.09);
+}
+.qchip .qnum {
+  width: 26px; height: 26px; border-radius: 6px;
+  background: var(--ink); color: var(--bg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px;
+  display: grid; place-items: center; flex-shrink: 0; margin-top: 1px;
+}
+.qchip strong { font-size: 14px; display: block; line-height: 1.3; }
+.qchip p { margin: 3px 0 0; font-size: 12px; color: var(--muted); line-height: 1.45; }
+
+/* ============================================================
+   核心认知卡片
+   ============================================================ */
+.insight-card {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  box-shadow: var(--shadow);
+  border-radius: 12px; padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.insight-num {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 11px; font-weight: 700; color: var(--clay); letter-spacing: .06em;
+}
+.insight-card h3 { font-size: 17px; margin: 0; line-height: 1.35; }
+.insight-card p  { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.65; }
+.insight-source {
+  display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px;
+}
+.insight-source span {
+  font-size: 11px; color: var(--muted);
+  border: 1px solid var(--border); border-radius: 4px;
+  padding: 1px 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ============================================================
+   误区对比卡
+   ============================================================ */
+.myth-card {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  box-shadow: var(--shadow);
+  border-radius: 12px; overflow: hidden;
+}
+.myth-wrong {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 14px 18px;
+  background: color-mix(in srgb, var(--clay) 8%, var(--surface-2));
+  border-bottom: 1px solid color-mix(in srgb, var(--clay) 20%, var(--border));
+  font-size: 14px; font-weight: 600; line-height: 1.45; color: var(--text);
+}
+.myth-wrong::before {
+  content: '✕'; color: var(--clay); font-size: 13px;
+  flex-shrink: 0; margin-top: 1px; font-weight: 700;
+}
+.myth-right {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 14px 18px; font-size: 13.5px; color: var(--muted); line-height: 1.6;
+}
+.myth-right::before {
+  content: '→'; color: var(--olive); font-size: 15px;
+  flex-shrink: 0; margin-top: 0; font-weight: 700;
+}
+
+/* ============================================================
+   Q&A 折叠
+   ============================================================ */
+.qa-list { display: flex; flex-direction: column; gap: 8px; }
+.qa-item {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  box-shadow: 0 2px 8px rgba(44,40,37,.04);
+  border-radius: 12px; overflow: hidden;
+  transition: border-color .18s;
+}
+.qa-item[open] { border-color: color-mix(in srgb, var(--clay) 45%, var(--border)); }
+.qa-item summary {
+  cursor: pointer; list-style: none;
+  display: flex; align-items: center; gap: 12px;
+  padding: 16px 20px; font-weight: 700; font-size: 15px; line-height: 1.35;
+  user-select: none;
+}
+.qa-item summary::-webkit-details-marker { display: none; }
+.qa-item summary::before {
+  content: 'Q';
+  width: 26px; height: 26px; flex-shrink: 0;
+  display: grid; place-items: center; border-radius: 6px;
+  background: var(--clay); color: var(--bg);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px; font-weight: 700;
+}
+.qa-chevron { margin-left: auto; font-size: 16px; color: var(--muted); transition: transform .2s; flex-shrink: 0; }
+.qa-item[open] .qa-chevron { transform: rotate(180deg); }
+.qa-body {
+  padding: 0 20px 18px 58px;
+  font-size: 14px; color: var(--muted); line-height: 1.7;
+  border-top: 1px solid var(--border);
+}
+.qa-body p { margin: 12px 0 0; }
+.qa-body p:first-child { margin-top: 14px; }
+.qa-body strong { color: var(--text); }
+.qa-steps {
+  margin: 10px 0 0; padding: 0; list-style: none;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.qa-steps li {
+  display: flex; gap: 10px; align-items: flex-start; font-size: 14px;
+}
+.qa-steps li::before {
+  content: attr(data-n);
+  width: 20px; height: 20px; flex-shrink: 0;
+  display: grid; place-items: center; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  font-size: 11px; font-weight: 700;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  margin-top: 2px;
+}
+
+/* ============ Footer ============ */
+.footer {
+  padding: 28px 0 44px; border-top: 1px solid var(--border); margin-top: 36px;
+}
+.small { font-size: 13px; color: var(--muted); }
+
+/* ============ 响应式 ============ */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding-top: 36px; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .nav-actions .optional { display: none; }
+  .quad-grid-wrap {
+    grid-template-columns: 50px 1fr 1fr;
+    grid-template-rows: 32px minmax(190px,auto) minmax(190px,auto);
+  }
+  .quad-col-label { font-size: 12px; }
+  .quad-row-label { font-size: 10px; }
+}
+@media (max-width: 600px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .quad-grid-wrap { grid-template-columns: 36px 1fr 1fr; }
+  .quad-col-label { font-size: 11px; gap: 3px; }
+  .quad-col-label .arr { display: none; }
+  .quad-row-label .rl-arr { display: none; }
+  .qchip { padding: 9px 10px; gap: 8px; }
+  .qchip strong { font-size: 13px; }
+  .qchip p { display: none; }
+  .quadrant { padding: 12px; }
+  .qa-body { padding-left: 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ======== 顶栏 ======== -->
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="index.html" aria-label="返回首页">
+      <span class="brand-mark">AI</span>
+      <span>八大使用场景</span>
+    </a>
+    <nav class="nav-actions">
+      <a class="btn optional" href="index.html">首页</a>
+      <button class="btn" type="button" onclick="toggleTheme()">明暗</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ======== Hero ======== -->
+  <section class="shell hero">
+    <div>
+      <div class="kicker">Offline Talk · 线下分享</div>
+      <h1 class="slide-title">AI 八大使用场景</h1>
+      <p class="lead">给小白装上"AI 雷达"：不是先背提示词，而是先识别这一刻该用哪一种 AI 姿势。</p>
+      <nav class="toc" aria-label="快速入口">
+        <a href="#matrix">判断矩阵</a>
+        <a href="#insights">核心认知</a>
+        <a href="#myths">常见误区</a>
+        <a href="#qa">Q &amp; A</a>
+      </nav>
+    </div>
+    <aside class="panel">
+      <div class="kicker">核心判断</div>
+      <h2 class="section-title" style="font-size:clamp(18px,2.4vw,26px);margin-top:10px;">AI 能干，和 AI 适合干，是两回事。</h2>
+      <p style="color:var(--muted);font-size:14px;margin:0;">本次分享把课程压缩成 8 个"抽屉"。学会把任务放进对应抽屉，就能知道下一句话怎么对 AI 说。</p>
+      <div class="stat-grid">
+        <div class="stat"><b>8</b><span>使用场景</span></div>
+        <div class="stat"><b>2×2</b><span>判断维度</span></div>
+        <div class="stat"><b>1</b><span>现场演示线</span></div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- ======== 四象限矩阵 ======== -->
+  <section id="matrix" class="shell section">
+    <div class="section-head">
+      <div class="kicker">第一步 · 建立框架</div>
+      <h2 class="section-title">一张图判断该用哪种模式</h2>
+      <p class="lead">先问两个问题：① 我是要<strong>处理信息</strong>，还是<strong>产出内容</strong>？② 目标是<strong>清晰</strong>的，还是<strong>模糊</strong>的？</p>
+    </div>
+
+    <div class="quad-grid-wrap" role="img" aria-label="八大场景四象限判断矩阵">
+      <div class="quad-corner"></div>
+      <div class="quad-col-label"><span class="arr">←</span> 目标明确</div>
+      <div class="quad-col-label">目标模糊 <span class="arr">→</span></div>
+
+      <div class="quad-row-label">
+        <span class="rl-arr">↑</span>
+        处理信息
+        <span class="rl-sub">输入端</span>
+      </div>
+      <div class="quadrant q-sky">
+        <div class="quad-tag">明确 · 输入</div>
+        <a class="qchip" href="scene-01-question-learning.html">
+          <span class="qnum">01</span>
+          <div><strong>提问学习</strong><p>不懂的概念，先让 AI 建知识地图</p></div>
+        </a>
+        <a class="qchip" href="scene-02-summary-integration.html">
+          <span class="qnum">02</span>
+          <div><strong>总结整合</strong><p>换密度呈现同一份信息</p></div>
+        </a>
+      </div>
+      <div class="quadrant q-olive">
+        <div class="quad-tag">模糊 · 输入</div>
+        <a class="qchip" href="scene-06-socratic-reflection.html">
+          <span class="qnum">06</span>
+          <div><strong>深思反问</strong><p>让 AI 反问你，暴露思维盲区</p></div>
+        </a>
+        <a class="qchip" href="scene-08-analysis-research.html">
+          <span class="qnum">08</span>
+          <div><strong>分析研究</strong><p>从文字或数据里找关系</p></div>
+        </a>
+      </div>
+
+      <div class="quad-row-label">
+        产出内容
+        <span class="rl-sub">输出端</span>
+        <span class="rl-arr">↓</span>
+      </div>
+      <div class="quadrant q-clay">
+        <div class="quad-tag">明确 · 输出</div>
+        <a class="qchip" href="scene-04-content-generation.html">
+          <span class="qnum">04</span>
+          <div><strong>创作生成</strong><p>规则说清楚，让 AI 写出来</p></div>
+        </a>
+        <a class="qchip" href="scene-07-translation-transformation.html">
+          <span class="qnum">07</span>
+          <div><strong>翻译转化</strong><p>信息换形态：语言 / 格式 / 模态</p></div>
+        </a>
+      </div>
+      <div class="quadrant q-violet">
+        <div class="quad-tag">模糊 · 输出</div>
+        <a class="qchip" href="scene-03-creative-ideation.html">
+          <span class="qnum">03</span>
+          <div><strong>创意启发</strong><p>先撒网，从候选里找方向</p></div>
+        </a>
+        <a class="qchip" href="scene-05-reference-imitation.html">
+          <span class="qnum">05</span>
+          <div><strong>模仿参考</strong><p>说不清风格时，直接贴样本</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== 核心认知 ======== -->
+  <section id="insights" class="shell section">
+    <div class="section-head">
+      <div class="kicker">第二步 · 收拢总结</div>
+      <h2 class="section-title">核心认知</h2>
+      <p class="lead">横跨 8 个场景的共通规律——比任何单一场景都更重要。</p>
+    </div>
+    <div class="grid grid-3">
+
+      <div class="insight-card">
+        <div class="insight-num">INSIGHT 01</div>
+        <h3>先判断场景，再写提示词</h3>
+        <p>任务放错抽屉，再好的提示词也白搭。矩阵是地图，提示词是路线——地图选错，跑再快也是南辕北辙。</p>
+        <div class="insight-source"><span>贯穿全程</span></div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">INSIGHT 02</div>
+        <h3>AI 的问题，比 AI 的答案更值钱</h3>
+        <p>绝大多数人用 AI 只取答案。但让 AI 反问你、追问你、逼出盲区，才是思维质量的真正提升器。</p>
+        <div class="insight-source"><span>深思反问</span><span>分析研究</span></div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">INSIGHT 03</div>
+        <h3>说不清的东西，直接贴样本</h3>
+        <p>人天生对风格的识别能力远超描述能力。贴 3 段范文或 1 张参考图，胜过绞尽脑汁写形容词。</p>
+        <div class="insight-source"><span>模仿参考</span><span>创作生成</span></div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">INSIGHT 04</div>
+        <h3>四件套是万能提示词骨架</h3>
+        <p><strong>角色 + 背景 + 任务 + 格式</strong>，四个槽位填一遍，覆盖 80% 的使用场景。其中"格式"是最容易被忽略的。</p>
+        <div class="insight-source"><span>创作生成</span><span>总结整合</span></div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">INSIGHT 05</div>
+        <h3>AI 穷举可能性，你来做决定</h3>
+        <p>AI 的优势是快速列举大量候选、推演多种路径。判断、拍板、执行永远是你的责任——把决定权交给 AI 是最大的误用。</p>
+        <div class="insight-source"><span>创意启发</span><span>深思反问</span></div>
+      </div>
+
+      <div class="insight-card">
+        <div class="insight-num">INSIGHT 06</div>
+        <h3>真实任务几乎都是组合拳</h3>
+        <p>写一份报告 = 提问学习理背景 + 总结整合压材料 + 创作生成写出来 + 深思反问找漏洞。单个场景是招式，组合才是实战。</p>
+        <div class="insight-source"><span>综合运用</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======== 常见误区 ======== -->
+  <section id="myths" class="shell section">
+    <div class="section-head">
+      <h2 class="section-title">常见误区</h2>
+      <p class="lead">这些认知如果不纠正，学再多提示词技巧也会原地打转。</p>
+    </div>
+    <div class="grid grid-2">
+
+      <div class="myth-card">
+        <div class="myth-wrong">"帮我写"三个字就够了</div>
+        <div class="myth-right">说了三个字，AI 只能猜。身份、背景、任务、格式缺一不可——规则没给清楚，产出就是猜测的平均值。</div>
+      </div>
+
+      <div class="myth-card">
+        <div class="myth-wrong">AI 回答了就等于答对了</div>
+        <div class="myth-right">AI 不会告诉你它在编造。数据分析结果、引用来源、逻辑推断，都需要主动核实，尤其是用于决策时。</div>
+      </div>
+
+      <div class="myth-card">
+        <div class="myth-wrong">提示词越详细、越长越好</div>
+        <div class="myth-right">关键是结构清晰，不是字数堆砌。一个 50 字的四件套提示词，往往胜过一段 500 字的流水账式描述。</div>
+      </div>
+
+      <div class="myth-card">
+        <div class="myth-wrong">用了 AI，效率自然就高了</div>
+        <div class="myth-right">错误场景用 AI，比不用更慢——你在和 AI 反复修改，不如一开始就自己写。工具对了，才叫效率。</div>
+      </div>
+
+      <div class="myth-card">
+        <div class="myth-wrong">AI 不了解我的业务，问不准</div>
+        <div class="myth-right">大多数尖锐问题是通用的（用户是谁、商业模型、风险点）。不需要懂你的行业，也能问中要害——人类思维的漏洞是共通的。</div>
+      </div>
+
+      <div class="myth-card">
+        <div class="myth-wrong">AI 会替代我思考，我变懒了</div>
+        <div class="myth-right">AI 放大你的思维质量，而不是替代它。带着烂问题去问，出来的是烂答案的放大版——输入的深度决定输出的上限。</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ======== Q&A ======== -->
+  <section id="qa" class="shell section">
+    <div class="section-head">
+      <h2 class="section-title">Q &amp; A</h2>
+      <p class="lead">现场最常被问到的五个问题。</p>
+    </div>
+    <div class="qa-list">
+
+      <details class="qa-item">
+        <summary>
+          怎么快速判断该用哪个场景？
+          <span class="qa-chevron">⌄</span>
+        </summary>
+        <div class="qa-body">
+          <p>问自己两个问题就能定位：</p>
+          <ul class="qa-steps">
+            <li data-n="1">我是要<strong>处理已有的信息</strong>（理解、总结、分析），还是要<strong>产出新的内容</strong>（写作、创意、转化）？</li>
+            <li data-n="2">我的目标<strong>清不清楚</strong>？知道要什么就是"明确"；只有方向感、说不清具体要什么就是"模糊"。</li>
+          </ul>
+          <p>两问交叉，直接对应矩阵里的象限，再缩小到 2 个场景选一个。</p>
+        </div>
+      </details>
+
+      <details class="qa-item">
+        <summary>
+          AI 给的答案不满意，怎么办？
+          <span class="qa-chevron">⌄</span>
+        </summary>
+        <div class="qa-body">
+          <p>不满意通常出在四个地方，按顺序排查：</p>
+          <ul class="qa-steps">
+            <li data-n="1"><strong>场景选错了</strong> → 换一个场景重新发起</li>
+            <li data-n="2"><strong>四件套没填完</strong> → 补上缺的槽位（最常缺的是"格式"）</li>
+            <li data-n="3"><strong>没给样本</strong> → 贴 1–3 个你想要的结果样本</li>
+            <li data-n="4"><strong>直接追问</strong> → 说"这部分不对，原因是 XX，重新来一次"</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="qa-item">
+        <summary>
+          不会写提示词，能上手吗？
+          <span class="qa-chevron">⌄</span>
+        </summary>
+        <div class="qa-body">
+          <p>能。用<strong>四件套骨架</strong>套一遍就够起步：</p>
+          <p>你是 <strong>[角色]</strong>，背景是 <strong>[上下文]</strong>，帮我 <strong>[具体任务]</strong>，用 <strong>[格式/长度/语气]</strong> 输出。</p>
+          <p>每个槽位哪怕只填一句话，输出质量都会比"帮我写一篇文章"提升几个档次。四件套先用熟，比背 100 个技巧更管用。</p>
+        </div>
+      </details>
+
+      <details class="qa-item">
+        <summary>
+          多个场景可以叠加着用吗？
+          <span class="qa-chevron">⌄</span>
+        </summary>
+        <div class="qa-body">
+          <p>不只可以，而且这才是高手的真实用法：</p>
+          <ul class="qa-steps">
+            <li data-n="1"><strong>创意启发</strong> → 撒网找 10 个方向，选一个</li>
+            <li data-n="2"><strong>深思反问</strong> → 让 AI 扮演苛刻评委，找漏洞</li>
+            <li data-n="3"><strong>创作生成</strong> → 用四件套骨架写出来</li>
+            <li data-n="4"><strong>模仿参考</strong> → 贴一篇优秀同类文章，让 AI 调整风格</li>
+          </ul>
+          <p>8 个场景是 8 种姿势，任何真实任务都可以自由编排顺序。</p>
+        </div>
+      </details>
+
+      <details class="qa-item">
+        <summary>
+          用哪个 AI 比较好？
+          <span class="qa-chevron">⌄</span>
+        </summary>
+        <div class="qa-body">
+          <p>大多数场景用<strong>任何主流 AI</strong>（Claude、ChatGPT、DeepSeek、Kimi）都够用。差别主要体现在：</p>
+          <ul class="qa-steps">
+            <li data-n="→"><strong>深思反问</strong>：Claude 的追问力度更强、更不客气</li>
+            <li data-n="→"><strong>代码 / 数据分析</strong>：Claude、GPT 均可；需要 Code Interpreter 功能</li>
+            <li data-n="→"><strong>图像生成</strong>：要用专门的生图 AI（即梦、Midjourney、Flux 等）</li>
+            <li data-n="→"><strong>中文写作风格</strong>：DeepSeek、Kimi 在地道中文表达上更自然</li>
+          </ul>
+          <p>建议先把场景用熟，再去比较不同 AI 的细节差异，别在工具选择上卡太久。</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ======== 收尾 ======== -->
+  <section id="closing" class="shell section">
+    <div class="window">
+      <div class="window-bar">
+        <span class="dot-win"></span><span class="dot-win"></span><span class="dot-win"></span>
+        <span class="window-title">带走这三句话</span>
+      </div>
+      <div class="window-body grid grid-3">
+        <div>
+          <h3>判断先于提示词</h3>
+          <p style="color:var(--muted);font-size:14px;margin:8px 0 0;">遇到任务，先问自己：这是哪个象限？再开口跟 AI 说话。</p>
+        </div>
+        <div>
+          <h3>今天试一个场景</h3>
+          <p style="color:var(--muted);font-size:14px;margin:8px 0 0;">不要一口气学完，挑一个今天最痛的问题，用对应场景试 3 轮对话。</p>
+        </div>
+        <div>
+          <h3>组合比单招更强</h3>
+          <p style="color:var(--muted);font-size:14px;margin:8px 0 0;">用 AI 用得好的人，都在把多个场景串成工作流，而不是只用一招。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="shell small">内容来源：方法库 / AI 八大使用场景-小白入门课。页面为线下分享场景重组版。</div>
+</footer>
+
+<script>
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = current === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('ai8-theme', next); } catch(e) {}
+}
+(function initTheme() {
+  try {
+    const saved = localStorage.getItem('ai8-theme');
+    if (saved) document.documentElement.setAttribute('data-theme', saved);
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

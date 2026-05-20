@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>06 深思反问 · AI 八大使用场景</title>
+  <style>
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f5;
+  --surface: #f0ede8;
+  --surface-2: #fffdf9;
+  --text: #2c2825;
+  --muted: #746d64;
+  --border: #d4cfc7;
+  --clay: #d97757;
+  --olive: #788c5d;
+  --sky: #6a8caf;
+  --ink: #141413;
+  --rose: #c66060;
+  --amber: #b07c30;
+  --violet: #8a6faf;
+  --shadow: 0 18px 60px rgba(44, 40, 37, .10);
+}
+[data-theme="dark"] {
+  --bg: #171615;
+  --surface: #23211f;
+  --surface-2: #2c2926;
+  --text: #f4efe8;
+  --muted: #b8afa4;
+  --border: #49433d;
+  --clay: #e79678;
+  --olive: #a9bc88;
+  --sky: #9bb8d5;
+  --ink: #f8f4ed;
+  --rose: #e07d7d;
+  --amber: #d4a050;
+  --violet: #b39dd5;
+  --shadow: 0 18px 60px rgba(0, 0, 0, .28);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(138, 111, 175, .10), transparent 32%),
+    radial-gradient(circle at 88% 100%, rgba(106, 140, 175, .08), transparent 30%),
+    linear-gradient(135deg, var(--bg), var(--surface));
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* ============ 顶栏 ============ */
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+.topbar-inner {
+  min-height: 56px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+.brand-mark {
+  width: 30px; height: 30px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  display: grid; place-items: center; border-radius: 8px;
+  color: var(--violet); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+}
+.nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn {
+  min-height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  padding: 6px 12px; border-radius: 8px; cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03); font-size: 14px;
+}
+.btn:hover { border-color: var(--violet); }
+.btn-mini { min-height: 30px; padding: 4px 10px; font-size: 13px; }
+
+/* ============ 进度条 ============ */
+.progress { display: flex; align-items: center; gap: 6px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--muted); }
+.progress-dots { display: flex; gap: 5px; }
+.progress-dots i { display: block; width: 18px; height: 4px; background: var(--border); border-radius: 2px; transition: background .2s ease, transform .2s ease; cursor: pointer; }
+.progress-dots i.active { background: var(--violet); transform: scaleY(1.4); }
+.progress-dots i.done { background: var(--olive); }
+
+/* ============ 翻页轨道 ============ */
+.deck { position: relative; width: 100%; }
+.slide { min-height: calc(100vh - 58px); padding: 48px 0 100px; display: none; animation: slideIn .35s ease; }
+.slide.active { display: block; }
+@keyframes slideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ============ 通用语义类 ============ */
+.kicker { color: var(--violet); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; }
+.eyebrow { color: var(--muted); font-size: 14px; }
+h1.slide-title { font-family: Georgia, "Times New Roman", "Songti SC", serif; font-size: clamp(40px, 6.6vw, 78px); line-height: 1.02; margin: 14px 0 18px; letter-spacing: 0; }
+h2.section-title { font-family: Georgia, "Times New Roman", "Songti SC", serif; font-size: clamp(28px, 4.2vw, 46px); line-height: 1.1; margin: 12px 0 14px; letter-spacing: 0; }
+.lead { font-size: clamp(17px, 2vw, 21px); color: var(--muted); max-width: 760px; }
+
+.card, .prompt-box, .panel { border: 1px solid var(--border); background: color-mix(in srgb, var(--surface-2) 90%, transparent); box-shadow: var(--shadow); border-radius: 12px; }
+.panel { padding: 22px; }
+.card { padding: 18px; }
+.card h3 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0; color: var(--muted); }
+
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+.tag { display: inline-flex; align-items: center; min-height: 28px; border: 1px solid var(--border); border-radius: 999px; padding: 3px 11px; color: var(--muted); background: var(--surface); font-size: 13px; }
+.tag.clay   { color: var(--clay);   border-color: color-mix(in srgb, var(--clay)   50%, var(--border)); }
+.tag.olive  { color: var(--olive);  border-color: color-mix(in srgb, var(--olive)  50%, var(--border)); }
+.tag.sky    { color: var(--sky);    border-color: color-mix(in srgb, var(--sky)    50%, var(--border)); }
+.tag.violet { color: var(--violet); border-color: color-mix(in srgb, var(--violet) 50%, var(--border)); }
+
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+.prompt-box { overflow: hidden; }
+.prompt-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--border); background: var(--surface); }
+.prompt-head strong { font-size: 14px; }
+pre { margin: 0; padding: 18px; overflow: auto; white-space: pre-wrap; color: var(--surface-2); background: var(--ink); line-height: 1.6; font-size: 14px; border-radius: 0 0 12px 12px; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+.note        { border-left: 4px solid var(--olive);  padding: 14px 16px; background: color-mix(in srgb, var(--olive)  10%, var(--surface-2)); border-radius: 8px; }
+.info        { border-left: 4px solid var(--sky);    padding: 14px 16px; background: color-mix(in srgb, var(--sky)    10%, var(--surface-2)); border-radius: 8px; }
+.violet-note { border-left: 4px solid var(--violet); padding: 14px 16px; background: color-mix(in srgb, var(--violet) 10%, var(--surface-2)); border-radius: 8px; }
+
+/* ============ Slide 1 封面 ============ */
+.cover-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .8fr); gap: 32px; align-items: center; }
+.cover-stats { padding: 22px; }
+.cover-stats .stat { border-top: 1px solid var(--border); padding: 14px 0; }
+.cover-stats .stat:first-of-type { border-top: 0; padding-top: 0; }
+.cover-stats .stat b { font-family: Georgia, serif; font-size: 28px; display: block; line-height: 1.15; color: var(--violet); }
+.cover-stats .stat span { color: var(--muted); font-size: 13px; }
+.audience-list { list-style: none; margin: 18px 0 0; padding: 0; }
+.audience-list li { border-top: 1px dashed var(--border); padding: 10px 0; color: var(--muted); font-size: 15px; }
+.audience-list li::before { content: "·  "; color: var(--violet); }
+
+/* ============ Slide 2 核心认知 ============ */
+.path-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+.path-card { border: 1px solid var(--border); border-radius: 14px; padding: 22px; background: var(--surface-2); }
+.path-card.old-way { border-top: 4px solid var(--rose); }
+.path-card.new-way { border-top: 4px solid var(--violet); }
+.path-label { font-family: ui-monospace, monospace; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 8px; }
+.path-card h3 { margin: 0 0 16px; font-size: 18px; }
+.flow-steps { display: flex; flex-direction: column; gap: 0; }
+.flow-step { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--border); font-size: 14.5px; }
+.flow-step:last-child { border-bottom: 0; }
+.flow-step .sn { color: var(--muted); font-size: 13px; flex-shrink: 0; margin-top: 2px; font-family: ui-monospace, monospace; }
+.flow-step .st { line-height: 1.5; }
+.flow-step .st b { color: var(--violet); }
+.analogy-box { margin-top: 22px; padding: 18px 20px; border: 1px dashed var(--border); border-radius: 12px; background: color-mix(in srgb, var(--violet) 6%, var(--surface-2)); font-size: 15.5px; line-height: 1.75; }
+.analogy-box strong { color: var(--violet); }
+.big-conclusion { margin-top: 20px; text-align: center; padding: 20px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+.big-conclusion .big-text { font-family: Georgia, serif; font-size: clamp(18px, 2.8vw, 28px); line-height: 1.35; }
+.big-conclusion .big-text b { color: var(--violet); }
+
+/* ============ Slide 3 三种用法 ============ */
+.method-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 24px; }
+.method-card { border: 1px solid var(--border); border-radius: 16px; padding: 24px 20px; background: var(--surface-2); display: flex; flex-direction: column; gap: 10px; }
+.method-card.mc-clay   { border-top: 4px solid var(--clay); }
+.method-card.mc-olive  { border-top: 4px solid var(--olive); }
+.method-card.mc-violet { border-top: 4px solid var(--violet); }
+.method-num { width: 40px; height: 40px; border-radius: 10px; display: grid; place-items: center; font-family: Georgia, serif; font-size: 20px; font-weight: 700; }
+.mc-clay   .method-num { background: color-mix(in srgb, var(--clay)   20%, var(--surface)); color: var(--clay); }
+.mc-olive  .method-num { background: color-mix(in srgb, var(--olive)  20%, var(--surface)); color: var(--olive); }
+.mc-violet .method-num { background: color-mix(in srgb, var(--violet) 20%, var(--surface)); color: var(--violet); }
+.method-card h3 { margin: 0; font-size: 20px; }
+.method-when { font-family: ui-monospace, monospace; font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.method-card > p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; flex: 1; }
+.trigger-tag { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 7px; border: 1px dashed var(--border); font-size: 13px; color: var(--text); font-style: italic; background: color-mix(in srgb, var(--ink) 4%, var(--surface)); margin-top: auto; }
+
+/* ============ Slide 4 聊天气泡 ============ */
+.chat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.chat-pane { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface-2); display: flex; flex-direction: column; }
+.chat-head { padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); background: var(--surface); font-size: 13px; }
+.chat-head .who { font-weight: 700; }
+.chat-pane.bad  .who { color: var(--rose); }
+.chat-pane.good .who { color: var(--violet); }
+.chat-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+.bubble { padding: 10px 12px; border-radius: 12px; max-width: 94%; white-space: pre-wrap; line-height: 1.55; }
+.bubble.user { align-self: flex-end; background: color-mix(in srgb, var(--violet) 18%, var(--surface)); color: var(--text); border: 1px solid color-mix(in srgb, var(--violet) 30%, var(--border)); }
+.bubble.ai { align-self: flex-start; background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+.bubble .ai-lbl { color: var(--muted); font-size: 12px; margin-bottom: 4px; font-family: ui-monospace, monospace; }
+.bubble.dim-b { opacity: .5; font-size: 13px; }
+.diff-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 14px; }
+.diff-bar > div { padding: 10px 14px; border-radius: 10px; font-size: 13px; font-family: ui-monospace, monospace; }
+.bad-meter  { background: color-mix(in srgb, var(--rose)   15%, var(--surface)); border: 1px solid color-mix(in srgb, var(--rose)   30%, var(--border)); color: var(--rose); }
+.good-meter { background: color-mix(in srgb, var(--violet) 15%, var(--surface)); border: 1px solid color-mix(in srgb, var(--violet) 30%, var(--border)); color: var(--violet); }
+.multi-role-box { margin-top: 18px; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface-2); }
+.multi-role-head { padding: 11px 16px; background: var(--surface); border-bottom: 1px solid var(--border); font-size: 14px; font-weight: 700; color: var(--violet); }
+.role-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+.role-col { padding: 14px; border-right: 1px solid var(--border); }
+.role-col:last-child { border-right: 0; }
+.role-name { font-family: ui-monospace, monospace; font-size: 11.5px; font-weight: 700; color: var(--violet); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 10px; }
+.role-q { font-size: 13px; color: var(--muted); padding: 5px 0; border-bottom: 1px dashed var(--border); line-height: 1.5; }
+.role-q:last-child { border-bottom: 0; }
+
+/* ============ Slide 5 答辩训练 ============ */
+.timeline { display: flex; flex-direction: column; gap: 0; margin-top: 24px; }
+.tl-step { display: flex; gap: 18px; padding-bottom: 24px; position: relative; }
+.tl-step:last-child { padding-bottom: 0; }
+.tl-step::before { content: ''; position: absolute; left: 19px; top: 40px; bottom: 0; width: 2px; background: color-mix(in srgb, var(--violet) 25%, var(--border)); }
+.tl-step:last-child::before { display: none; }
+.tl-num { flex: 0 0 40px; height: 40px; border-radius: 50%; background: var(--violet); color: #fff; display: grid; place-items: center; font-family: Georgia, serif; font-size: 17px; font-weight: 700; position: relative; z-index: 1; flex-shrink: 0; }
+.tl-body { flex: 1; padding-top: 6px; }
+.tl-body h3 { margin: 0 0 6px; font-size: 18px; }
+.tl-body p { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+
+/* ============ Slide 6 双版块 ============ */
+.dual-section { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-top: 22px; align-items: start; }
+.section-block { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface-2); }
+.section-block-head { padding: 16px 18px; background: var(--surface); border-bottom: 1px solid var(--border); }
+.section-block-head h3 { margin: 0 0 4px; font-size: 18px; }
+.section-block-head p { margin: 0; color: var(--muted); font-size: 14px; }
+.section-block-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+.infer-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.infer-table th { text-align: left; padding: 8px 10px; font-size: 12px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); background: var(--surface); }
+.infer-table td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.5; }
+.infer-table tr:last-child td { border-bottom: 0; }
+.infer-badge { display: inline-block; padding: 1px 7px; border-radius: 5px; font-size: 11.5px; font-family: ui-monospace, monospace; font-weight: 700; }
+.infer-badge.best   { background: color-mix(in srgb, var(--olive)  20%, var(--surface)); color: var(--olive); }
+.infer-badge.worst  { background: color-mix(in srgb, var(--rose)   20%, var(--surface)); color: var(--rose); }
+.infer-badge.likely { background: color-mix(in srgb, var(--sky)    20%, var(--surface)); color: var(--sky); }
+.infer-badge.hidden { background: color-mix(in srgb, var(--violet) 20%, var(--surface)); color: var(--violet); }
+.infer-badge.key    { background: color-mix(in srgb, var(--amber)  20%, var(--surface)); color: var(--amber); }
+
+/* ============ Slide 7 误区 ============ */
+.myth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
+.myth-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: var(--surface-2); }
+.myth-row { padding: 11px 14px; display: flex; gap: 12px; align-items: flex-start; font-size: 14px; line-height: 1.55; }
+.myth-row + .myth-row { border-top: 1px solid var(--border); }
+.myth-label { flex: 0 0 34px; padding: 2px 6px; border-radius: 5px; font-size: 12px; font-weight: 700; text-align: center; font-family: ui-monospace, monospace; }
+.myth-label.bad  { background: color-mix(in srgb, var(--rose)   20%, var(--surface)); color: var(--rose); }
+.myth-label.good { background: color-mix(in srgb, var(--violet) 20%, var(--surface)); color: var(--violet); }
+.myth-card.full { grid-column: span 2; }
+.adv-box { margin-top: 18px; border: 1px solid color-mix(in srgb, var(--violet) 40%, var(--border)); border-radius: 12px; padding: 18px 20px; background: color-mix(in srgb, var(--violet) 7%, var(--surface-2)); }
+.adv-box h3 { margin: 0 0 12px; font-size: 17px; color: var(--violet); }
+.adv-steps { display: flex; flex-direction: column; gap: 10px; }
+.adv-step { display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; }
+.adv-step .dot { flex-shrink: 0; width: 22px; height: 22px; border-radius: 6px; background: var(--violet); color: #fff; display: grid; place-items: center; font-size: 11px; font-weight: 700; margin-top: 1px; }
+.adv-step p { margin: 0; color: var(--muted); line-height: 1.6; }
+.adv-step p strong { color: var(--text); }
+
+/* ============ Slide 8 收束 ============ */
+.takeaway-list { list-style: none; padding: 0; margin: 22px 0; display: flex; flex-direction: column; gap: 14px; }
+.takeaway-list li { display: flex; gap: 16px; align-items: flex-start; border: 1px solid var(--border); border-radius: 12px; padding: 18px; background: var(--surface-2); }
+.takeaway-list .num { flex: 0 0 36px; height: 36px; border-radius: 10px; background: var(--violet); color: #fff; display: grid; place-items: center; font-family: Georgia, serif; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+.takeaway-list .body h3 { margin: 0 0 4px; font-size: 18px; }
+.takeaway-list .body p  { margin: 0; color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+.prompt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+.next-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 18px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); margin-top: 14px; }
+.next-row h3 { margin: 6px 0 0; font-size: 17px; }
+
+/* ============ 浮动翻页 ============ */
+.deck-nav { position: fixed; right: 20px; bottom: 20px; display: flex; align-items: center; gap: 4px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); z-index: 20; overflow: hidden; }
+.deck-nav button { border: 0; background: transparent; cursor: pointer; padding: 9px 14px; font-size: 14px; color: var(--text); border-radius: 0; }
+.deck-nav button:hover { background: var(--surface); }
+.deck-nav .counter { padding: 6px 10px; color: var(--muted); font-family: ui-monospace, monospace; font-size: 13px; }
+
+/* ============ 帮助蒙层 ============ */
+.help { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: color-mix(in srgb, var(--ink) 65%, transparent); z-index: 40; }
+.help.open { display: flex; }
+.help-panel { width: min(420px, 86vw); background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; padding: 22px; box-shadow: var(--shadow); }
+.help-panel h3 { margin: 0 0 12px; }
+.kb { display: grid; grid-template-columns: 110px 1fr; gap: 8px 14px; font-size: 14px; }
+.kb code { background: var(--surface); border: 1px solid var(--border); padding: 2px 8px; border-radius: 6px; font-size: 12.5px; }
+
+/* ============ 响应式 ============ */
+@media (max-width: 920px) {
+  .cover-grid, .path-grid, .chat-grid, .dual-section, .myth-grid, .prompt-grid { grid-template-columns: 1fr; }
+  .method-grid { grid-template-columns: 1fr; }
+  .role-grid { grid-template-columns: 1fr 1fr; }
+  .diff-bar { grid-template-columns: 1fr; }
+  .deck-nav { right: 10px; bottom: 10px; }
+  h1.slide-title { font-size: 40px; }
+  .myth-card.full { grid-column: span 1; }
+}
+@media (max-width: 560px) {
+  .role-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="index.html" aria-label="返回首页">
+      <span class="brand-mark">AI</span>
+      <span>八大使用场景 · 06 深思反问</span>
+    </a>
+    <div class="progress" aria-label="演讲进度">
+      <span id="counter-text">01 / 08</span>
+      <span class="progress-dots" id="dots"></span>
+    </div>
+    <nav class="nav-actions">
+      <button class="btn btn-mini" type="button" onclick="toggleTheme()" title="切换主题">明 / 暗</button>
+      <button class="btn btn-mini" type="button" onclick="openHelp()" title="快捷键（?）">?</button>
+      <a class="btn btn-mini" href="index.html">首页</a>
+    </nav>
+  </div>
+</header>
+
+<main class="deck" id="deck">
+
+<!-- ====================================================
+     Slide 1 · 封面
+==================================================== -->
+<section class="slide active" data-title="封面 · 钩子句">
+  <div class="shell">
+    <div class="cover-grid">
+      <div>
+        <p class="kicker">Scene 06 / 08 · 深思反问模式</p>
+        <h1 class="slide-title">让 AI 当那个<br>会怼你的导师。</h1>
+        <p class="lead">大多数人用 AI 是"问 AI → AI 答"。但有一种用法价值远超它——"我说想法 → AI 反问我"，逼出你自己都没发现的盲区。</p>
+        <div class="tag-row">
+          <span class="tag violet">"请扮演苛刻投资人"</span>
+          <span class="tag violet">"狠狠质疑我的方案"</span>
+          <span class="tag violet">"帮我出10道题考我"</span>
+          <span class="tag violet">"推演这个决定的后果"</span>
+        </div>
+      </div>
+      <div class="panel cover-stats">
+        <div class="stat">
+          <b>3 种用法</b>
+          <span>拷问方案 · 反向出题 · 推演后果</span>
+        </div>
+        <div class="stat">
+          <b>6 个角度</b>
+          <span>投资人/用户/竞对/法务…多角色同时质疑</span>
+        </div>
+        <div class="stat">
+          <b>3 个月</b>
+          <span>养成对话式思考，思维深度肉眼可见地涨</span>
+        </div>
+        <ul class="audience-list">
+          <li>一个人想问题越想越窄、容易钻牛角尖的人</li>
+          <li>要做演讲/答辩/汇报，怕被追问到答不上的人</li>
+          <li>想做产品/决策，但总担心漏掉关键视角的人</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 2 · 核心认知
+==================================================== -->
+<section class="slide" data-title="核心认知 · 问答 vs 反问">
+  <div class="shell">
+    <p class="kicker">核心认知</p>
+    <h2 class="section-title">AI 最被低估的能力，<br>不是回答，而是提问。</h2>
+    <p class="lead">问 AI → AI 答，是让 AI 给你知识。让 AI 反问你，是让它照出你思维里的盲区——这两件事的价值，完全不在一个量级。</p>
+
+    <div class="path-grid">
+      <div class="path-card old-way">
+        <p class="path-label">旧用法 · 普通人</p>
+        <h3 style="color:var(--rose)">问 AI，让它回答你</h3>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <span class="sn">1.</span>
+            <div class="st">你提出问题</div>
+          </div>
+          <div class="flow-step">
+            <span class="sn">2.</span>
+            <div class="st">AI 给出答案</div>
+          </div>
+          <div class="flow-step">
+            <span class="sn">3.</span>
+            <div class="st">你接受答案，感觉很有收获</div>
+          </div>
+          <div class="flow-step">
+            <span class="sn">4.</span>
+            <div class="st">但你不知道自己有没有真的想清楚——<br><span style="color:var(--muted);text-decoration:line-through">盲区依然完整地藏在你脑子里</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="path-card new-way">
+        <p class="path-label">新用法 · 老手</p>
+        <h3 style="color:var(--violet)">让 AI 反问你</h3>
+        <div class="flow-steps">
+          <div class="flow-step">
+            <span class="sn">1.</span>
+            <div class="st">你说出自己的想法 / 方案 / 决定</div>
+          </div>
+          <div class="flow-step">
+            <span class="sn">2.</span>
+            <div class="st">AI 扮演苛刻角色，向你提问</div>
+          </div>
+          <div class="flow-step">
+            <span class="sn">3.</span>
+            <div class="st">你被逼着一一回答</div>
+          </div>
+          <div class="flow-step">
+            <span class="sn">4.</span>
+            <div class="st"><b>回答不上来的地方，就是你真正的漏洞</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="analogy-box">
+      <strong>老板类比：</strong>写完一份方案给老板看，老板问：目标用户是谁？凭什么他们会买？竞品怎么解决的？……每问一个，你脑子里要么"我想过"，要么"卧槽我没想过"。<strong>深思反问就是让 AI 当那个老板，提前问你一遍。</strong>等到真的面对老板或客户时，你已经提前填完了所有空缺。
+    </div>
+
+    <div class="big-conclusion">
+      <div class="big-text">AI 的"答案"对小白是诱惑，<br>AI 的<b>"问题"</b>对老手才是真宝藏。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 3 · 三种用法总览
+==================================================== -->
+<section class="slide" data-title="三种用法总览">
+  <div class="shell">
+    <p class="kicker">用法总览</p>
+    <h2 class="section-title">三种用法，<br>对应三种场景。</h2>
+    <p class="lead">一旦掌握这三种模式，你和 AI 的对话就从"索取答案"变成了"锻炼思维"。</p>
+
+    <div class="method-grid">
+      <div class="method-card mc-clay">
+        <div class="method-num">A</div>
+        <h3>拷问你的想法</h3>
+        <p class="method-when">适合：决策 / 方案 / 产品设计 / 演讲准备</p>
+        <p>你说方案，AI 扮演评审/投资人/老板，从多个角度质疑你，你逐一回应。每一个答不上来的问题，都是你方案的真漏洞。</p>
+        <span class="trigger-tag">"请狠狠质疑我的方案，不要给面子"</span>
+      </div>
+      <div class="method-card mc-olive">
+        <div class="method-num">B</div>
+        <h3>反向出题</h3>
+        <p class="method-when">适合：学习 / 面试准备 / 答辩 / 知识自测</p>
+        <p>AI 围绕一个话题出 N 道题，你来回答，AI 点评哪里好、哪里弱。最强的检验不是"复述一遍"，是被问倒。</p>
+        <span class="trigger-tag">"出10道题考我，不要直接给答案"</span>
+      </div>
+      <div class="method-card mc-violet">
+        <div class="method-num">C</div>
+        <h3>推演后果</h3>
+        <p class="method-when">适合：重大决策 / 风险预判 / 战略规划</p>
+        <p>描述你的决定，AI 推演 3-6 个月后各种可能的后果：最好/最坏/最可能/最隐蔽。很多坑在做决策时就能看见，但你没有看。</p>
+        <span class="trigger-tag">"帮我推演这个决定3-6个月后的后果"</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 18px;" class="violet-note">
+      <strong>一个原则：</strong>这三种用法都不是让 AI 替你思考，而是让 AI 当一面镜子，照出你自己思维的盲区。<strong>你的思考质量决定一切，AI 只是加速你发现问题的工具。</strong>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 4 · 拷问方案：单角色 vs 多角色
+==================================================== -->
+<section class="slide" data-title="拷问方案 · 单角色 vs 多角色">
+  <div class="shell">
+    <p class="kicker">用法 A · 拷问方案</p>
+    <h2 class="section-title">同一个方案，菜鸟让 AI"帮看看"，<br>老手让 AI"狠狠质疑"。</h2>
+
+    <div class="chat-grid">
+      <div class="chat-pane bad">
+        <div class="chat-head">
+          <span class="who">菜鸟用法</span>
+          <span style="color:var(--muted);font-size:12px">客气模式 · 无效反馈</span>
+        </div>
+        <div class="chat-body">
+          <div class="bubble user">帮我看看我这个方案怎么样。
+[方案描述]</div>
+          <div class="bubble ai">
+            <div class="ai-lbl">AI 回复</div>
+您的方案整体思路清晰，有几点建议：
+① 可以进一步细化用户画像
+② 建议考虑竞品情况
+③ 执行计划可以更详细
+
+整体来说是个不错的开始！</div>
+          <div class="bubble user dim-b">嗯，感谢，那就这样了。</div>
+        </div>
+      </div>
+      <div class="chat-pane good">
+        <div class="chat-head">
+          <span class="who">老手用法</span>
+          <span style="color:var(--muted);font-size:12px">质疑模式 · 直击漏洞</span>
+        </div>
+        <div class="chat-body">
+          <div class="bubble user">请扮演苛刻投资人，从6个角度质疑我：
+①真需求还是伪需求？②用户凭什么不用竞品？③商业模型怎么算账？④团队凭什么干得过？⑤最可能死在哪？⑥最不信的一句话是哪句？不要给面子。
+方案：[描述]</div>
+          <div class="bubble ai">
+            <div class="ai-lbl">AI 回复（真正的质疑）</div>
+好，我来质疑你。
+① 你说"用户有这个痛点"——请问你访谈了几个真实用户？还是你自己推断的？
+② 你说"用户会为此付费"——他们现在用什么替代方案？为什么会放弃那个来用你的？
+③ 你的商业模型里，第一个付钱的客户是谁……</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="diff-bar">
+      <div class="bad-meter">反馈深度：表面建议 · 价值：低 · 你感觉良好但一无所获</div>
+      <div class="good-meter">反馈深度：直击漏洞 · 价值：发现你没想到的真实盲区</div>
+    </div>
+
+    <div class="multi-role-box">
+      <div class="multi-role-head">进阶：4 个角色同时质疑——更全面，更残酷</div>
+      <div class="role-grid">
+        <div class="role-col">
+          <div class="role-name">投资人</div>
+          <div class="role-q">市场规模真有你说的那么大？</div>
+          <div class="role-q">你的护城河在哪里？</div>
+          <div class="role-q">3年后凭什么还活着？</div>
+        </div>
+        <div class="role-col">
+          <div class="role-name">目标用户</div>
+          <div class="role-q">我为什么要换掉我现在的方案？</div>
+          <div class="role-q">你的产品学习成本是多少？</div>
+          <div class="role-q">遇到问题我找谁？</div>
+        </div>
+        <div class="role-col">
+          <div class="role-name">竞争对手</div>
+          <div class="role-q">我们做同样的事已经两年了</div>
+          <div class="role-q">你的差异化凭什么持续？</div>
+          <div class="role-q">我抄你最快需要多久？</div>
+        </div>
+        <div class="role-col">
+          <div class="role-name">法务 / 风控</div>
+          <div class="role-q">数据合规有没有问题？</div>
+          <div class="role-q">用户协议涵盖这个场景吗？</div>
+          <div class="role-q">监管政策变化后怎么办？</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 5 · 演讲/答辩魔鬼训练
+==================================================== -->
+<section class="slide" data-title="答辩/演讲 · 魔鬼训练">
+  <div class="shell">
+    <p class="kicker">用法 A · 进阶场景</p>
+    <h2 class="section-title">正式答辩前，<br>先被 AI 问一遍最难的问题。</h2>
+    <p class="lead">临场被问到答不上，是因为你没有提前"预答"过。AI 可以无限次扮演最难缠的评委，让你在正式场合之前把所有盲区全填完。</p>
+
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-num">1</div>
+        <div class="tl-body">
+          <h3>把答辩主题 / 演讲内容描述给 AI</h3>
+          <p>不需要完美，把你的主要观点、核心论据、结论，用自然语言告诉 AI 即可。越完整，后续的反问越准确。</p>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-num">2</div>
+        <div class="tl-body">
+          <h3>让 AI 扮演"最难缠的答辩评委"出 10 道题</h3>
+          <p>要求 AI 出"最可能让你答不上来的问题"，按难度从低到高排列，并说明每个问题在挑战哪个薄弱点。</p>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-num">3</div>
+        <div class="tl-body">
+          <h3>逐题预答，AI 点评每一道</h3>
+          <p>每答完一题，AI 点评：哪里答得好、哪里弱、有没有更好的角度。答不上来的题，就是你最需要补的地方。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-box" style="margin-top: 24px;">
+      <div class="prompt-head">
+        <strong>答辩/演讲魔鬼训练 Prompt 模板</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p-debate', this)">复制</button>
+      </div>
+      <pre id="p-debate">请扮演一位最难缠的答辩评委。
+我的答辩主题是：[XX]
+主要观点：[XX]
+
+请出10个最可能让我答不上的问题，按难度从低到高排列。
+每个问题告诉我：它在挑战我的哪个薄弱点。
+先出题，不要给答案。我答完一道，你再点评。</pre>
+    </div>
+
+    <div class="note" style="margin-top: 16px;">
+      <strong>做完这一遍，正式答辩时基本所向披靡。</strong>不是 AI 帮你答，是它帮你找到了所有的空缺，让你提前填完。
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 6 · 反向出题 + 推演后果
+==================================================== -->
+<section class="slide" data-title="反向出题 · 推演后果">
+  <div class="shell">
+    <p class="kicker">用法 B · C</p>
+    <h2 class="section-title">两种玩法：<br>出题考你，推演未来。</h2>
+
+    <div class="dual-section">
+      <div class="section-block">
+        <div class="section-block-head">
+          <h3 style="color:var(--olive)">用法 B · 反向出题</h3>
+          <p>学完就该被考倒，不是被复述一遍</p>
+        </div>
+        <div class="section-block-body">
+          <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">最强的检验方法不是"复述一遍"，而是"被问倒"。AI 出题，你回答，AI 点评——每个答不上的都是知识漏洞。</p>
+          <div class="prompt-box">
+            <div class="prompt-head">
+              <strong>反向出题模板</strong>
+              <button class="btn btn-mini" type="button" onclick="copyPrompt('p-quiz', this)">复制</button>
+            </div>
+            <pre id="p-quiz" style="font-size:13px">我刚学完[XX知识点]。请出10道题：
+前3道：概念性，检查基础理解
+中间4道：情景应用，给场景让我解决
+最后3道：综合反思，逼我思考边界
+先出题，不要给答案。
+我答完一道，你再点评。</pre>
+          </div>
+          <div class="info">
+            <strong>面试前：</strong>扮演面试官，出行为面试+专业能力+综合思维三类共15题，一次一题，答后点评。
+          </div>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="section-block-head">
+          <h3 style="color:var(--violet)">用法 C · 推演后果</h3>
+          <p>很多决策的坑，做决定时就能预见——但你没预见</p>
+        </div>
+        <div class="section-block-body">
+          <p style="margin:0;color:var(--muted);font-size:14px;line-height:1.6">适合：换工作 / 创业 / 重大采购 / 战略转型</p>
+          <table class="infer-table">
+            <thead>
+              <tr>
+                <th>维度</th>
+                <th>AI 推演的问题</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="infer-badge best">最好</span></td>
+                <td>3个月/6个月/1年后，最理想的状态是什么？</td>
+              </tr>
+              <tr>
+                <td><span class="infer-badge worst">最坏</span></td>
+                <td>哪些因素可能导致彻底失败？</td>
+              </tr>
+              <tr>
+                <td><span class="infer-badge likely">最可能</span></td>
+                <td>基于现实，最可能发生的路径是？</td>
+              </tr>
+              <tr>
+                <td><span class="infer-badge hidden">最隐蔽</span></td>
+                <td>最容易被忽视的风险是哪个？</td>
+              </tr>
+              <tr>
+                <td><span class="infer-badge key">关键点</span></td>
+                <td>影响结果走向的最关键决策节点？</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="violet-note" style="margin-top:4px;font-size:13.5px">
+            推演不是预测，而是穷举可能性。价值是"提前看见"，决定还是你来做。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 7 · 误区 + 进阶玩法
+==================================================== -->
+<section class="slide" data-title="误区 · 进阶玩法">
+  <div class="shell">
+    <p class="kicker">常见误区</p>
+    <h2 class="section-title">为什么你的 AI 反问<br>总是问不到要害？</h2>
+
+    <div class="myth-grid">
+      <div class="myth-card">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>"帮我看看" = 让它批评我，效果一样</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>AI 默认是礼貌的。必须明确说"狠狠质疑""挑最让我难堪的漏洞"，才能拿到真正的质疑。</span>
+        </div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>AI 不懂我的业务，问出来不准</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>大多数尖锐问题是通用的：用户是谁/商业模型/风险点。不需要懂业务也能问中要害。</span>
+        </div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>推演就是预测未来，不靠谱</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>推演是穷举可能性，不是算命。价值是"提前看见"，帮你提前应对，决定还是你来做。</span>
+        </div>
+      </div>
+      <div class="myth-card">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>反问只适合创业/产品，我用不上</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>所有需要决策、表达、学习的场景都适用。请假怎么写、年终总结怎么讲都能用。</span>
+        </div>
+      </div>
+      <div class="myth-card full">
+        <div class="myth-row">
+          <span class="myth-label bad">误区</span>
+          <span>AI 问得让我答不上来，太刁难了，没用</span>
+        </div>
+        <div class="myth-row">
+          <span class="myth-label good">真相</span>
+          <span>那正是你的盲区。痛感越强，价值越大。答不上来不是失败，是你找到了最需要补的地方。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="adv-box">
+      <h3>进阶：把三种用法日常化</h3>
+      <div class="adv-steps">
+        <div class="adv-step">
+          <div class="dot">A</div>
+          <p><strong>写一段观点</strong> → AI 反问5句 → 我修改 → 再反问。每次迭代，观点更严密。</p>
+        </div>
+        <div class="adv-step">
+          <div class="dot">B</div>
+          <p><strong>做一个决定</strong> → AI 推演后果 → 审视盲区 → 调整计划。提前看见，主动应对。</p>
+        </div>
+        <div class="adv-step">
+          <div class="dot">C</div>
+          <p><strong>学一个知识</strong> → AI 出题考我 → 我回答 → AI 点评。用被问倒代替复述，真正内化。</p>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--border);color:var(--violet);font-size:16px;font-family:Georgia,serif;font-style:italic">
+        三个月后，思维深度会肉眼可见地涨。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ====================================================
+     Slide 8 · 收束
+==================================================== -->
+<section class="slide" data-title="3 句话带走这一章">
+  <div class="shell">
+    <p class="kicker">Scene 06 · 收束</p>
+    <h2 class="section-title">3 句话带走这一章</h2>
+
+    <ul class="takeaway-list">
+      <li>
+        <div class="num">1</div>
+        <div class="body">
+          <h3>AI 最大的价值不是给你答案，是照出你的盲区</h3>
+          <p>问 AI 让你更依赖它；让 AI 反问你，让你越来越独立。用"反问模式"的人，几个月后和用"问答模式"的人差距会越来越大。</p>
+        </div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div class="body">
+          <h3>触发反问的关键词：狠狠质疑、不要给面子、出题考我</h3>
+          <p>AI 默认礼貌。你必须主动用这些关键词"解锁"它的苛刻模式，才能拿到真正有价值的反问，而不是客气的建议。</p>
+        </div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div class="body">
+          <h3>三个场景：拷问方案 / 反向出题 / 推演后果</h3>
+          <p>把这三种用法日常化——写完一段话就让 AI 质疑它，做一个决定就让 AI 推演后果，学完一件事就让 AI 出题考你。坚持三个月。</p>
+        </div>
+      </li>
+    </ul>
+
+    <div class="prompt-grid">
+      <div class="prompt-box">
+        <div class="prompt-head">
+          <strong>多角色拷问模板</strong>
+          <button class="btn btn-mini" type="button" onclick="copyPrompt('p-multi', this)">复制</button>
+        </div>
+        <pre id="p-multi">请同时扮演4个角色质疑我的方案：
+① 苛刻投资人：问盈利/规模/竞争护城河
+② 挑剔用户：问体验/替代方案/付费意愿
+③ 竞争对手：问差异化/可复制性
+④ 法务风控：问合规/数据/监管
+
+每个角色各出3个最尖锐的问题。
+不要给面子。方案如下：[描述]</pre>
+      </div>
+      <div class="prompt-box">
+        <div class="prompt-head">
+          <strong>推演后果模板</strong>
+          <button class="btn btn-mini" type="button" onclick="copyPrompt('p-infer', this)">复制</button>
+        </div>
+        <pre id="p-infer">我正在考虑做这个决定：[描述]
+
+请帮我推演后果，分5个维度：
+① 最好情况：3/6/12个月后的理想状态
+② 最坏情况：哪些因素可能导致失败
+③ 最可能情况：基于现实的大概率路径
+④ 最隐蔽风险：最容易被忽视的坑
+⑤ 关键决策点：最影响走向的节点
+
+不要预测，穷举可能性即可。</pre>
+      </div>
+    </div>
+
+    <div class="next-row">
+      <div>
+        <p class="eyebrow" style="margin:0">上一场景</p>
+        <h3><a href="scene-05-reference-imitation.html">05 · 参考模仿</a></h3>
+      </div>
+      <a class="btn" href="index.html">返回总览</a>
+      <div style="text-align:right">
+        <p class="eyebrow" style="margin:0">下一场景</p>
+        <h3><a href="scene-07-translation-transformation.html">07 · 翻译转化</a></h3>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- 浮动翻页 -->
+<nav class="deck-nav" aria-label="翻页控制">
+  <button type="button" onclick="prevSlide()" title="上一页 (←)">&#8592;</button>
+  <span class="counter" id="nav-counter">1 / 8</span>
+  <button type="button" onclick="nextSlide()" title="下一页 (→)">&#8594;</button>
+</nav>
+
+<!-- 帮助蒙层 -->
+<div class="help" id="help" role="dialog" aria-modal="true" aria-label="快捷键帮助">
+  <div class="help-panel">
+    <h3>快捷键</h3>
+    <div class="kb">
+      <code>← / →</code><span>上一页 / 下一页</span>
+      <code>Space / PgDn</code><span>下一页</span>
+      <code>PgUp</code><span>上一页</span>
+      <code>Home / End</code><span>第一页 / 最后一页</span>
+      <code>1 - 8</code><span>直接跳到对应页</span>
+      <code>T</code><span>切换明暗主题</span>
+      <code>?</code><span>显示这个面板</span>
+      <code>Esc</code><span>关闭这个面板</span>
+    </div>
+    <div style="margin-top: 16px; text-align: right;">
+      <button class="btn btn-mini" type="button" onclick="closeHelp()">知道了</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dotsBox = document.getElementById('dots');
+const counterText = document.getElementById('counter-text');
+const navCounter = document.getElementById('nav-counter');
+let idx = 0;
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+function renderDots() {
+  dotsBox.innerHTML = '';
+  slides.forEach(function(s, i) {
+    const dot = document.createElement('i');
+    if (i === idx) dot.classList.add('active');
+    else if (i < idx) dot.classList.add('done');
+    dot.title = s.dataset.title || ('第 ' + (i + 1) + ' 屏');
+    dot.addEventListener('click', function() { goTo(i); });
+    dotsBox.appendChild(dot);
+  });
+}
+
+function goTo(i) {
+  if (i < 0 || i >= slides.length) return;
+  slides[idx].classList.remove('active');
+  idx = i;
+  slides[idx].classList.add('active');
+  counterText.textContent = pad(idx + 1) + ' / ' + pad(slides.length);
+  navCounter.textContent = (idx + 1) + ' / ' + slides.length;
+  renderDots();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+
+function nextSlide() { goTo(Math.min(idx + 1, slides.length - 1)); }
+function prevSlide() { goTo(Math.max(idx - 1, 0)); }
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('ai8-theme', next); } catch(e) {}
+}
+
+function openHelp()  { document.getElementById('help').classList.add('open'); }
+function closeHelp() { document.getElementById('help').classList.remove('open'); }
+
+function copyPrompt(id, btn) {
+  const node = document.getElementById(id);
+  if (!node) return;
+  navigator.clipboard.writeText(node.innerText).then(function() {
+    if (!btn) return;
+    const old = btn.innerText;
+    btn.innerText = '已复制 ✓';
+    setTimeout(function() { btn.innerText = old; }, 1300);
+  });
+}
+
+document.addEventListener('keydown', function(e) {
+  if (document.getElementById('help').classList.contains('open')) {
+    if (e.key === 'Escape') closeHelp();
+    return;
+  }
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch (e.key) {
+    case 'ArrowRight': case 'PageDown': case ' ':
+      e.preventDefault(); nextSlide(); break;
+    case 'ArrowLeft': case 'PageUp':
+      e.preventDefault(); prevSlide(); break;
+    case 'Home': e.preventDefault(); goTo(0); break;
+    case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
+    case 't': case 'T': toggleTheme(); break;
+    case '?': case '/': openHelp(); break;
+    default:
+      if (/^[1-9]$/.test(e.key)) {
+        const n = parseInt(e.key, 10) - 1;
+        if (n < slides.length) goTo(n);
+      }
+  }
+});
+
+(function init() {
+  try {
+    const t = localStorage.getItem('ai8-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  } catch(e) {}
+  counterText.textContent = pad(1) + ' / ' + pad(slides.length);
+  navCounter.textContent = '1 / ' + slides.length;
+  renderDots();
+})();
+</script>
+</body>
+</html>
