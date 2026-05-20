@@ -1,0 +1,1748 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Code as Agent Harness 文章可视化总结：三层架构、三类能力、应用场景、未解挑战和系统自检清单。">
+  <title>代码作为 Agent Harness — 极致工程化探索</title>
+  
+  <!-- 预加载 Google Fonts 以获取极高品质的字体排版 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================
+       1. 设计系统变量 (Design Tokens)
+       ========================================== */
+    :root {
+      /* 浅色主题 - Sunset Clay (落日粘土) & warm neutral background */
+      --bg-base: #fbfaf8;
+      --bg-surface: rgba(244, 240, 234, 0.7);
+      --bg-panel: rgba(255, 255, 255, 0.85);
+      --bg-panel-solid: #ffffff;
+      --border-color: rgba(216, 209, 198, 0.7);
+      --border-color-light: rgba(216, 209, 198, 0.35);
+      --text-main: #23201e;
+      --text-muted: #72685e;
+      --text-light: #968c82;
+      
+      /* 强调色 */
+      --accent: #d96a4b;
+      --accent-hover: #c45738;
+      --accent-light: rgba(217, 106, 75, 0.08);
+      --accent-glow: rgba(217, 106, 75, 0.2);
+      
+      --color-olive: #5f7a4e;
+      --color-olive-light: rgba(95, 122, 78, 0.08);
+      --color-sky: #4b7493;
+      --color-sky-light: rgba(75, 116, 147, 0.08);
+      --color-danger: #c24d45;
+      --color-danger-light: rgba(194, 77, 69, 0.08);
+      
+      /* 阴影与圆角 */
+      --shadow-sm: 0 2px 8px rgba(35, 32, 30, 0.02);
+      --shadow-md: 0 10px 30px rgba(35, 32, 30, 0.04), 0 2px 10px rgba(35, 32, 30, 0.02);
+      --shadow-lg: 0 22px 60px rgba(35, 32, 30, 0.07), 0 4px 20px rgba(35, 32, 30, 0.03);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      
+      /* 字体体系 */
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-serif: 'Noto Serif SC', Georgia, "Times New Roman", serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+      
+      --transition-base: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        /* 深色主题 - 邃影黑 */
+        --bg-base: #0f1012;
+        --bg-surface: rgba(25, 27, 31, 0.65);
+        --bg-panel: rgba(16, 17, 20, 0.82);
+        --bg-panel-solid: #121316;
+        --border-color: rgba(255, 255, 255, 0.07);
+        --border-color-light: rgba(255, 255, 255, 0.03);
+        --text-main: #eee9e0;
+        --text-muted: #a39a8f;
+        --text-light: #7a7268;
+        
+        --accent: #eb7c5e;
+        --accent-hover: #f0957c;
+        --accent-light: rgba(235, 124, 94, 0.08);
+        --accent-glow: rgba(235, 124, 94, 0.35);
+        
+        --color-olive: #7ea869;
+        --color-olive-light: rgba(126, 168, 105, 0.08);
+        --color-sky: #6ca0c7;
+        --color-sky-light: rgba(108, 160, 199, 0.08);
+        --color-danger: #db5e56;
+        --color-danger-light: rgba(219, 94, 86, 0.08);
+        
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+        --shadow-md: 0 12px 35px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 30px 70px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      }
+    }
+
+    /* ==========================================
+       2. 基础重置与滚动行为
+       ========================================== */
+    * {
+      box-sizing: border-box;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.62;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.5s ease, color 0.3s ease;
+    }
+
+    /* 自定义美观的滚动条 */
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--bg-base);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: var(--radius-sm);
+      border: 2px solid var(--bg-base);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* ==========================================
+       3. 页面大版式与容器 (Layout & Grid)
+       ========================================== */
+    .container {
+      width: min(1200px, calc(100vw - 40px));
+      margin: 0 auto;
+    }
+
+    /* 优雅卡片通用样式 */
+    .glass-card {
+      background: var(--bg-panel);
+      backdrop-filter: blur(16px) saturate(110%);
+      -webkit-backdrop-filter: blur(16px) saturate(110%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      transition: var(--transition-base);
+    }
+    .glass-card:hover {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    /* ==========================================
+       4. Sticky 导航栏 (Interactive Header)
+       ========================================== */
+    .header-nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(var(--bg-base), 0.8);
+      backdrop-filter: blur(20px) saturate(120%);
+      -webkit-backdrop-filter: blur(20px) saturate(120%);
+      border-bottom: 1px solid var(--border-color);
+      transition: var(--transition-base);
+    }
+    
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+    .nav-brand-logo {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--accent);
+      color: #fff;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
+    .nav-brand-title {
+      font-family: var(--font-serif);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .nav-links a {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 99px;
+      transition: var(--transition-base);
+    }
+    .nav-links a:hover,
+    .nav-links li.active a {
+      color: var(--text-main);
+      background-color: var(--bg-surface);
+    }
+    .nav-links li.active a {
+      font-weight: 600;
+      box-shadow: inset 0 0 0 1px var(--border-color);
+    }
+
+    /* 搜索框组件 */
+    .search-container {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-input {
+      width: 220px;
+      height: 38px;
+      padding: 0 16px 0 38px;
+      border: 1px solid var(--border-color);
+      border-radius: 99px;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-size: 13.5px;
+      transition: var(--transition-base);
+    }
+    .search-input:focus {
+      outline: none;
+      width: 280px;
+      background: var(--bg-panel-solid);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-glow);
+    }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      width: 14px;
+      height: 14px;
+      color: var(--text-light);
+      pointer-events: none;
+      transition: var(--transition-base);
+    }
+    .search-input:focus + .search-icon {
+      color: var(--accent);
+    }
+
+    /* ==========================================
+       5. Editorial Hero 报刊社论式头图
+       ========================================== */
+    .hero-section {
+      padding: 80px 0 50px;
+      border-bottom: 1px solid var(--border-color-light);
+    }
+    
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(36px, 5.5vw, 68px);
+      line-height: 1.05;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin: 0 0 20px;
+      color: var(--text-main);
+    }
+
+    .hero-subtitle {
+      font-size: clamp(16px, 2.2vw, 20px);
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin: 0 0 28px;
+      font-weight: 400;
+      max-width: 620px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* 极致按钮样式 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 48px;
+      padding: 0 24px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      box-shadow: 0 6px 20px var(--accent-glow);
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      box-shadow: 0 8px 24px var(--accent-glow);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-surface);
+      border-color: var(--text-main);
+    }
+
+    /* 右侧快速信息卡片 */
+    .hero-side-card {
+      padding: 30px;
+      background: radial-gradient(circle at top right, var(--accent-light), transparent 60%), var(--bg-panel);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-side-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent);
+    }
+    .side-card-title {
+      font-family: var(--font-serif);
+      font-size: 20px;
+      margin: 0 0 16px;
+    }
+    .side-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .stat-num {
+      font-family: var(--font-mono);
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .side-card-desc {
+      font-size: 13px;
+      color: var(--text-light);
+      margin: 0;
+      border-top: 1px solid var(--border-color-light);
+      padding-top: 14px;
+    }
+
+    /* ==========================================
+       6. 段落与小版块通用样式
+       ========================================== */
+    .section-padding {
+      padding: 80px 0;
+    }
+    
+    .section-header {
+      max-width: 720px;
+      margin-bottom: 48px;
+    }
+    .section-kicker {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.15;
+      margin: 0 0 16px;
+    }
+    .section-desc {
+      color: var(--text-muted);
+      font-size: 16px;
+      margin: 0;
+    }
+
+    /* ==========================================
+       7. 三栏核心挑战 (Grid 布局)
+       ========================================== */
+    .card-grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    .panel-card {
+      padding: 32px;
+      position: relative;
+    }
+    .panel-icon-wrap {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-sm);
+      margin-bottom: 24px;
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+    .panel-card:nth-child(2) .panel-icon-wrap {
+      background: var(--color-olive-light);
+      color: var(--color-olive);
+    }
+    .panel-card:nth-child(3) .panel-icon-wrap {
+      background: var(--color-sky-light);
+      color: var(--color-sky);
+    }
+    
+    .panel-card h3 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      margin: 0 0 12px;
+    }
+    .panel-card p {
+      color: var(--text-muted);
+      font-size: 14.5px;
+      margin: 0;
+      line-height: 1.58;
+    }
+
+    /* ==========================================
+       8. SVG 架构图 (带有精致的虚线发光流向微动效)
+       ========================================== */
+    .svg-container {
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-sm);
+    }
+    .diagram-window {
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+    .window-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 42px;
+      padding: 0 16px;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .window-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--text-light);
+      opacity: 0.3;
+    }
+    .window-dot-red { background: var(--color-danger); opacity: 0.8; }
+    .window-dot-yellow { background: #d99c4b; opacity: 0.8; }
+    .window-dot-green { background: var(--color-olive); opacity: 0.8; }
+    
+    .window-title {
+      flex: 1;
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    
+    .diagram-body {
+      background: var(--bg-panel-solid);
+      padding: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* SVG 内部微流光动画定义 */
+    @keyframes flowDash {
+      to {
+        stroke-dashoffset: -20;
+      }
+    }
+    
+    .flow-line {
+      stroke: var(--text-light);
+      stroke-dasharray: 6, 4;
+      animation: flowDash 1.5s linear infinite;
+    }
+    .flow-line-accent {
+      stroke: var(--accent);
+      stroke-dasharray: 6, 4;
+      animation: flowDash 1.2s linear infinite;
+    }
+    
+    .layer-card {
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .layer-card:hover {
+      transform: translateY(-4px);
+    }
+
+    /* ==========================================
+       9. 详细分析三栏
+       ========================================== */
+    .info-tag {
+      display: inline-flex;
+      padding: 4px 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+    .feature-list {
+      margin: 18px 0 0;
+      padding-left: 20px;
+      list-style-type: none;
+    }
+    .feature-list li {
+      position: relative;
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .feature-list li::before {
+      content: "•";
+      position: absolute;
+      left: -14px;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* ==========================================
+       10. 交互式标签页与表格 (Tabs & Tables)
+       ========================================== */
+    .tabs-wrapper {
+      margin-bottom: 30px;
+    }
+    .tab-list {
+      display: flex;
+      gap: 8px;
+      padding: 6px;
+      background: var(--bg-surface);
+      border-radius: 99px;
+      border: 1px solid var(--border-color);
+      display: inline-flex;
+    }
+    .tab-btn {
+      height: 38px;
+      padding: 0 20px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      font-weight: 500;
+      border-radius: 99px;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+    .tab-btn:hover {
+      color: var(--text-main);
+    }
+    .tab-btn.active {
+      background: var(--bg-panel-solid);
+      color: var(--text-main);
+      font-weight: 600;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .table-container {
+      overflow-x: auto;
+    }
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14.5px;
+    }
+    .custom-table th {
+      padding: 16px 20px;
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .custom-table td {
+      padding: 18px 20px;
+      border-bottom: 1px solid var(--border-color-light);
+      vertical-align: top;
+    }
+    .custom-table tr:last-child td {
+      border-bottom: none;
+    }
+    
+    .badge {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-accent { background: var(--accent-light); color: var(--accent); }
+    .badge-olive { background: var(--color-olive-light); color: var(--color-olive); }
+    .badge-sky { background: var(--color-sky-light); color: var(--color-sky); }
+
+    .fade-in {
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================
+       11. 未解挑战 (优雅的卡片布局)
+       ========================================== */
+    .challenge-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .challenge-card {
+      padding: 24px;
+      display: flex;
+      gap: 20px;
+      align-items: start;
+    }
+    .challenge-num {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--color-danger-light);
+      color: var(--color-danger);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .challenge-content h4 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      font-family: var(--font-serif);
+      font-weight: 700;
+    }
+    .challenge-content p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 13.5px;
+      line-height: 1.55;
+    }
+
+    /* ==========================================
+       12. 自检清单与代码展示 (双栏)
+       ========================================== */
+    .bottom-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+    }
+    
+    .checklist-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .checkbox-item {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 16px;
+      align-items: start;
+      padding: 16px 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color-light);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition-base);
+    }
+    .checkbox-item:hover {
+      background: var(--bg-panel);
+      border-color: var(--accent);
+    }
+    
+    .checkbox-custom {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      margin-top: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-base);
+    }
+    
+    .checkbox-item.checked {
+      background: var(--bg-surface);
+      border-color: var(--border-color-light);
+      opacity: 0.65;
+    }
+    .checkbox-item.checked .checkbox-custom {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .checkbox-item.checked .checkbox-custom::after {
+      content: "";
+      width: 8px;
+      height: 4px;
+      border-left: 2px solid white;
+      border-bottom: 2px solid white;
+      transform: rotate(-45deg) translate(1px, -1px);
+    }
+    .checkbox-item.checked .checkbox-text {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+    .checkbox-text {
+      font-size: 15px;
+      line-height: 1.5;
+      transition: var(--transition-base);
+    }
+
+    /* 代码控制台面板 */
+    .code-console {
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+    .console-body {
+      padding: 24px;
+      background: #0f1012;
+      color: #eae7e2;
+    }
+    .console-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .console-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #7a7268;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #c5beb3;
+      padding: 6px 12px;
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: var(--transition-base);
+    }
+    .copy-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    
+    .code-box {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      line-height: 1.65;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    
+    .code-box code {
+      display: block;
+    }
+
+    /* ==========================================
+       13. 来源与边界 (Footer style)
+       ========================================== */
+    .footer-section {
+      padding: 60px 0 80px;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-surface);
+    }
+    
+    .footer-wrapper {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: start;
+    }
+    
+    .footer-info p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin: 0 0 16px;
+      max-width: 680px;
+    }
+    
+    .footer-links {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: var(--transition-base);
+    }
+    .footer-link:hover {
+      color: var(--accent-hover);
+      text-decoration: underline;
+    }
+    
+    .footer-copyright {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-light);
+      margin: 0;
+      text-align: right;
+    }
+
+    /* ==========================================
+       14. 荧光搜索高亮
+       ========================================== */
+    .highlight-mark {
+      background: rgba(217, 106, 75, 0.22);
+      border-bottom: 2px solid var(--accent);
+      padding: 0 2px;
+      border-radius: 2px;
+    }
+    
+    /* 返回顶部按钮 */
+    .back-to-top {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--bg-panel-solid);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-md);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 99;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition: var(--transition-base);
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .back-to-top:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+      box-shadow: 0 6px 16px var(--accent-glow);
+    }
+
+    /* ==========================================
+       15. 响应式布局自适应媒体查询
+       ========================================== */
+    @media (max-width: 960px) {
+      .hero-grid,
+      .bottom-grid,
+      .footer-wrapper {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .footer-copyright {
+        text-align: left;
+      }
+      .card-grid-3 {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+      .challenge-grid {
+        grid-template-columns: 1fr;
+      }
+      .hero-title {
+        font-size: clamp(32px, 7vw, 48px);
+      }
+      .nav-links {
+        display: none; /* 简化移动端导航 */
+      }
+      .search-input {
+        width: 140px;
+      }
+      .search-input:focus {
+        width: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================
+       Header & Navigation (交互顶部栏)
+       ========================================== -->
+  <header class="header-nav">
+    <div class="container nav-wrapper">
+      <a href="#" class="nav-brand">
+        <span class="nav-brand-logo">H</span>
+        <span class="nav-brand-title">Agent Harness</span>
+      </a>
+      
+      <nav aria-label="页面目录导航">
+        <ul class="nav-links" id="navbar-links">
+          <li class="active"><a href="#thesis">核心主张</a></li>
+          <li><a href="#architecture">三层架构</a></li>
+          <li><a href="#applications">应用场景</a></li>
+          <li><a href="#challenges">未解挑战</a></li>
+          <li><a href="#questions">自检清单</a></li>
+        </ul>
+      </nav>
+      
+      <div class="search-container">
+        <input class="search-input" type="search" placeholder="搜索关键词..." aria-label="搜索页面内容" id="site-search">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ==========================================
+         Hero Section (社论头图)
+         ========================================== -->
+    <section class="hero-section">
+      <div class="container hero-grid">
+        <div>
+          <span class="hero-kicker">
+            <svg style="width:14px; height:14px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+            </svg>
+            Literature Insight
+          </span>
+          <h1 class="hero-title">代码作为 Agent Harness</h1>
+          <p class="hero-subtitle">把推理、行动和环境状态变成可执行、可验证、可追溯的工程基础设施。</p>
+          <div class="hero-buttons">
+            <a href="#architecture" class="btn btn-primary">探索三层架构</a>
+            <a href="#questions" class="btn btn-secondary">开始系统自检</a>
+          </div>
+        </div>
+        
+        <div class="glass-card hero-side-card">
+          <h2 class="side-card-title">从黑盒到可审计</h2>
+          <div class="side-stats">
+            <div class="stat-item">
+              <span class="stat-num">110+</span>
+              <span class="stat-label">覆盖论文综述</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-num">23</span>
+              <span class="stat-label">代表性工程系统</span>
+            </div>
+          </div>
+          <p class="side-card-desc">本页根据研究材料进行结构化梳理，提炼出可执行代码在复杂 Agent 运行时的基础支撑作用，具体统计和权威结论以原论文为准。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Section 1: 核心主张
+         ========================================== -->
+    <section id="thesis" class="section-padding scroll-mark-block">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-kicker">Section 01 / Central Thesis</span>
+          <h2 class="section-title">问题不是“模型还不够聪明”，而是“系统不可审计”</h2>
+          <p class="section-desc">自然语言作为推理介质容易成为黑盒，而“代码化”让 Agent 的动作与状态转变获得确定性的物理实体。</p>
+        </div>
+        
+        <div class="card-grid-3">
+          <div class="glass-card panel-card">
+            <div class="panel-icon-wrap">
+              <svg style="width:24px; height:24px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <h3>看不清推理</h3>
+            <p>自然语言推理过程容易退化为无法验证的文本。代码能暴露中间计算过程，使得计算边界与逻辑约束被严格审计。</p>
+          </div>
+          
+          <div class="glass-card panel-card">
+            <div class="panel-icon-wrap">
+              <svg style="width:24px; height:24px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h3>追不回行动</h3>
+            <p>在网络交互或系统操作中，动作轨迹极易迷失。代码化接口让操作支持独立测试、沙箱回放和自动化失败诊断。</p>
+          </div>
+          
+          <div class="glass-card panel-card">
+            <div class="panel-icon-wrap">
+              <svg style="width:24px; height:24px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
+            </div>
+            <h3>管不住状态</h3>
+            <p>长生命周期 Agent 会累积复杂的上下文与内存状态。将环境与交互抽象为数据结构，可有效消除混沌并支持断点复原。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Section 2: 三层架构
+         ========================================== -->
+    <section id="architecture" class="section-padding scroll-mark-block" style="border-top: 1px solid var(--border-color-light)">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-kicker">Section 02 / Architectural Layer</span>
+          <h2 class="section-title">核心结论：三层 Harness 运行系统</h2>
+          <p class="section-desc">本图展示了代码不再仅仅是 Agent 的生成产物，而是作为其生存与运行的整套工程化 Harness 骨架。</p>
+        </div>
+        
+        <!-- SVG 容器框，带有浏览器窗口外壳 -->
+        <div class="glass-card svg-container">
+          <div class="diagram-window">
+            <div class="window-bar">
+              <span class="window-dot window-dot-red"></span>
+              <span class="window-dot window-dot-yellow"></span>
+              <span class="window-dot window-dot-green"></span>
+              <div class="window-title">code-as-agent-harness-architecture.svg</div>
+            </div>
+            <div class="diagram-body">
+              <!-- 重绘后极具现代感的 SVG 架构图，支持流光虚线动画 -->
+              <svg class="akm-diagram" viewBox="0 0 1040 520" width="100%" height="auto" role="img" aria-label="代码作为 Agent Harness 的三层架构图" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="layer1-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="var(--accent-light)" />
+                    <stop offset="100%" stop-color="var(--bg-panel)" />
+                  </linearGradient>
+                  <linearGradient id="layer2-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="var(--color-olive-light)" />
+                    <stop offset="100%" stop-color="var(--bg-panel)" />
+                  </linearGradient>
+                  <linearGradient id="layer3-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="var(--color-sky-light)" />
+                    <stop offset="100%" stop-color="var(--bg-panel)" />
+                  </linearGradient>
+                  
+                  <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+                    <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="rgba(35,32,30,0.08)" />
+                  </filter>
+                  <filter id="accent-glow" x="-10%" y="-10%" width="120%" height="120%">
+                    <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="var(--accent)" flood-opacity="0.15" />
+                  </filter>
+                  
+                  <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="var(--text-light)"></path>
+                  </marker>
+                  <marker id="arrow-accent" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                    <path d="M0,0 L0,6 L9,3 z" fill="var(--accent)"></path>
+                  </marker>
+                </defs>
+
+                <!-- 架构底板背景 -->
+                <rect x="20" y="20" width="1000" height="480" rx="20" fill="var(--bg-surface)" stroke="var(--border-color)" stroke-width="1.5"></rect>
+                
+                <!-- 底部说明条 -->
+                <rect x="260" y="435" width="520" height="44" rx="22" fill="#0f1012" stroke="rgba(255,255,255,0.06)" filter="url(#shadow)"></rect>
+                <text x="520" y="462" text-anchor="middle" fill="#eae7e2" font-family="var(--font-mono)" font-size="14" font-weight="500" letter-spacing="0.08em">Executable • Verifiable • Stateful</text>
+                
+                <!-- 主标题 -->
+                <text x="60" y="70" fill="var(--text-main)" font-family="var(--font-serif)" font-size="28" font-weight="700">Agent 运行基础设施模型</text>
+                
+                <!-- 连线路径一：Layer 1 -> Layer 2 -->
+                <path d="M345 250 H380" stroke="var(--text-light)" stroke-width="2" fill="none" marker-end="url(#arrow)"></path>
+                <path d="M345 250 H380" class="flow-line" stroke-width="2" fill="none"></path>
+
+                <!-- 连线路径二：Layer 2 -> Layer 3 -->
+                <path d="M655 250 H690" stroke="var(--text-light)" stroke-width="2" fill="none" marker-end="url(#arrow)"></path>
+                <path d="M655 250 H690" class="flow-line-accent" stroke-width="2" fill="none"></path>
+
+                <!-- ==================== LAYER 1 ==================== -->
+                <g class="layer-card">
+                  <rect x="70" y="115" width="270" height="280" rx="18" fill="url(#layer1-grad)" stroke="var(--accent)" stroke-width="1.5" filter="url(#accent-glow)"></rect>
+                  <rect x="90" y="135" width="40" height="40" rx="10" fill="var(--accent)" opacity="0.1"></rect>
+                  <!-- 标签 -->
+                  <text x="98" y="160" fill="var(--accent)" font-family="var(--font-mono)" font-size="18" font-weight="700">L1</text>
+                  <text x="150" y="159" fill="var(--accent)" font-family="var(--font-mono)" font-size="13" font-weight="600" letter-spacing="0.05em">Layer 1 · 接口层</text>
+                  
+                  <text x="90" y="215" fill="var(--text-main)" font-family="var(--font-serif)" font-size="24" font-weight="700">能力接入</text>
+                  <text x="90" y="255" fill="var(--text-muted)" font-size="14.5">推理翻译 → 确定程序代码</text>
+                  <text x="90" y="285" fill="var(--text-muted)" font-size="14.5">行动外包 → 策略代码接口</text>
+                  <text x="90" y="315" fill="var(--text-muted)" font-size="14.5">环境状态 → 统一数据结构</text>
+                  
+                  <rect x="90" y="348" width="230" height="30" rx="6" fill="var(--bg-panel)" stroke="var(--border-color-light)"></rect>
+                  <text x="102" y="368" fill="var(--accent)" font-family="var(--font-mono)" font-size="12" font-weight="500">PoT / PAL / Chain of Code</text>
+                </g>
+
+                <!-- ==================== LAYER 2 ==================== -->
+                <g class="layer-card">
+                  <rect x="385" y="115" width="270" height="280" rx="18" fill="url(#layer2-grad)" stroke="var(--color-olive)" stroke-width="1.5" filter="url(#shadow)"></rect>
+                  <rect x="405" y="135" width="40" height="40" rx="10" fill="var(--color-olive)" opacity="0.1"></rect>
+                  <text x="413" y="160" fill="var(--color-olive)" font-family="var(--font-mono)" font-size="18" font-weight="700">L2</text>
+                  <text x="465" y="159" fill="var(--color-olive)" font-family="var(--font-mono)" font-size="13" font-weight="600" letter-spacing="0.05em">Layer 2 · 机制层</text>
+                  
+                  <text x="405" y="215" fill="var(--text-main)" font-family="var(--font-serif)" font-size="24" font-weight="700">单体控制</text>
+                  <text x="405" y="255" fill="var(--text-muted)" font-size="14.5">规划策略：递归任务拆解</text>
+                  <text x="405" y="285" fill="var(--text-muted)" font-size="14.5">内存持久：代码化经验池</text>
+                  <text x="405" y="315" fill="var(--text-muted)" font-size="14.5">动态调试：异常捕获与修正</text>
+                  
+                  <rect x="405" y="348" width="230" height="30" rx="6" fill="var(--bg-panel)" stroke="var(--border-color-light)"></rect>
+                  <text x="417" y="368" fill="var(--color-olive)" font-family="var(--font-mono)" font-size="12" font-weight="500">CodePlan / CodeMem / Agent</text>
+                </g>
+
+                <!-- ==================== LAYER 3 ==================== -->
+                <g class="layer-card">
+                  <rect x="700" y="115" width="270" height="280" rx="18" fill="url(#layer3-grad)" stroke="var(--color-sky)" stroke-width="1.5" filter="url(#shadow)"></rect>
+                  <rect x="720" y="135" width="40" height="40" rx="10" fill="var(--color-sky)" opacity="0.1"></rect>
+                  <text x="728" y="160" fill="var(--color-sky)" font-family="var(--font-mono)" font-size="18" font-weight="700">L3</text>
+                  <text x="780" y="159" fill="var(--color-sky)" font-family="var(--font-mono)" font-size="13" font-weight="600" letter-spacing="0.05em">Layer 3 · 协作层</text>
+                  
+                  <text x="720" y="215" fill="var(--text-main)" font-family="var(--font-serif)" font-size="24" font-weight="700">多体协作</text>
+                  <text x="720" y="255" fill="var(--text-muted)" font-size="14.5">代码库：共享版本控制</text>
+                  <text x="720" y="285" fill="var(--text-muted)" font-size="14.5">联合调试：标准化测试协议</text>
+                  <text x="720" y="315" fill="var(--text-muted)" font-size="14.5">通信契约：结构化调用链</text>
+                  
+                  <rect x="720" y="348" width="230" height="30" rx="6" fill="var(--bg-panel)" stroke="var(--border-color-light)"></rect>
+                  <text x="732" y="368" fill="var(--color-sky)" font-family="var(--font-mono)" font-size="12" font-weight="500">MetaGPT / Reviewer / Tester</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- 详细架构三栏分析 (加深认知) -->
+        <div class="card-grid-3" style="margin-top: 40px">
+          <div class="glass-card panel-card">
+            <span class="info-tag">Interface Layer</span>
+            <h3>01 推理变得严密</h3>
+            <p>通过 PoT / PAL 等技术，将模糊思维转换成确定性程序。由传统的文本直觉模型升级为运行物理引擎的形式化审计系统。</p>
+            <ul class="feature-list">
+              <li>证明器辅助：利用 Lean4 等工具对演绎链条严格判定。</li>
+              <li>结构翻译：动态翻译逻辑约束并直接抛出计算异常。</li>
+            </ul>
+          </div>
+          
+          <div class="glass-card panel-card">
+            <span class="info-tag">Mechanism Layer</span>
+            <h3>02 机制自我改进</h3>
+            <p>通过长效机制与异常回溯，使单体 Agent 从被动接受任务升级为自适应控制流，在运行中不断积累沉淀技能库。</p>
+            <ul class="feature-list">
+              <li>Voyager 技能库：在沙盒中自主封装可重复利用的策略。</li>
+              <li>自我调试：发生报错时自动截获 Traceback 自我重构。</li>
+            </ul>
+          </div>
+          
+          <div class="glass-card panel-card">
+            <span class="info-tag">Collaboration Layer</span>
+            <h3>03 多体边界契约</h3>
+            <p>在多体协作场景下，使用代码作为公共的标准契约，依靠版本控制工作区与公共测试用例解决群体状态同步与冲突冲突。</p>
+            <ul class="feature-list">
+              <li>共享工作区：以虚拟 Git 仓库统一追踪协作冲突。</li>
+              <li>评审与诊断：多 Agent 分别扮演开发者、测试者与合规评审。</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Section 3: 应用场景
+         ========================================== -->
+    <section id="applications" class="section-padding scroll-mark-block" style="border-top: 1px solid var(--border-color-light)">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-kicker">Section 03 / Engineering Scenarios</span>
+          <h2 class="section-title">应用场景与范例：代码如何发挥 Harness 效能</h2>
+          <p class="section-desc">在实际生产应用中，代码承载的不同状态和验证标准，让系统从黑盒 Demo 演进为工业级系统。</p>
+        </div>
+        
+        <div class="tabs-wrapper">
+          <div class="tab-list" role="tablist" aria-label="应用场景分类切换">
+            <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="panel-coding" id="btn-coding">代码生成与维护</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-gui" id="btn-gui">GUI 网页端自动化</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-science" id="btn-science">科学自主探索</button>
+            <button class="tab-btn" role="tab" aria-selected="false" aria-controls="panel-robot" id="btn-robot">物理具身机器人</button>
+          </div>
+        </div>
+
+        <div class="glass-card" style="overflow:hidden">
+          <div class="table-container">
+            <!-- 代码助手面板 -->
+            <div id="panel-coding" class="tabpanel-content fade-in" role="tabpanel" aria-labelledby="btn-coding">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>典型系统</th>
+                    <th>Harness 工程形态</th>
+                    <th>客观验证媒介</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong style="font-size:16px">SWE-bench / OpenHands</strong></td>
+                    <td><span class="badge badge-accent">软件仓库 / Patch</span> 包含开发分支、沙盒系统以及完备的基础运行环境依赖。</td>
+                    <td><span class="badge badge-accent">Unit Test</span> 单元测试、编译检测、静态扫描以及完整回归覆盖作为硬性验证准则。</td>
+                  </tr>
+                  <tr>
+                    <td><strong style="font-size:16px">AgentCoder</strong></td>
+                    <td><span class="badge badge-accent">测试代码自迭代</span> 包含专门的测试生成模块与测试用例隔离沙箱。</td>
+                    <td><span class="badge badge-accent">Self-Correction</span> 动态运行生成的高阶断言，基于运行态反馈定位语法或业务逻辑死锁。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- GUI 面板 -->
+            <div id="panel-gui" class="tabpanel-content fade-in" role="tabpanel" aria-labelledby="btn-gui" style="display:none">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>典型系统</th>
+                    <th>Harness 工程形态</th>
+                    <th>客观验证媒介</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong style="font-size:16px">Mind2Web / WebArena</strong></td>
+                    <td><span class="badge badge-olive">DOM 树 / 结构树</span> 基于可访问性（Accessibility）API 的树状环境动作映射模型。</td>
+                    <td><span class="badge badge-olive">Action Trajectory</span> 页面交互状态断言、最终数据接口拉取状态、视觉一致性检测。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- 科学发现面板 -->
+            <div id="panel-science" class="tabpanel-content fade-in" role="tabpanel" aria-labelledby="btn-science" style="display:none">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>典型系统</th>
+                    <th>Harness 工程形态</th>
+                    <th>客观验证媒介</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong style="font-size:16px">ChemCrow / AI Scientist</strong></td>
+                    <td><span class="badge badge-sky">科学假说 / Python 脚本</span> 模拟数值模型、自动化实验室机器人指令集。</td>
+                    <td><span class="badge badge-sky">Repeatable Pipeline</span> 可复现实验记录、数学极限检查、以及独立的交叉实验组对照机制。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- 机器人面板 -->
+            <div id="panel-robot" class="tabpanel-content fade-in" role="tabpanel" aria-labelledby="btn-robot" style="display:none">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>典型系统</th>
+                    <th>Harness 工程形态</th>
+                    <th>客观验证媒介</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong style="font-size:16px">SayCan / Voyager</strong></td>
+                    <td><span class="badge badge-accent">策略代码 / 动力学 API</span> 机器人底层感知到动作原语的代码描述库。</td>
+                    <td><span class="badge badge-accent">Success Probability</span> 物理动作成功率、Minecraft 高复杂度技能库积累数。</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Section 4: 未解挑战
+         ========================================== -->
+    <section id="challenges" class="section-padding scroll-mark-block" style="border-top: 1px solid var(--border-color-light)">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-kicker">Section 04 / Constraints & Hard Limits</span>
+          <h2 class="section-title">六个未解挑战：警惕 Harness 神话</h2>
+          <p class="section-desc">工程化的优势无可比拟，但我们也必须认清在复杂现实世界中，代码所面临的多体协作与真实鲁棒性瓶颈。</p>
+        </div>
+        
+        <div class="challenge-grid">
+          <div class="glass-card challenge-card">
+            <span class="challenge-num">1</span>
+            <div class="challenge-content">
+              <h4>评估依然粗糙与滞后</h4>
+              <p>单纯依靠最终答案判断经常会导致低质量推理过程的逃逸。急需建立精细到微动作级别的多维度评估手段。</p>
+            </div>
+          </div>
+
+          <div class="glass-card challenge-card">
+            <span class="challenge-num">2</span>
+            <div class="challenge-content">
+              <h4>不完整环境状态下的验证失真</h4>
+              <p>网络环境或机器人视角极易陷入“盲区”。在部分可观测状态中，难以判定完美的真实世界物理规律。</p>
+            </div>
+          </div>
+
+          <div class="glass-card challenge-card">
+            <span class="challenge-num">3</span>
+            <div class="challenge-content">
+              <h4>自我改进中的漏洞逃逸</h4>
+              <p>Agent 在自主重构或编写新逻辑时极易绕过防护网，如何严格限制权限、建立鲁棒的沙盒与高保真测试仍未解决。</p>
+            </div>
+          </div>
+
+          <div class="glass-card challenge-card">
+            <span class="challenge-num">4</span>
+            <div class="challenge-content">
+              <h4>多体环境下的高维状态一致性</h4>
+              <p>当多个 Agent 互不知晓地并行写入同一真实世界工作区时，群体状态机的漂移与锁竞争是工程上的一大痛点。</p>
+            </div>
+          </div>
+
+          <div class="glass-card challenge-card">
+            <span class="challenge-num">5</span>
+            <div class="challenge-content">
+              <h4>高风险动作的安全确认与效能平衡</h4>
+              <p>涉及大额交易、系统销毁等操作时如何融入人类审计回路，并在频繁打断与极致执行效率中找到平衡点。</p>
+            </div>
+          </div>
+
+          <div class="glass-card challenge-card">
+            <span class="challenge-num">6</span>
+            <div class="challenge-content">
+              <h4>非结构化传感器多模态信息的对齐</h4>
+              <p>视觉序列、物理压力、连续语音等自然信号较难高保真翻译为离散的代码数据结构，这是跨越现实数字鸿沟的关键所在。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         Section 5: 自检清单与代码 (交互勾选)
+         ========================================== -->
+    <section id="questions" class="section-padding scroll-mark-block" style="border-top: 1px solid var(--border-color-light)">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-kicker">Section 05 / System Checklist</span>
+          <h2 class="section-title">自检自测：判断你的系统是 Demo 还是工程级 Harness</h2>
+          <p class="section-desc">交互式清单可助你迅速评估系统目前的工程审计水准。支持一键导出或复制配置清单。</p>
+        </div>
+        
+        <div class="bottom-grid">
+          <div>
+            <div class="checklist-wrapper">
+              <div class="checkbox-item" data-check>
+                <div class="checkbox-custom"></div>
+                <span class="checkbox-text">推理步骤是否已转换为可执行证明、形式化公式或数学分支约束？</span>
+              </div>
+              <div class="checkbox-item" data-check>
+                <div class="checkbox-custom"></div>
+                <span class="checkbox-text">外部操作（例如数据库、网页点击）是否保存了高精度的回滚、回放和异常堆栈？</span>
+              </div>
+              <div class="checkbox-item" data-check>
+                <div class="checkbox-custom"></div>
+                <span class="checkbox-text">环境本身是否是确定性的、可独立运行或由单元测试严格框定的真理边界？</span>
+              </div>
+              <div class="checkbox-item" data-check>
+                <div class="checkbox-custom"></div>
+                <span class="checkbox-text">高风险动作（如删除、资产流转）是否配置了完善的人类干预（Human-in-the-loop）审计？</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 右侧代码终端 -->
+          <div class="glass-card code-console">
+            <div class="window-bar">
+              <span class="window-dot window-dot-red"></span>
+              <span class="window-dot window-dot-yellow"></span>
+              <span class="window-dot window-dot-green"></span>
+              <div class="window-title">console-output.yaml</div>
+            </div>
+            <div class="console-body">
+              <div class="console-header-row">
+                <span class="console-label">Auditing Summary Checklist</span>
+                <button class="copy-btn" id="copy-summary-btn" data-copy="#agent-summary-code">
+                  <svg style="width:12px; height:12px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m-5 4h6m-6 4h6m-6 4h10" />
+                  </svg>
+                  <span>Copy Configuration</span>
+                </button>
+              </div>
+              <pre class="code-box"><code id="agent-summary-code"># Agent Harness 工程化系统自检 YAML
+system_config:
+  audit_version: "2026.05.20"
+  executable_reasoning:
+    enabled: true
+    checker_engine: "Lean4 / Prover"
+  action_tracking:
+    record_traceback: true
+    replay_sandbox: "Docker-Lite"
+  environment_isolation:
+    ground_truth: "SWE-bench Suite"
+    roll_back_strategy: "Snapshot"
+  safety_guard:
+    hitl_approval:
+      dangerous_actions: ["rm_dir", "transfer_fund"]
+      require_logs: true</code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================
+       Footer (来源与边界)
+       ========================================== -->
+  <footer class="footer-section">
+    <div class="container footer-wrapper">
+      <div class="footer-info">
+        <p><strong>学术文献声明：</strong> 本页面基于用户提供的综述论文进行结构化编辑和极致前端可视化，系统图例及统计结论主要参考了 arXiv 最新学术界研究及 Awesome GitHub 项目。在真实科研探索时，具体数据和推论请以原文献为准。</p>
+        <div class="footer-links">
+          <a class="footer-link" href="https://arxiv.org/abs/2605.18747" target="_blank" rel="noopener">
+            <svg style="width:14px; height:14px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            arXiv: 2605.18747 (Code as Agent Harness)
+          </a>
+          <a class="footer-link" href="https://github.com/YennNing/Awesome-Code-as-Agent-Harness-Papers" target="_blank" rel="noopener">
+            <svg style="width:14px; height:14px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+            GitHub: Awesome Papers
+          </a>
+        </div>
+      </div>
+      <div>
+        <p class="footer-copyright">Designed with Sunset Clay Style<br>© 2026 Code as Agent Harness Visualizer.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 返回顶部悬浮圆钮 -->
+  <div class="back-to-top" id="btn-back-to-top" aria-label="返回顶部">
+    <svg style="width:20px; height:20px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+    </svg>
+  </div>
+
+  <!-- ==========================================
+       JS 交互实现 (Tabs, Search, Scrollspy, Checkbox)
+       ========================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      /* ==========================================
+         1. Tabs (应用场景切换逻辑)
+         ========================================== */
+      const tabs = document.querySelectorAll('.tab-btn');
+      const panels = document.querySelectorAll('.tabpanel-content');
+      
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          panels.forEach(p => {
+            p.style.display = 'none';
+          });
+          
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          
+          const activePanelId = tab.getAttribute('aria-controls');
+          const activePanel = document.getElementById(activePanelId);
+          if (activePanel) {
+            activePanel.style.display = 'block';
+            activePanel.classList.add('fade-in');
+            setTimeout(() => {
+              activePanel.classList.remove('fade-in');
+            }, 400);
+          }
+        });
+      });
+
+      /* ==========================================
+         2. Scrollspy 滚动章节智能高亮监听
+         ========================================== */
+      const scrollBlocks = document.querySelectorAll('.scroll-mark-block');
+      const navLinks = document.querySelectorAll('.nav-links li');
+      
+      const onScroll = () => {
+        let currentSectionId = '';
+        const scrollPosition = window.scrollY + 200; // 偏移判定线
+        
+        scrollBlocks.forEach(block => {
+          const top = block.offsetTop;
+          const height = block.offsetHeight;
+          if (scrollPosition >= top && scrollPosition < top + height) {
+            currentSectionId = block.getAttribute('id');
+          }
+        });
+        
+        if (currentSectionId) {
+          navLinks.forEach(li => {
+            li.classList.remove('active');
+            const linkHref = li.querySelector('a')?.getAttribute('href');
+            if (linkHref === `#${currentSectionId}`) {
+              li.classList.add('active');
+            }
+          });
+        }
+      };
+      
+      window.addEventListener('scroll', onScroll);
+
+      /* ==========================================
+         3. 页面全局高效高亮过滤搜索系统
+         ========================================== */
+      const searchInput = document.getElementById('site-search');
+      
+      // 用于递归文本节点并标记高亮，避免替换了 DOM 元素造成交互失效
+      function performHighlight(element, keyword) {
+        const nodes = Array.from(element.childNodes);
+        nodes.forEach(node => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const text = node.textContent;
+            const lowerText = text.toLowerCase();
+            const index = lowerText.indexOf(keyword.toLowerCase());
+            
+            if (index !== -1 && keyword.trim() !== '') {
+              const span = document.createElement('span');
+              span.className = 'highlight-mark';
+              
+              const beforeText = text.substring(0, index);
+              const matchText = text.substring(index, index + keyword.length);
+              const afterText = text.substring(index + keyword.length);
+              
+              span.textContent = matchText;
+              
+              node.textContent = beforeText;
+              node.after(span);
+              
+              // 递归处理剩下部分
+              const remainingTextNode = document.createTextNode(afterText);
+              span.after(remainingTextNode);
+              performHighlight(span.nextSibling, keyword);
+            }
+          } else if (node.nodeType === Node.ELEMENT_NODE && !node.classList.contains('highlight-mark') && node.tagName !== 'SCRIPT' && node.tagName !== 'STYLE' && node.tagName !== 'PRE') {
+            performHighlight(node, keyword);
+          }
+        });
+      }
+
+      function clearHighlights() {
+        const highlights = document.querySelectorAll('.highlight-mark');
+        highlights.forEach(hl => {
+          const parent = hl.parentNode;
+          if (parent) {
+            parent.replaceChild(document.createTextNode(hl.textContent), hl);
+            parent.normalize(); // 清理相邻文本碎片
+          }
+        });
+      }
+
+      searchInput?.addEventListener('input', () => {
+        const query = searchInput.value.trim();
+        clearHighlights();
+        
+        if (!query) {
+          // 搜索为空时，所有段落重新显影
+          document.querySelectorAll('.scroll-mark-block, .panel-card, .challenge-card').forEach(block => {
+            block.style.opacity = '1';
+            block.style.filter = 'none';
+          });
+          return;
+        }
+
+        // 遍历需要进行搜索的目标节点并高亮
+        const searchableContainers = document.querySelectorAll('.scroll-mark-block');
+        searchableContainers.forEach(container => {
+          performHighlight(container, query);
+        });
+
+        // 增强视觉反馈：暗化没有匹配到的独立区块
+        document.querySelectorAll('.panel-card, .challenge-card').forEach(card => {
+          const hasMatch = card.querySelectorAll('.highlight-mark').length > 0;
+          if (hasMatch) {
+            card.style.opacity = '1';
+            card.style.filter = 'none';
+            card.style.borderColor = 'var(--accent)';
+          } else {
+            card.style.opacity = '0.35';
+            card.style.filter = 'grayscale(30%)';
+            card.style.borderColor = 'var(--border-color-light)';
+          }
+        });
+      });
+
+      /* ==========================================
+         4. 交互式 Checklist (勾选状态与划线)
+         ========================================== */
+      const checkboxItems = document.querySelectorAll('[data-check]');
+      
+      checkboxItems.forEach(item => {
+        item.addEventListener('click', () => {
+          item.classList.toggle('checked');
+        });
+      });
+
+      /* ==========================================
+         5. 一键复制高级反馈
+         ========================================== */
+      const copyBtn = document.getElementById('copy-summary-btn');
+      
+      copyBtn?.addEventListener('click', async () => {
+        const targetSelector = copyBtn.getAttribute('data-copy');
+        const targetElement = document.querySelector(targetSelector);
+        if (!targetElement) return;
+        
+        try {
+          await navigator.clipboard.writeText(targetElement.innerText || targetElement.textContent || '');
+          
+          // 优雅切换提示文本与图标
+          const oldHtml = copyBtn.innerHTML;
+          copyBtn.style.background = 'var(--color-olive)';
+          copyBtn.style.borderColor = 'var(--color-olive)';
+          copyBtn.innerHTML = `
+            <svg style="width:12px; height:12px" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>Copied Successfully!</span>
+          `;
+          
+          setTimeout(() => {
+            copyBtn.style.background = '';
+            copyBtn.style.borderColor = '';
+            copyBtn.innerHTML = oldHtml;
+          }, 1800);
+        } catch (err) {
+          console.error('Failed to copy text: ', err);
+        }
+      });
+
+      /* ==========================================
+         6. 返回顶部按钮显影与平滑滚动
+         ========================================== */
+      const backToTopBtn = document.getElementById('btn-back-to-top');
+      
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 400) {
+          backToTopBtn.classList.add('visible');
+        } else {
+          backToTopBtn.classList.remove('visible');
+        }
+      });
+      
+      backToTopBtn?.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+
+    });
+  </script>
+</body>
+</html>

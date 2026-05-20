@@ -5,39 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="个人成长知识库 — AI、管理、运营与个人成长的学习笔记集合。">
   <title>Bin哥的知识地图</title>
+  <!-- 预加载 Google Fonts 以获取极高品质的字体排版 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
 :root {
   --bg: #faf8f5;
-  --surface: #f0ede8;
-  --panel: #fffdfa;
-  --border: #d4cfc7;
+  --surface: #f4f0ea;
+  --panel: rgba(255, 253, 250, 0.85);
+  --panel-solid: #fffdfa;
+  --border: rgba(212, 207, 199, 0.65);
+  --border-light: rgba(212, 207, 199, 0.3);
   --text: #2c2825;
-  --muted: #8a837a;
+  --muted: #7a7268;
   --soft: #e3dacc;
   --accent: #d97757;
   --accent-dark: #b8602a;
+  --accent-glow: rgba(217, 119, 87, 0.15);
+  --accent-light: rgba(217, 119, 87, 0.08);
   --olive: #788c5d;
   --sky: #6a8caf;
   --slate: #141413;
-  --shadow: 0 2px 12px rgba(44, 40, 37, .07), 0 1px 3px rgba(44, 40, 37, .05);
-  --shadow-hover: 0 8px 32px rgba(44, 40, 37, .13), 0 2px 8px rgba(44, 40, 37, .07);
-  --radius: 16px;
-  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  --serif: Georgia, "Times New Roman", serif;
-  --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --shadow: 0 4px 16px rgba(44, 40, 37, .04), 0 1px 3px rgba(44, 40, 37, .02);
+  --shadow-hover: 0 16px 40px rgba(217, 119, 87, 0.1), 0 4px 12px rgba(44, 40, 37, 0.04);
+  --radius: 20px;
+  --mono: 'JetBrains Mono', ui-monospace, monospace;
+  --serif: 'Noto Serif SC', Georgia, serif;
+  --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #17191c;
-    --surface: #202226;
-    --panel: #111214;
-    --border: #3d3d39;
+    --bg: #111214;
+    --surface: #1a1b1e;
+    --panel: rgba(23, 25, 28, 0.82);
+    --panel-solid: #17191c;
+    --border: rgba(255, 255, 255, 0.07);
+    --border-light: rgba(255, 255, 255, 0.03);
     --text: #eee9df;
-    --muted: #aaa49a;
+    --muted: #a39a8f;
     --soft: #2e2d2a;
-    --shadow: 0 2px 12px rgba(0, 0, 0, .25), 0 1px 3px rgba(0, 0, 0, .15);
-    --shadow-hover: 0 8px 32px rgba(0, 0, 0, .40), 0 2px 8px rgba(0, 0, 0, .20);
+    --accent-glow: rgba(217, 119, 87, 0.3);
+    --shadow: 0 4px 16px rgba(0, 0, 0, .25), 0 1px 3px rgba(0, 0, 0, .15);
+    --shadow-hover: 0 16px 40px rgba(217, 119, 87, 0.2), 0 4px 12px rgba(0, 0, 0, .2);
   }
 }
 
@@ -281,19 +293,21 @@ a { color: inherit; text-decoration: none; }
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 20px;
 }
 
 .card {
   position: relative;
   display: flex;
   flex-direction: column;
-  padding: 22px;
+  padding: 24px;
   background: var(--panel);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
-  transition: box-shadow .2s, transform .2s, border-color .2s;
+  transition: var(--transition);
   overflow: hidden;
   cursor: pointer;
 }
@@ -303,44 +317,70 @@ a { color: inherit; text-decoration: none; }
   position: absolute;
   inset: 0;
   border-radius: var(--radius);
+  background: radial-gradient(circle at top right, var(--accent-light), transparent 60%);
   opacity: 0;
-  transition: opacity .2s;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
 }
 
 .card:hover {
   box-shadow: var(--shadow-hover);
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+  transform: translateY(-4px) scale(1.006);
+  border-color: var(--accent);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card-category,
+.card-title,
+.card-desc,
+.card-footer {
+  position: relative;
+  z-index: 2;
 }
 
 .card-category {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 3px 9px;
+  gap: 6px;
+  padding: 4px 12px;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-light);
   border-radius: 99px;
   color: var(--muted);
-  font: 11px/1.2 var(--mono);
-  letter-spacing: .06em;
+  font: 500 11px/1.2 var(--mono);
+  letter-spacing: .08em;
   margin-bottom: 14px;
   width: fit-content;
+  transition: var(--transition);
+}
+
+.card:hover .card-category {
+  border-color: var(--accent);
+  color: var(--text);
 }
 
 .card-title {
   font-family: var(--serif);
-  font-size: 18px;
-  line-height: 1.3;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.4;
   margin-bottom: 10px;
   color: var(--text);
-  flex: 1;
+  transition: color 0.25s ease;
+}
+
+.card:hover .card-title {
+  color: var(--accent);
 }
 
 .card-desc {
   color: var(--muted);
-  font-size: 13px;
-  line-height: 1.55;
+  font-size: 13.5px;
+  line-height: 1.6;
   margin-bottom: 18px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -355,7 +395,7 @@ a { color: inherit; text-decoration: none; }
   gap: 8px;
   margin-top: auto;
   padding-top: 14px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-light);
 }
 
 .card-date {
@@ -367,20 +407,21 @@ a { color: inherit; text-decoration: none; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--muted);
   font-size: 14px;
-  transition: background .15s, color .15s;
+  transition: var(--transition);
 }
 
 .card:hover .card-arrow {
   background: var(--accent);
   border-color: var(--accent);
   color: #fff;
+  transform: translateX(5px);
 }
 
 /* Featured card */
@@ -390,39 +431,63 @@ a { color: inherit; text-decoration: none; }
   align-items: stretch;
   gap: 0;
   padding: 0;
+  background: var(--panel);
 }
 
 .card.featured .card-body {
   flex: 1;
-  padding: 28px 28px 24px;
+  padding: 32px;
   display: flex;
   flex-direction: column;
 }
 
 .card.featured .card-visual {
-  width: 260px;
+  width: 280px;
   flex-shrink: 0;
-  background: var(--surface);
+  background: radial-gradient(circle at center, var(--surface) 20%, rgba(217, 119, 87, 0.04) 100%);
   border-left: 1px solid var(--border);
   border-radius: 0 var(--radius) var(--radius) 0;
   display: grid;
   place-items: center;
-  padding: 24px;
+  padding: 32px;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.card.featured:hover .card-visual {
+  background: radial-gradient(circle at center, var(--surface) 10%, rgba(217, 119, 87, 0.12) 100%);
 }
 
 .card.featured .card-title {
-  font-size: 22px;
+  font-size: 23px;
 }
 
 .visual-badge {
   display: grid;
   place-items: center;
-  width: 80px;
-  height: 80px;
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-  border: 2px solid color-mix(in srgb, var(--accent) 30%, transparent);
-  border-radius: 20px;
-  font-size: 36px;
+  width: 88px;
+  height: 88px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  font-size: 38px;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+}
+
+@media (prefers-color-scheme: dark) {
+  .visual-badge {
+    background: rgba(23, 25, 28, 0.7);
+  }
+}
+
+.card.featured:hover .visual-badge {
+  transform: scale(1.08) rotate(4deg);
+  border-color: var(--accent);
+  box-shadow: 0 10px 25px var(--accent-glow);
 }
 
 /* ── SIDEBAR ─────────────────────────────────────────────── */
@@ -537,12 +602,22 @@ a { color: inherit; text-decoration: none; }
 /* ── EMPTY STATE ─────────────────────────────────────────── */
 .empty-section {
   grid-column: 1 / -1;
-  padding: 32px 24px;
+  padding: 44px 24px;
   text-align: center;
-  border: 2px dashed var(--border);
+  background: var(--panel);
+  border: 1.5px dashed var(--border);
   border-radius: var(--radius);
   color: var(--muted);
   font-size: 14px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: var(--transition);
+}
+
+.empty-section:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  background: var(--panel-solid);
 }
 
 /* ── FOOTER ──────────────────────────────────────────────── */
@@ -627,7 +702,7 @@ a { color: inherit; text-decoration: none; }
     </p>
     <div class="hero-stats">
       <div class="stat">
-        <span class="stat-num" id="total-count">2</span>
+        <span class="stat-num" id="total-count">3</span>
         <span class="stat-label">篇文章</span>
       </div>
       <div class="stat">
@@ -675,7 +750,7 @@ a { color: inherit; text-decoration: none; }
           <h2 class="section-title">
             <span class="section-icon">🤖</span>AI &amp; 工程
           </h2>
-          <span class="section-count" id="count-ai">2 篇</span>
+          <span class="section-count" id="count-ai">3 篇</span>
         </div>
         <div class="card-grid" id="grid-ai">
 
@@ -718,6 +793,25 @@ a { color: inherit; text-decoration: none; }
             </p>
             <div class="card-footer">
               <span class="card-date">2026-05-18</span>
+              <span class="card-arrow">→</span>
+            </div>
+          </a>
+
+          <!-- code-as-agent-harness-visual -->
+          <a href="map/ai/code-as-agent-harness-visual.html" class="card"
+             data-category="ai"
+             data-title="代码作为 Agent Harness：极致工程化探索"
+             data-desc="Code as Agent Harness 可视化总结：三层架构、三类能力、应用场景、未解挑战与系统自检清单。">
+            <span class="card-category">
+              <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#6a8caf"/></svg>
+              AI &amp; 工程
+            </span>
+            <div class="card-title">代码作为 Agent Harness</div>
+            <p class="card-desc">
+              极致工程化探索。三层架构、三类能力、应用场景、未解挑战以及 12 项系统自检清单的可视化总结。
+            </p>
+            <div class="card-footer">
+              <span class="card-date">2026-05-20</span>
               <span class="card-arrow">→</span>
             </div>
           </a>
@@ -794,14 +888,14 @@ a { color: inherit; text-decoration: none; }
                 <span class="topic-item-icon">📚</span>
                 <span>全部文章</span>
               </div>
-              <span class="topic-count" id="nav-all">2</span>
+              <span class="topic-count" id="nav-all">3</span>
             </div>
             <div class="topic-item" data-nav-filter="ai">
               <div class="topic-item-left">
                 <span class="topic-item-icon">🤖</span>
                 <span>AI &amp; 工程</span>
               </div>
-              <span class="topic-count" id="nav-ai">2</span>
+              <span class="topic-count" id="nav-ai">3</span>
             </div>
             <div class="topic-item" data-nav-filter="management">
               <div class="topic-item-left">
@@ -833,6 +927,13 @@ a { color: inherit; text-decoration: none; }
         <div class="widget-header">最近更新</div>
         <div class="widget-body">
           <div class="recent-list">
+            <a href="map/ai/code-as-agent-harness-visual.html" class="recent-item">
+              <div class="recent-dot"></div>
+              <div class="recent-info">
+                <div class="recent-title">代码作为 Agent Harness</div>
+                <div class="recent-meta">AI · 2026-05-20</div>
+              </div>
+            </a>
             <a href="map/ai/multi-agent-collaboration-methodology.html" class="recent-item">
               <div class="recent-dot"></div>
               <div class="recent-info">
