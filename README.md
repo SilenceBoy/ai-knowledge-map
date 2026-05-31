@@ -33,6 +33,8 @@
 | [AI 团队怎么组（多智能体协作小白版）](map/ai/multi-agent-collaboration-methodology.html) | AI & 工程 | 2026-05-18 |
 | [代码作为 Agent Harness — 极致工程化探索](map/ai/code-as-agent-harness-visual.html) | AI & 工程 | 2026-05-20 |
 | [AI 八大使用场景 · 线下分享专题](map/ai/ai_eight_use_scenarios_offline/index.html) | AI & 工程 | 2026-05-20 |
+| [你收藏了 30 个 AI 神器，为什么稿子还是憋不出来](map/ai/ai-workflow-four-layer-stack.html) | AI & 工程 | 2026-05-31 |
+| [趋势是入场券，不是护城河](map/growth/trend-is-ticket-not-moat.html) | 个人成长 | 2026-05-21 |
 
 
 ## 目录结构

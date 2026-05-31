@@ -1,0 +1,539 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="收藏 30 个 AI 工具却写不出稿，真正缺的不是更强的工具，而是一套不容易乱掉的流程。本文拆解 AI 落地的四层栈与最小可用方法。">
+<title>你收藏了 30 个 AI 神器，为什么稿子还是憋不出来</title>
+<style>
+:root{
+  --bg:#FAF8F5; --surface:#F0EDE8; --surface-2:#FFFFFF; --border:#D4CFC7;
+  --text:#2C2825; --muted:#6B6560; --faint:#938B82;
+  --clay:#D97757; --clay-soft:#F4E2D8;
+  --olive:#788C5D; --olive-soft:#E4E9DB;
+  --sky:#6A8CAF; --sky-soft:#DFE7EF;
+  --slate:#141413; --code-bg:#1E1C1A; --code-text:#EDE8E1;
+  --shadow:0 1px 2px rgba(44,40,37,.04),0 8px 24px rgba(44,40,37,.06);
+  --radius:14px;
+  --serif:"Songti SC","STSong",Georgia,"Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Segoe UI",Roboto,sans-serif;
+  --mono:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+}
+[data-theme="dark"]{
+  --bg:#1A1816; --surface:#232019; --surface-2:#2B2722; --border:#3B362F;
+  --text:#EDE8E1; --muted:#A89F94; --faint:#7A726A;
+  --clay:#E08A6A; --clay-soft:#3A2C25;
+  --olive:#9CB07E; --olive-soft:#2A3024;
+  --sky:#8AA9C9; --sky-soft:#232E38;
+  --slate:#0C0B0A; --code-bg:#0F0E0D; --code-text:#EDE8E1;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--sans);line-height:1.75;font-size:17px;
+  -webkit-font-smoothing:antialiased;transition:background .3s,color .3s;
+}
+.shell{max-width:880px;margin:0 auto;padding:0 22px}
+
+/* ===== Top bar ===== */
+.topbar{
+  position:sticky;top:0;z-index:30;backdrop-filter:saturate(160%) blur(10px);
+  background:color-mix(in srgb,var(--bg) 82%,transparent);
+  border-bottom:1px solid var(--border);
+}
+.topbar .row{display:flex;align-items:center;justify-content:space-between;gap:12px;height:54px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14px;letter-spacing:.02em}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--clay);box-shadow:0 0 0 4px var(--clay-soft)}
+.topbar .actions{display:flex;gap:8px}
+.icon-btn{
+  border:1px solid var(--border);background:var(--surface-2);color:var(--text);
+  border-radius:9px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:var(--sans);
+  transition:.15s;display:inline-flex;align-items:center;gap:6px;
+}
+.icon-btn:hover{border-color:var(--clay);color:var(--clay)}
+
+/* ===== Hero ===== */
+.hero{padding:72px 0 48px;border-bottom:1px solid var(--border)}
+.kicker{
+  font-family:var(--mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--clay);display:inline-flex;align-items:center;gap:8px;margin-bottom:22px;
+}
+.kicker::before{content:"";width:26px;height:1px;background:var(--clay)}
+.hero h1{
+  font-family:var(--serif);font-weight:700;font-size:clamp(30px,5.4vw,46px);
+  line-height:1.25;margin:0 0 24px;letter-spacing:-.01em;
+}
+.hero .lede{font-size:19px;color:var(--muted);margin:0 0 28px;max-width:660px}
+.thesis{
+  background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--clay);
+  border-radius:0 var(--radius) var(--radius) 0;padding:18px 22px;margin-top:8px;
+}
+.thesis .lab{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--clay);text-transform:uppercase}
+.thesis p{margin:6px 0 0;font-size:17px;font-weight:500}
+.meta{display:flex;flex-wrap:wrap;gap:18px;margin-top:30px;font-size:13px;color:var(--faint);font-family:var(--mono)}
+.meta b{color:var(--muted);font-weight:600}
+
+/* ===== TOC ===== */
+.toc{margin:40px 0 8px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px 24px}
+.toc h2{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin:0 0 14px}
+.toc ol{margin:0;padding:0;list-style:none;counter-reset:t;display:grid;grid-template-columns:1fr 1fr;gap:4px 28px}
+.toc li{counter-increment:t}
+.toc a{
+  display:flex;gap:12px;align-items:baseline;text-decoration:none;color:var(--text);
+  padding:7px 8px;border-radius:8px;transition:.15s;font-size:15px;
+}
+.toc a:hover{background:var(--bg);color:var(--clay)}
+.toc a::before{content:counter(t,decimal-leading-zero);font-family:var(--mono);font-size:12px;color:var(--clay);flex:none}
+
+/* ===== Sections ===== */
+section{padding:50px 0;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.sec-head{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px}
+.sec-num{
+  font-family:var(--mono);font-size:13px;color:var(--clay);border:1px solid var(--border);
+  border-radius:8px;padding:4px 9px;flex:none;margin-top:4px;background:var(--surface)
+}
+.sec-head h2{font-family:var(--serif);font-size:clamp(23px,3.6vw,30px);font-weight:700;margin:0;line-height:1.3}
+section p{margin:0 0 18px;color:var(--text)}
+section p.q{color:var(--muted);font-style:italic}
+.muted{color:var(--muted)}
+
+/* ===== Pain list (questions stack) ===== */
+.qstack{display:flex;flex-direction:column;gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:8px 0 22px}
+.qstack div{background:var(--surface-2);padding:13px 18px;font-size:15.5px;display:flex;gap:12px;align-items:center}
+.qstack div::before{content:"?";font-family:var(--mono);color:var(--clay);font-weight:700;flex:none}
+
+/* ===== Compare cards ===== */
+.vs{display:grid;grid-template-columns:1fr auto 1fr;gap:0;align-items:stretch;margin:24px 0}
+.vs .card{background:var(--surface-2);border:1px solid var(--border);padding:22px}
+.vs .card:first-child{border-radius:var(--radius) 0 0 var(--radius)}
+.vs .card:last-child{border-radius:0 var(--radius) var(--radius) 0;border-left:none}
+.vs .bad{border-top:3px solid var(--faint)}
+.vs .good{border-top:3px solid var(--olive)}
+.vs .tag{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+.vs .bad .tag{color:var(--faint)}
+.vs .good .tag{color:var(--olive)}
+.vs h3{font-family:var(--serif);font-size:19px;margin:0 0 8px}
+.vs p{font-size:14.5px;color:var(--muted);margin:0}
+.vs .mid{display:flex;align-items:center;justify-content:center;background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);width:48px;font-family:var(--serif);color:var(--faint);font-size:15px}
+
+/* ===== Stack diagram wrapper ===== */
+.figure{margin:24px 0;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.figure svg{display:block;width:100%;height:auto}
+.figure figcaption{font-size:13px;color:var(--faint);padding:12px 18px;border-top:1px solid var(--border);font-family:var(--mono)}
+
+/* ===== Layer detail cards ===== */
+.layer{display:grid;grid-template-columns:auto 1fr;gap:18px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;margin:14px 0}
+.layer .badge{font-family:var(--mono);font-weight:700;font-size:13px;color:#fff;border-radius:9px;width:54px;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;flex:none;line-height:1.1}
+.layer .badge small{font-size:9px;font-weight:500;opacity:.85;letter-spacing:.05em}
+.layer.l1 .badge{background:var(--clay)} .layer.l1{border-left:3px solid var(--clay)}
+.layer.l2 .badge{background:var(--olive)} .layer.l2{border-left:3px solid var(--olive)}
+.layer.l3 .badge{background:var(--sky)} .layer.l3{border-left:3px solid var(--sky)}
+.layer.l4 .badge{background:var(--slate)} .layer.l4{border-left:3px solid var(--slate)}
+.layer h3{font-family:var(--serif);font-size:20px;margin:0 0 4px}
+.layer .role{font-size:13px;color:var(--faint);font-family:var(--mono);margin:0 0 10px}
+.layer p{font-size:15px;margin:0 0 10px;color:var(--muted)}
+.layer ul{margin:0;padding-left:18px;color:var(--muted);font-size:14.5px}
+.layer ul li{margin:3px 0}
+
+/* ===== Callout ===== */
+.callout{display:flex;gap:14px;background:var(--clay-soft);border:1px solid color-mix(in srgb,var(--clay) 30%,transparent);border-radius:var(--radius);padding:18px 20px;margin:24px 0}
+.callout .ic{font-size:22px;flex:none}
+.callout p{margin:0;font-size:15.5px;color:var(--text)}
+.callout.cold{background:var(--sky-soft);border-color:color-mix(in srgb,var(--sky) 30%,transparent)}
+
+/* ===== Action steps ===== */
+.steps{counter-reset:s;display:flex;flex-direction:column;gap:14px;margin:8px 0 4px}
+.step{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;counter-increment:s;position:relative}
+.step::before{content:"0" counter(s);position:absolute;top:16px;right:20px;font-family:var(--serif);font-size:34px;color:var(--surface);font-weight:700;line-height:1}
+[data-theme="dark"] .step::before{color:var(--border)}
+.step h3{font-family:var(--serif);font-size:19px;margin:0 0 8px;padding-right:50px}
+.step p{font-size:14.5px;margin:0 0 10px;color:var(--muted)}
+.step .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.chip{font-family:var(--mono);font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:4px 10px;color:var(--muted)}
+.gate{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.gate span{font-size:13px;background:var(--clay-soft);color:var(--clay);border-radius:7px;padding:5px 12px;font-weight:600}
+
+/* ===== Pipeline / copy block ===== */
+.copybox{background:var(--code-bg);border-radius:var(--radius);overflow:hidden;margin:20px 0;border:1px solid var(--border)}
+.copybox .bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+.copybox .bar .dots{display:flex;gap:6px}
+.copybox .bar .dots i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.copybox .bar .dots i:nth-child(1){background:#E0796B}.copybox .bar .dots i:nth-child(2){background:#E8C36B}.copybox .bar .dots i:nth-child(3){background:#9CB07E}
+.copy-btn{background:rgba(255,255,255,.08);color:#EDE8E1;border:none;border-radius:7px;padding:5px 12px;font-size:12px;cursor:pointer;font-family:var(--mono);transition:.15s}
+.copy-btn:hover{background:rgba(255,255,255,.18)}
+.copybox pre{margin:0;padding:18px;color:var(--code-text);font-family:var(--mono);font-size:14px;line-height:1.7;overflow-x:auto;white-space:pre-wrap}
+
+/* ===== Conclusion ===== */
+.final{text-align:center;padding:60px 0}
+.final .big{font-family:var(--serif);font-size:clamp(22px,4vw,30px);font-weight:700;line-height:1.5;max-width:680px;margin:0 auto 16px}
+.final .big mark{background:linear-gradient(transparent 62%,var(--clay-soft) 62%);color:inherit;padding:0 3px}
+.final .sub{color:var(--muted);font-size:16px;max-width:560px;margin:0 auto}
+
+/* ===== Title options ===== */
+.titles{display:grid;gap:10px;margin-top:8px}
+.titlecard{display:flex;gap:14px;align-items:center;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px}
+.titlecard .n{font-family:var(--serif);font-size:22px;color:var(--clay);font-weight:700;flex:none}
+.titlecard span{font-weight:500}
+
+/* ===== Footer ===== */
+footer{padding:40px 0 60px;text-align:center;color:var(--faint);font-size:13px;font-family:var(--mono)}
+footer a{color:var(--clay);text-decoration:none}
+
+.backtop{position:fixed;right:20px;bottom:20px;z-index:40;width:42px;height:42px;border-radius:12px;border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;font-size:18px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.25s}
+.backtop.show{opacity:1;pointer-events:auto}
+.backtop:hover{border-color:var(--clay);color:var(--clay)}
+
+@media(max-width:680px){
+  body{font-size:16px}
+  .toc ol{grid-template-columns:1fr}
+  .vs{grid-template-columns:1fr}
+  .vs .card:first-child{border-radius:var(--radius) var(--radius) 0 0}
+  .vs .card:last-child{border-radius:0 0 var(--radius) var(--radius);border-left:1px solid var(--border);border-top:none}
+  .vs .mid{width:auto;height:40px;border-left:1px solid var(--border);border-right:1px solid var(--border)}
+  .layer{grid-template-columns:1fr}
+  .step::before{display:none}.step h3{padding-right:0}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="shell row">
+    <div class="brand"><span class="dot"></span>AI 成长笔记 · 工作流</div>
+    <div class="actions">
+      <button class="icon-btn" id="themeBtn">🌗 主题</button>
+    </div>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="shell">
+    <div class="kicker">Article Explainer · AI 落地方法论</div>
+    <h1>你收藏了 30 个 AI 神器，<br>为什么稿子还是憋不出来</h1>
+    <p class="lede">写稿的、配图的、做表格的、剪视频的——工具基本都齐了，看起来很专业。但真到写稿那一刻，还是会卡住。问题不在工具，在流程。</p>
+    <div class="thesis">
+      <span class="lab">中心观点</span>
+      <p>我们以为缺的是「更强的工具」，但很多时候，真正缺的是一套<strong>不容易乱掉的流程</strong>。工具一多，如果没有入口、分工、标准和兜底，越用越乱。</p>
+    </div>
+    <div class="meta">
+      <span><b>主题</b> AI in Action</span>
+      <span><b>结构</b> 痛点 → 四层栈 → 落地</span>
+      <span><b>阅读</b> 约 8 分钟</span>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <nav class="toc">
+    <h2>目录</h2>
+    <ol>
+      <li><a href="#s1">收藏夹里的 30 个工具</a></li>
+      <li><a href="#s2">不再炫「模型多强」</a></li>
+      <li><a href="#s3">我自己踩过的坑</a></li>
+      <li><a href="#s4">不容易乱的四层栈</a></li>
+      <li><a href="#s5">泼一盆冷水：别急着搭栈</a></li>
+      <li><a href="#s6">真要落地，先做三件事</a></li>
+      <li><a href="#s7">一个最小可用的方法</a></li>
+      <li><a href="#s8">结论与可选标题</a></li>
+    </ol>
+  </nav>
+</div>
+
+<main class="shell">
+
+<section id="s1">
+  <div class="sec-head"><span class="sec-num">01</span><h2>收藏夹里的 30 个工具</h2></div>
+  <p>我见过一个做内容的朋友，收藏夹里有三十多个 AI 工具，写稿、配图、做表格、剪视频、整理资料基本都齐了。看起来很专业。但真到写稿那一刻，他还是会卡住——这些问题一多，工具反而变成了负担：</p>
+  <div class="qstack">
+    <div>今天这篇稿子先用哪个工具？</div>
+    <div>资料丢给谁整理？</div>
+    <div>标题让谁来起？</div>
+    <div>初稿出来以后谁负责改？</div>
+    <div>发布前，到底按什么标准判断能不能发？</div>
+  </div>
+  <p>最后经常是：前面用 AI 拼了好几段，后面自己又从头改一遍。时间没省多少，脑子还更乱了。这不是某一个人的问题——很多公司、团队，甚至个人创作者，用 AI 都卡在这里。</p>
+</section>
+
+<section id="s2">
+  <div class="sec-head"><span class="sec-num">02</span><h2>一个变化：大家不太爱炫「模型多强」了</h2></div>
+  <p>这两年看企业 AI 的新闻，我有个明显的感觉：以前大家喜欢讲模型能力——参数多少、推理多强、性能多好。现在这话题还在，但已经没那么稀缺了，因为「模型很强」这句话很多公司都能说。真正难的是下一步：</p>
+  <div class="qstack">
+    <div>你能不能把 AI 放到真实业务里？</div>
+    <div>能不能稳定跑、控制成本？</div>
+    <div>出了问题能不能追溯？</div>
+    <div>最后是不是真的能交付结果？</div>
+  </div>
+  <p>这也是我觉得腾讯云这次 Cloud Day 值得看的原因。2026 年 5 月 29 日，腾讯云在香港办了首届 Cloud Day，主题叫 <strong>AI in Action</strong>，一口气发布了面向办公任务的智能体 WorkBuddy、做创意生产的 Miora，以及模型即服务平台 TokenHub。</p>
+  <div class="callout">
+    <div class="ic">🧭</div>
+    <p>我在意的不是「又出了几个新工具」，而是方向变了：问题已经从「这个模型行不行？」变成「这个东西放进公司流程里，会不会出事？值不值得？能不能长期用？」</p>
+  </div>
+</section>
+
+<section id="s3">
+  <div class="sec-head"><span class="sec-num">03</span><h2>我自己也踩过这个坑</h2></div>
+  <p>之前我做过一个内容自动化流程，一开始犯了个很典型的错误：<strong>先比工具</strong>。这个 Agent 写得更像人、那个模型整理资料更快、另一个插件能自动生成图表、再加一个做标题优化……每个单独看都不错。但跑了两周，产出没明显变好，返工反而更多，而且我说不清到底是哪一步出了问题。</p>
+  <div class="vs">
+    <div class="card bad">
+      <div class="tag">看起来很像 · 实际差很多</div>
+      <h3>堆工具</h3>
+      <p>看到什么好用就加什么。工具越攒越多，流程却始终没成形。</p>
+    </div>
+    <div class="mid">≠</div>
+    <div class="card good">
+      <div class="tag">真正该做的</div>
+      <h3>搭流程</h3>
+      <p>先想清楚每一步要交付什么，再决定用谁来做。</p>
+    </div>
+  </div>
+  <p class="muted">后来我把这件事拆成四层，才慢慢理顺。</p>
+</section>
+
+<section id="s4">
+  <div class="sec-head"><span class="sec-num">04</span><h2>一个不容易乱的 AI 系统，至少要看四层</h2></div>
+  <p>把 AI 系统从上往下拆成四层：先定<strong>改造哪件事</strong>，再定<strong>谁来交付</strong>，接着是<strong>用哪个模型</strong>，最后把<strong>边界管住</strong>。</p>
+
+  <figure class="figure">
+    <svg viewBox="0 0 800 430" role="img" aria-label="AI 系统四层栈示意图">
+      <defs>
+        <style>
+          .ttl{font:600 17px var(--sans,sans-serif)} .sub{font:12px monospace} .dsc{font:13px sans-serif}
+        </style>
+      </defs>
+      <!-- L1 -->
+      <g>
+        <rect x="60" y="24" width="680" height="84" rx="12" fill="#F4E2D8" stroke="#D97757" stroke-width="1.5"/>
+        <rect x="60" y="24" width="6" height="84" rx="3" fill="#D97757"/>
+        <text x="84" y="54" fill="#9B4A2E" class="ttl">① 场景层</text>
+        <text x="84" y="74" fill="#B5654A" class="sub">SCENARIO</text>
+        <text x="84" y="96" fill="#7A5040" class="dsc">先想清楚到底改造哪件事——选流程，不是选工具</text>
+        <text x="700" y="72" text-anchor="end" font-size="30" opacity="0.5">🎯</text>
+      </g>
+      <!-- L2 -->
+      <g>
+        <rect x="60" y="120" width="680" height="84" rx="12" fill="#E4E9DB" stroke="#788C5D" stroke-width="1.5"/>
+        <rect x="60" y="120" width="6" height="84" rx="3" fill="#788C5D"/>
+        <text x="84" y="150" fill="#4F5E3A" class="ttl">② 工具层</text>
+        <text x="84" y="170" fill="#637349" class="sub">TOOLS</text>
+        <text x="84" y="192" fill="#56633E" class="dsc">谁负责交付具体产物——能稳定接住流程里的一个节点</text>
+        <text x="700" y="168" text-anchor="end" font-size="30" opacity="0.5">🛠️</text>
+      </g>
+      <!-- L3 -->
+      <g>
+        <rect x="60" y="216" width="680" height="84" rx="12" fill="#DFE7EF" stroke="#6A8CAF" stroke-width="1.5"/>
+        <rect x="60" y="216" width="6" height="84" rx="3" fill="#6A8CAF"/>
+        <text x="84" y="246" fill="#3E5A78" class="ttl">③ 模型路由层</text>
+        <text x="84" y="266" fill="#4E6A88" class="sub">MODEL ROUTING</text>
+        <text x="84" y="288" fill="#445E78" class="dsc">不同的活别都丢给同一个模型——在速度、成本、质量间取舍</text>
+        <text x="700" y="264" text-anchor="end" font-size="30" opacity="0.5">🔀</text>
+      </g>
+      <!-- L4 -->
+      <g>
+        <rect x="60" y="312" width="680" height="84" rx="12" fill="#2C2825" stroke="#141413" stroke-width="1.5"/>
+        <rect x="60" y="312" width="6" height="84" rx="3" fill="#D97757"/>
+        <text x="84" y="342" fill="#F0EDE8" class="ttl">④ 运行与治理层</text>
+        <text x="84" y="362" fill="#B8AEA2" class="sub">RUNTIME &amp; GOVERNANCE</text>
+        <text x="84" y="384" fill="#D4CFC7" class="dsc">把边界管住——权限、成本、可观测、可追溯、谁负责</text>
+        <text x="700" y="360" text-anchor="end" font-size="30" opacity="0.6">🛡️</text>
+      </g>
+      <!-- arrow -->
+      <g stroke="#938B82" stroke-width="1.5" fill="none">
+        <line x1="30" y1="40" x2="30" y2="380"/>
+        <polygon points="30,388 25,376 35,376" fill="#938B82" stroke="none"/>
+      </g>
+      <text x="18" y="215" fill="#938B82" font-size="11" font-family="monospace" transform="rotate(-90 18 215)" text-anchor="middle">从「定义」到「管控」</text>
+    </svg>
+    <figcaption>四层栈：从场景定义层层向下，落到运行治理</figcaption>
+  </figure>
+
+  <div class="layer l1">
+    <div class="badge">L1<small>场景</small></div>
+    <div>
+      <h3>场景层：先想清楚改造哪件事</h3>
+      <p class="role">选流程，不是选工具</p>
+      <p>不要一上来就问「哪个 Agent 最强」，这问题太大、太容易把人带偏。更该先问：我现在最重复、最耗时、最适合被 AI 改造的流程是哪一个？</p>
+      <ul>
+        <li>办公、设计、客服、研发、内容生产，每个场景容错率不同</li>
+        <li>内部资料整理可以多试错；客户沟通、合同判断、对外发布不能太激进</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="layer l2">
+    <div class="badge">L2<small>工具</small></div>
+    <div>
+      <h3>工具层：谁负责交付具体产物</h3>
+      <p class="role">能稳定交付，比看起来聪明更重要</p>
+      <p>到这层 WorkBuddy、codex 这类工具才该登场。我现在看工具，不看它「能不能展示很多能力」，而看它能不能稳定交付一个东西：</p>
+      <ul>
+        <li>一份报告 / 一组图片 / 一段代码 / 一条客户回复 / 一个可继续修改的初稿</li>
+        <li>价值不在于多聪明，而在于能不能接住流程里的某个节点</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="layer l3">
+    <div class="badge">L3<small>路由</small></div>
+    <div>
+      <h3>模型路由层：别都丢给同一个模型</h3>
+      <p class="role">看起来技术，其实很业务</p>
+      <p>流程稍复杂，「用哪个模型」就既是成本问题也是质量问题。简单摘要没必要每次都用最贵的；关键判断也不能随手丢给便宜模型。</p>
+      <ul>
+        <li>创意发散、严肃分析、事实核对、格式整理，本就不该一套标准处理</li>
+        <li>不同任务走不同模型，钱花在哪、质量卡在哪，都得说得清</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="layer l4">
+    <div class="badge">L4<small>治理</small></div>
+    <div>
+      <h3>运行与治理层：把边界管住</h3>
+      <p class="role">试点拼速度，生产拼治理</p>
+      <p>安全沙箱、工具网关、可观测性听着硬，翻译一下其实是几个朴素问题：AI 能访问哪些资料？不能访问哪些系统？调用了什么工具？花了多少钱？输出错了能不能回头查？最后谁负责？</p>
+      <ul>
+        <li>没有统一入口、成本路由、权限边界，AI 用得越多乱得越快</li>
+        <li>工具少时问题藏得住；工具一多，所有不清楚的流程都会被放大</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="s5">
+  <div class="sec-head"><span class="sec-num">05</span><h2>但也想泼一盆冷水：别急着给自己「搭栈」</h2></div>
+  <p>讲到这里很容易走向另一个极端：既然工具不能乱用，那我是不是得先搭一套完整的 AI 工作流系统？我建议先别急——尤其是个人创作者和小团队，最容易掉进这个坑。</p>
+  <p>我见过有人为了「搭自己的 AI 工作流」，画流程图画了一星期、工具评测看了二十篇、插件装了一堆，最后一篇稿子都没写出来。这和收藏三十个 AI 工具，<strong>本质上是同一种拖延</strong>：</p>
+  <div class="vs">
+    <div class="card bad"><div class="tag">拖延 · 形态一</div><h3>沉迷攒工具</h3><p>看到什么好用就收藏，收藏夹很满，产出为零。</p></div>
+    <div class="mid">＝</div>
+    <div class="card bad"><div class="tag">拖延 · 形态二</div><h3>沉迷搭系统</h3><p>流程图、评测、插件堆满，框架很漂亮，稿子没写。</p></div>
+  </div>
+  <div class="callout cold">
+    <div class="ic">🧊</div>
+    <p>「四层栈」不是让你动手前先盖一座大楼，而是<strong>当流程已经乱了，用来诊断问题的工具</strong>。如果你一天就写一篇稿、流程很简单，那就先跑起来——跑乱了再分层，哪里卡住就先修哪里。框架是用来治乱的，不是用来拖延的。</p>
+  </div>
+</section>
+
+<section id="s6">
+  <div class="sec-head"><span class="sec-num">06</span><h2>真要落地，可以先做三件事</h2></div>
+  <p>就拿「每天写一篇 AI 行业分析」来说，别一上来就搭大系统，先把一个小流程跑顺。</p>
+  <div class="steps">
+    <div class="step">
+      <h3>把交付物定死</h3>
+      <p>先写清楚你最后到底要什么。「让 AI 帮我写点东西」不算需求——太空了，AI 只能陪你聊，不能帮你判断结果好不好。一个合格的交付物定义，应该让外人也能看懂：</p>
+      <div class="chips"><span class="chip">最终要交什么</span><span class="chip">字数多少</span><span class="chip">给谁看</span><span class="chip">判断标准</span><span class="chip">哪些内容不能错</span></div>
+    </div>
+    <div class="step">
+      <h3>每个节点只绑一个主工具</h3>
+      <p>不按名气收藏工具，按流程安排工具。先把写作流程拆成节点，每个节点先只放一个主工具，别今天用这个明天换那个，也别看到新工具就立刻加进来。</p>
+      <div class="chips"><span class="chip">选题</span><span class="chip">资料搜索</span><span class="chip">深度阅读</span><span class="chip">结构整理</span><span class="chip">初稿生成</span><span class="chip">事实核对</span><span class="chip">标题优化</span><span class="chip">人工改稿</span></div>
+      <p style="margin-top:12px">判断标准很简单：一个流程能不能连续跑 7 天？跑的过程中还会不会每天纠结「今天用哪个工具」？如果还在纠结，说明工具没真正进入流程。</p>
+    </div>
+    <div class="step">
+      <h3>给关键步骤留一道人工闸口</h3>
+      <p>只要流程会影响品牌、客户、收入，或对外发布，我都建议留人工确认。尤其这三类地方最好不要完全交给 AI——不是 AI 一定不行，而是一旦错了成本很高：</p>
+      <div class="gate"><span>✋ 事实判断</span><span>✋ 标题方向</span><span>✋ 对外发布</span></div>
+      <p style="margin-top:12px">合格的状态是：每一次关键输出，你都能说清楚——资料从哪来、为什么这么改、最后谁负责。留一道人工闸口，本质上是用一点效率，换一份兜底。</p>
+    </div>
+  </div>
+</section>
+
+<section id="s7">
+  <div class="sec-head"><span class="sec-num">07</span><h2>一个最小可用的方法</h2></div>
+  <p>如果你现在只想先动起来，不用想太复杂。选一个你每周都会重复的流程，画出五步，每步只绑一个工具，连续跑 7 天。</p>
+
+  <figure class="figure">
+    <svg viewBox="0 0 800 150" role="img" aria-label="五步最小流程：输入-处理-输出-审核-沉淀">
+      <defs><marker id="ar" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#938B82"/></marker></defs>
+      <g font-family="sans-serif" text-anchor="middle">
+        <g><rect x="20" y="48" width="124" height="54" rx="11" fill="#F4E2D8" stroke="#D97757"/><text x="82" y="72" font-size="16" font-weight="600" fill="#9B4A2E">输入</text><text x="82" y="91" font-size="11" fill="#B5654A" font-family="monospace">INPUT</text></g>
+        <line x1="148" y1="75" x2="172" y2="75" stroke="#938B82" stroke-width="1.5" marker-end="url(#ar)"/>
+        <g><rect x="178" y="48" width="124" height="54" rx="11" fill="#E4E9DB" stroke="#788C5D"/><text x="240" y="72" font-size="16" font-weight="600" fill="#4F5E3A">处理</text><text x="240" y="91" font-size="11" fill="#637349" font-family="monospace">PROCESS</text></g>
+        <line x1="306" y1="75" x2="330" y2="75" stroke="#938B82" stroke-width="1.5" marker-end="url(#ar)"/>
+        <g><rect x="336" y="48" width="124" height="54" rx="11" fill="#DFE7EF" stroke="#6A8CAF"/><text x="398" y="72" font-size="16" font-weight="600" fill="#3E5A78">输出</text><text x="398" y="91" font-size="11" fill="#4E6A88" font-family="monospace">OUTPUT</text></g>
+        <line x1="464" y1="75" x2="488" y2="75" stroke="#938B82" stroke-width="1.5" marker-end="url(#ar)"/>
+        <g><rect x="494" y="48" width="124" height="54" rx="11" fill="#F4E2D8" stroke="#D97757"/><text x="556" y="72" font-size="16" font-weight="600" fill="#9B4A2E">审核</text><text x="556" y="91" font-size="11" fill="#B5654A" font-family="monospace">REVIEW ✋</text></g>
+        <line x1="622" y1="75" x2="646" y2="75" stroke="#938B82" stroke-width="1.5" marker-end="url(#ar)"/>
+        <g><rect x="652" y="48" width="124" height="54" rx="11" fill="#2C2825" stroke="#141413"/><text x="714" y="72" font-size="16" font-weight="600" fill="#F0EDE8">沉淀</text><text x="714" y="91" font-size="11" fill="#B8AEA2" font-family="monospace">ARCHIVE</text></g>
+      </g>
+    </svg>
+    <figcaption>最小可用流程 · 五步各绑一个工具，连续跑 7 天</figcaption>
+  </figure>
+
+  <div class="copybox">
+    <div class="bar"><div class="dots"><i></i><i></i><i></i></div><button class="copy-btn" data-copy="#recipe">复制清单</button></div>
+    <pre id="recipe">【最小可用方法 · 7 天跑通】
+
+第 1 步  输入 → 只绑一个工具
+第 2 步  处理 → 只绑一个工具
+第 3 步  输出 → 只绑一个工具
+第 4 步  审核 → 留人工闸口 ✋
+第 5 步  沉淀 → 只绑一个工具
+
+规则：
+  · 别中途换工具
+  · 别中途改框架
+  · 先把问题暴露出来
+
+7 天后只看两个数：
+  ① 省了多少时间？
+  ② 返工主要卡在哪一步？</pre>
+  </div>
+  <p>这两个数，比你看二十篇工具测评有用。因为你会发现，很多时候问题根本不是工具不够多，而是<strong>流程一开始就没定义清楚</strong>。</p>
+</section>
+
+<section id="s8">
+  <div class="sec-head"><span class="sec-num">08</span><h2>最后说回那句话</h2></div>
+  <p>AI 落地，不是比谁收藏的工具多，更不是比谁的框架画得漂亮。真正拉开差距的，是谁能更早把工具放进自己的工作流程里，并且让它稳定产出。</p>
+  <p class="muted">但也有个提醒：别把「研究系统」当成「已经在干活」。攒工具是拖延，搭框架搭上瘾也是拖延。框架唯一的价值，是帮你把已经乱掉的东西理顺，然后回去继续干活。</p>
+
+  <div class="final" style="padding:40px 0 20px">
+    <div class="big">未来值钱的，不只是<mark>会用 AI</mark> 的人，<br>而是能把 <mark>AI 放进自己工作系统</mark>里的人。</div>
+  </div>
+
+  <h3 style="font-family:var(--serif);font-size:18px;margin:24px 0 4px">可选开头 / 标题</h3>
+  <div class="titles">
+    <div class="titlecard"><span class="n">1</span><span>收藏 30 个 AI 工具之后，我反而更不会写稿了</span></div>
+    <div class="titlecard"><span class="n">2</span><span>AI 真正难用的地方，不是工具不够强</span></div>
+    <div class="titlecard"><span class="n">3</span><span>别再攒 AI 神器了，先把你的流程跑顺</span></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="shell">
+    <p>AI 成长笔记 · 日更第 296 天 · 由原文重构为可视化阅读页</p>
+    <p style="margin-top:6px">来源：<a href="https://www.notion.so/371acc097f07805e9335c7d555d5cb5e">Notion 原文</a></p>
+  </div>
+</footer>
+
+<button class="backtop" id="backtop" aria-label="返回顶部">↑</button>
+
+<script>
+// theme toggle
+const root=document.documentElement, tb=document.getElementById('themeBtn');
+const saved=localStorage.getItem('hav-theme');
+if(saved) root.setAttribute('data-theme',saved);
+tb.addEventListener('click',()=>{
+  const n=root.getAttribute('data-theme')==='dark'?'light':'dark';
+  root.setAttribute('data-theme',n);localStorage.setItem('hav-theme',n);
+});
+// copy
+document.querySelectorAll('[data-copy]').forEach(b=>{
+  b.addEventListener('click',async()=>{
+    const t=document.querySelector(b.getAttribute('data-copy'));if(!t)return;
+    try{await navigator.clipboard.writeText(t.innerText||t.textContent||'');
+    const o=b.textContent;b.textContent='已复制 ✓';setTimeout(()=>b.textContent=o,1300);}catch(e){}
+  });
+});
+// back to top
+const bt=document.getElementById('backtop');
+addEventListener('scroll',()=>{bt.classList.toggle('show',scrollY>500)});
+bt.addEventListener('click',()=>scrollTo({top:0,behavior:'smooth'}));
+</script>
+</body>
+</html>

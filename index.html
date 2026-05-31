@@ -140,6 +140,42 @@ a { color: inherit; text-decoration: none; }
 
 .nav-search input::placeholder { color: var(--muted); }
 
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+  height: 36px;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 99px;
+  color: #fff;
+  font: 600 13px/1 var(--sans);
+  white-space: nowrap;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.nav-home:hover {
+  background: var(--accent-dark);
+  border-color: var(--accent-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px var(--accent-glow);
+}
+
+.nav-home .nav-home-arrow {
+  font-size: 12px;
+  transition: transform .2s;
+}
+
+.nav-home:hover .nav-home-arrow { transform: translate(2px, -2px); }
+
 /* ── HERO ────────────────────────────────────────────────── */
 .hero {
   padding: 72px 0 52px;
@@ -703,6 +739,27 @@ a { color: inherit; text-decoration: none; }
   line-height: 1.55;
 }
 
+.about-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 14px;
+  padding: 8px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  color: var(--accent);
+  font: 600 12.5px/1 var(--sans);
+  transition: var(--transition);
+}
+
+.about-home-link:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
 /* ── EMPTY STATE ─────────────────────────────────────────── */
 .empty-section {
   grid-column: 1 / -1;
@@ -818,13 +875,18 @@ a { color: inherit; text-decoration: none; }
         <span class="nav-logo-mark">Bin哥的知识地图</span>
         <span class="nav-logo-sub">Knowledge Map</span>
       </a>
-      <label class="nav-search" aria-label="搜索">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <input type="search" placeholder="搜索文章…" id="search-input" autocomplete="off">
-      </label>
+      <div class="nav-right">
+        <label class="nav-search" aria-label="搜索">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <circle cx="6.5" cy="6.5" r="5" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M10.5 10.5L14 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input type="search" placeholder="搜索文章…" id="search-input" autocomplete="off">
+        </label>
+        <a class="nav-home" href="https://www.silencebin.com" target="_blank" rel="noopener" title="访问 Bin 哥的个人主页">
+          个人主页<span class="nav-home-arrow">↗</span>
+        </a>
+      </div>
     </div>
   </div>
 </nav>
@@ -839,7 +901,7 @@ a { color: inherit; text-decoration: none; }
     </p>
     <div class="hero-stats">
       <div class="stat">
-        <span class="stat-num" id="total-count">5</span>
+        <span class="stat-num" id="total-count">6</span>
         <span class="stat-label">篇文章</span>
       </div>
       <div class="stat">
@@ -862,14 +924,14 @@ a { color: inherit; text-decoration: none; }
     <button class="pill" data-filter="ai">
       <span class="pill-dot" style="background:#6a8caf"></span>AI &amp; 工程
     </button>
-    <button class="pill" data-filter="management">
-      <span class="pill-dot" style="background:#788c5d"></span>管理
+    <button class="pill" data-filter="growth">
+      <span class="pill-dot" style="background:#9b84b3"></span>个人成长
     </button>
     <button class="pill" data-filter="ops">
       <span class="pill-dot" style="background:#d97757"></span>运营
     </button>
-    <button class="pill" data-filter="growth">
-      <span class="pill-dot" style="background:#9b84b3"></span>个人成长
+    <button class="pill" data-filter="management">
+      <span class="pill-dot" style="background:#788c5d"></span>管理
     </button>
 
     <div class="layout-control" role="group" aria-label="布局尺寸">
@@ -893,9 +955,33 @@ a { color: inherit; text-decoration: none; }
           <h2 class="section-title">
             <span class="section-icon">🤖</span>AI &amp; 工程
           </h2>
-          <span class="section-count" id="count-ai">4 篇</span>
+          <span class="section-count" id="count-ai">5 篇</span>
         </div>
         <div class="card-grid" id="grid-ai">
+
+          <!-- CARD: ai-workflow-four-layer-stack -->
+          <a href="map/ai/ai-workflow-four-layer-stack.html" class="card"
+             data-category="ai"
+             data-title="你收藏了 30 个 AI 神器，为什么稿子还是憋不出来"
+             data-desc="缺的不是更强工具，而是不容易乱掉的流程。AI 落地的四层栈与最小可用方法。">
+            <div class="card-body">
+              <span class="card-category">
+                <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#6a8caf"/></svg>
+                AI &amp; 工程
+              </span>
+              <div class="card-title">你收藏了 30 个 AI 神器，为什么稿子还是憋不出来</div>
+              <p class="card-desc">
+                工具基本都齐了，看起来很专业，可真到写稿那一刻还是会卡住。真正缺的不是更强的工具，而是一套不容易乱掉的流程——场景、工具、模型路由、运行治理四层栈，加一个能跑 7 天的最小方法。
+              </p>
+              <div class="card-footer">
+                <span class="card-date">2026-05-31</span>
+                <span class="card-arrow">→</span>
+              </div>
+            </div>
+            <div class="card-visual">
+              <div class="visual-badge">✒️</div>
+            </div>
+          </a>
 
           <!-- CARD: ai-eight-use-scenarios-offline -->
           <a href="map/ai/ai_eight_use_scenarios_offline/index.html" class="card"
@@ -996,36 +1082,6 @@ a { color: inherit; text-decoration: none; }
         </div>
       </section>
 
-      <!-- MANAGEMENT -->
-      <section class="section" data-category="management" id="section-management">
-        <div class="section-header">
-          <h2 class="section-title">
-            <span class="section-icon">🧭</span>管理
-          </h2>
-          <span class="section-count" id="count-management">0 篇</span>
-        </div>
-        <div class="card-grid" id="grid-management">
-          <div class="empty-section">
-            暂无文章 — 整理中……
-          </div>
-        </div>
-      </section>
-
-      <!-- OPS -->
-      <section class="section" data-category="ops" id="section-ops">
-        <div class="section-header">
-          <h2 class="section-title">
-            <span class="section-icon">⚙️</span>运营
-          </h2>
-          <span class="section-count" id="count-ops">0 篇</span>
-        </div>
-        <div class="card-grid" id="grid-ops">
-          <div class="empty-section">
-            暂无文章 — 整理中……
-          </div>
-        </div>
-      </section>
-
       <!-- GROWTH -->
       <section class="section" data-category="growth" id="section-growth">
         <div class="section-header">
@@ -1063,6 +1119,36 @@ a { color: inherit; text-decoration: none; }
         </div>
       </section>
 
+      <!-- OPS -->
+      <section class="section" data-category="ops" id="section-ops">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">⚙️</span>运营
+          </h2>
+          <span class="section-count" id="count-ops">0 篇</span>
+        </div>
+        <div class="card-grid" id="grid-ops">
+          <div class="empty-section">
+            暂无文章 — 整理中……
+          </div>
+        </div>
+      </section>
+
+      <!-- MANAGEMENT -->
+      <section class="section" data-category="management" id="section-management">
+        <div class="section-header">
+          <h2 class="section-title">
+            <span class="section-icon">🧭</span>管理
+          </h2>
+          <span class="section-count" id="count-management">0 篇</span>
+        </div>
+        <div class="card-grid" id="grid-management">
+          <div class="empty-section">
+            暂无文章 — 整理中……
+          </div>
+        </div>
+      </section>
+
     </div>
 
     <!-- SIDEBAR -->
@@ -1074,6 +1160,9 @@ a { color: inherit; text-decoration: none; }
           <div class="about-avatar">🗺️</div>
           <div class="about-name">Bin哥的知识地图</div>
           <p class="about-desc">记录学习过的内容，构建可以反复查阅的个人知识体系。</p>
+          <a class="about-home-link" href="https://www.silencebin.com" target="_blank" rel="noopener">
+            访问个人主页<span aria-hidden="true">↗</span>
+          </a>
         </div>
       </div>
 
@@ -1087,21 +1176,21 @@ a { color: inherit; text-decoration: none; }
                 <span class="topic-item-icon">📚</span>
                 <span>全部文章</span>
               </div>
-              <span class="topic-count" id="nav-all">5</span>
+              <span class="topic-count" id="nav-all">6</span>
             </div>
             <div class="topic-item" data-nav-filter="ai">
               <div class="topic-item-left">
                 <span class="topic-item-icon">🤖</span>
                 <span>AI &amp; 工程</span>
               </div>
-              <span class="topic-count" id="nav-ai">4</span>
+              <span class="topic-count" id="nav-ai">5</span>
             </div>
-            <div class="topic-item" data-nav-filter="management">
+            <div class="topic-item" data-nav-filter="growth">
               <div class="topic-item-left">
-                <span class="topic-item-icon">🧭</span>
-                <span>管理</span>
+                <span class="topic-item-icon">🌱</span>
+                <span>个人成长</span>
               </div>
-              <span class="topic-count" id="nav-management">0</span>
+              <span class="topic-count" id="nav-growth">1</span>
             </div>
             <div class="topic-item" data-nav-filter="ops">
               <div class="topic-item-left">
@@ -1110,12 +1199,12 @@ a { color: inherit; text-decoration: none; }
               </div>
               <span class="topic-count" id="nav-ops">0</span>
             </div>
-            <div class="topic-item" data-nav-filter="growth">
+            <div class="topic-item" data-nav-filter="management">
               <div class="topic-item-left">
-                <span class="topic-item-icon">🌱</span>
-                <span>个人成长</span>
+                <span class="topic-item-icon">🧭</span>
+                <span>管理</span>
               </div>
-              <span class="topic-count" id="nav-growth">1</span>
+              <span class="topic-count" id="nav-management">0</span>
             </div>
           </div>
         </div>
@@ -1126,6 +1215,13 @@ a { color: inherit; text-decoration: none; }
         <div class="widget-header">最近更新</div>
         <div class="widget-body">
           <div class="recent-list">
+            <a href="map/ai/ai-workflow-four-layer-stack.html" class="recent-item">
+              <div class="recent-dot"></div>
+              <div class="recent-info">
+                <div class="recent-title">你收藏了 30 个 AI 神器，为什么稿子还是憋不出来</div>
+                <div class="recent-meta">AI · 2026-05-31</div>
+              </div>
+            </a>
             <a href="map/growth/trend-is-ticket-not-moat.html" class="recent-item">
               <div class="recent-dot"></div>
               <div class="recent-info">
