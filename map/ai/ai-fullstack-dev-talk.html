@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 全栈开发 · 工程方法论 · 线下分享</title>
+  <style>
+/* ============ 变量（沿用八大场景配色） ============ */
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f5;
+  --surface: #f0ede8;
+  --surface-2: #fffdf9;
+  --text: #2c2825;
+  --muted: #746d64;
+  --border: #d4cfc7;
+  --clay: #d97757;
+  --olive: #788c5d;
+  --sky: #6a8caf;
+  --violet: #8a6faf;
+  --rose: #c66060;
+  --ink: #141413;
+  --shadow: 0 18px 60px rgba(44, 40, 37, .10);
+}
+[data-theme="dark"] {
+  --bg: #171615;
+  --surface: #23211f;
+  --surface-2: #2c2926;
+  --text: #f4efe8;
+  --muted: #b8afa4;
+  --border: #49433d;
+  --clay: #e79678;
+  --olive: #a9bc88;
+  --sky: #9bb8d5;
+  --violet: #b09ad4;
+  --rose: #e07d7d;
+  --ink: #f8f4ed;
+  --shadow: 0 18px 60px rgba(0, 0, 0, .28);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(217, 119, 87, .10), transparent 32%),
+    radial-gradient(circle at 86% 100%, rgba(106, 140, 175, .08), transparent 30%),
+    linear-gradient(135deg, var(--bg), var(--surface));
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* ============ 顶栏 ============ */
+.topbar {
+  position: sticky; top: 0; z-index: 30;
+  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+.topbar-inner {
+  min-height: 56px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+.brand-mark {
+  width: 30px; height: 30px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  display: grid; place-items: center; border-radius: 8px;
+  color: var(--clay);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px;
+}
+.nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn {
+  min-height: 36px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+  padding: 6px 12px; border-radius: 8px; cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03); font-size: 14px;
+}
+.btn:hover { border-color: var(--clay); }
+.btn-mini { min-height: 30px; padding: 4px 10px; font-size: 13px; }
+
+/* ============ 进度条 ============ */
+.progress { display: flex; align-items: center; gap: 8px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--muted); }
+.progress-dots { display: flex; gap: 4px; }
+.progress-dots i {
+  display: block; width: 14px; height: 4px;
+  background: var(--border); border-radius: 2px;
+  transition: background .2s ease, transform .2s ease; cursor: pointer;
+}
+.progress-dots i.active { background: var(--clay); transform: scaleY(1.4); }
+.progress-dots i.done { background: var(--olive); }
+
+/* ============ 翻页轨道 ============ */
+.deck { position: relative; width: 100%; }
+.slide {
+  min-height: calc(100vh - 58px);
+  padding: 44px 0 96px;
+  display: none;
+  animation: slideIn .35s ease;
+}
+.slide.active { display: block; }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide-inner { min-height: calc(100vh - 200px); display: flex; flex-direction: column; justify-content: center; }
+
+/* ============ 通用语义类 ============ */
+.kicker {
+  color: var(--clay);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+}
+.module-no { color: var(--muted); font-size: 13px; font-family: ui-monospace, monospace; letter-spacing: .05em; }
+h1.slide-title {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: clamp(40px, 6.6vw, 74px); line-height: 1.04; margin: 14px 0 18px; letter-spacing: 0;
+}
+h2.section-title {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: clamp(28px, 4.2vw, 46px); line-height: 1.12; margin: 10px 0 16px; letter-spacing: 0;
+}
+.lead { font-size: clamp(16px, 2vw, 20px); color: var(--muted); max-width: 800px; margin: 0; }
+.big {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: clamp(64px, 13vw, 150px); line-height: .9; letter-spacing: -.01em; color: var(--clay);
+}
+
+/* 卡片 / 窗口 / 面板 */
+.card, .window, .panel, .prompt-box {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  box-shadow: var(--shadow); border-radius: 12px;
+}
+.panel { padding: 22px; }
+.card  { padding: 18px; }
+.card h3 { margin: 0 0 8px; font-size: 18px; line-height: 1.3; }
+.card p  { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+/* 标签 */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  display: inline-flex; align-items: center; min-height: 28px;
+  border: 1px solid var(--border); border-radius: 999px; padding: 3px 11px;
+  color: var(--muted); background: var(--surface); font-size: 13px;
+}
+.tag.clay   { color: var(--clay);   border-color: color-mix(in srgb, var(--clay)   50%, var(--border)); }
+.tag.olive  { color: var(--olive);  border-color: color-mix(in srgb, var(--olive)  50%, var(--border)); }
+.tag.sky    { color: var(--sky);    border-color: color-mix(in srgb, var(--sky)    50%, var(--border)); }
+.tag.violet { color: var(--violet); border-color: color-mix(in srgb, var(--violet) 50%, var(--border)); }
+.tag.rose   { color: var(--rose);   border-color: color-mix(in srgb, var(--rose)   50%, var(--border)); }
+
+/* grid */
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+
+/* 警示 / 注释 */
+.warning {
+  border-left: 4px solid var(--clay); padding: 16px 18px;
+  background: color-mix(in srgb, var(--clay) 12%, var(--surface-2)); border-radius: 8px;
+}
+.note {
+  border-left: 4px solid var(--olive); padding: 16px 18px;
+  background: color-mix(in srgb, var(--olive) 10%, var(--surface-2)); border-radius: 8px;
+}
+.warning strong, .note strong { color: var(--text); }
+
+/* 引用金句 */
+.quote {
+  border-left: 4px solid var(--violet);
+  padding: 18px 22px; margin: 0;
+  background: color-mix(in srgb, var(--violet) 8%, var(--surface-2));
+  border-radius: 0 12px 12px 0;
+  font-size: clamp(16px, 2.2vw, 21px); line-height: 1.6; color: var(--text);
+}
+.quote span { color: var(--clay); font-weight: 700; }
+
+/* 数据 stat */
+.stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 18px; }
+.stat { border: 1px solid var(--border); border-radius: 8px; padding: 14px; background: var(--surface); }
+.stat b { display: block; font-size: 26px; line-height: 1.1; font-family: Georgia, serif; }
+.stat span { color: var(--muted); font-size: 13px; }
+
+/* ============ 封面 ============ */
+.cover-grid { display: grid; grid-template-columns: minmax(0,1.3fr) minmax(300px,.78fr); gap: 32px; align-items: center; }
+.mind-chain { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+.mind-chain .mc {
+  border: 1px solid var(--border); border-radius: 10px; padding: 10px 14px;
+  background: var(--surface-2); font-weight: 700; font-size: 15px;
+}
+.mind-chain .mc small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.mind-chain .arr { color: var(--clay); font-size: 18px; }
+.cover-meta { padding: 22px; }
+.cover-meta .row { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-top: 1px solid var(--border); font-size: 14px; }
+.cover-meta .row:first-child { border-top: 0; padding-top: 0; }
+.cover-meta .row b { color: var(--text); }
+
+/* ============ 议程目录 ============ */
+.agenda { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+.agenda a {
+  display: flex; gap: 14px; align-items: flex-start;
+  border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px;
+  background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+  transition: transform .15s, border-color .18s, box-shadow .15s; color: inherit;
+}
+.agenda a:hover { transform: translateY(-2px); border-color: var(--clay); box-shadow: 0 6px 18px rgba(0,0,0,.08); }
+.agenda .an {
+  width: 34px; height: 34px; flex-shrink: 0; border-radius: 8px;
+  background: var(--ink); color: var(--bg); display: grid; place-items: center;
+  font-family: ui-monospace, monospace; font-size: 14px; font-weight: 700;
+}
+.agenda h3 { margin: 0; font-size: 16px; line-height: 1.3; }
+.agenda p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+/* ============ 三层控制力 嵌套图 ============ */
+.layer-stack { display: flex; flex-direction: column; gap: 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); }
+.layer {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 22px 26px;
+  border-bottom: 1px solid var(--border);
+}
+.layer:last-child { border-bottom: 0; }
+.layer.l-prompt  { background: color-mix(in srgb, var(--sky)    13%, var(--surface-2)); }
+.layer.l-context { background: color-mix(in srgb, var(--olive)  13%, var(--surface-2)); padding-left: 50px; }
+.layer.l-harness { background: color-mix(in srgb, var(--clay)   14%, var(--surface-2)); padding-left: 74px; }
+.layer .lcontent { flex: 1; min-width: 0; }
+.layer .ltitle { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.layer .ltitle b { font-family: Georgia, serif; font-size: 22px; }
+.layer .ltitle .en { font-family: ui-monospace, monospace; font-size: 12px; color: var(--muted); letter-spacing: .05em; }
+.layer .ldesc { margin: 6px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.layer .badge {
+  flex-shrink: 0; margin-top: 3px;
+  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  font-family: ui-monospace, monospace; font-size: 12px; font-weight: 700; color: var(--bg);
+}
+.layer.l-prompt .badge  { background: var(--sky); }
+.layer.l-context .badge { background: var(--olive); }
+.layer.l-harness .badge { background: var(--clay); }
+
+/* ============ 能力阶梯 ============ */
+.ladder { display: flex; align-items: flex-end; gap: 14px; }
+.ladder .step {
+  flex: 1; border: 1px solid var(--border); border-radius: 12px 12px 0 0;
+  padding: 18px; background: var(--surface-2); text-align: center;
+}
+.ladder .step.s1 { height: 120px; background: color-mix(in srgb, var(--sky) 10%, var(--surface-2)); }
+.ladder .step.s2 { height: 165px; background: color-mix(in srgb, var(--olive) 10%, var(--surface-2)); }
+.ladder .step.s3 { height: 210px; background: color-mix(in srgb, var(--clay) 12%, var(--surface-2)); }
+.ladder .step .lv { font-family: ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+.ladder .step h3 { margin: 8px 0 6px; font-size: 17px; }
+.ladder .step p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+/* ============ 步骤流 ============ */
+.step-flow { display: flex; flex-direction: column; gap: 10px; }
+.step-flow .sf {
+  display: grid; grid-template-columns: 44px 1fr; gap: 16px; align-items: flex-start;
+  border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px;
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+}
+.step-flow .sf .n {
+  width: 36px; height: 36px; border-radius: 9px; display: grid; place-items: center;
+  background: var(--ink); color: var(--bg); font-family: Georgia, serif; font-size: 18px; font-weight: 700;
+}
+.step-flow .sf h3 { margin: 2px 0 4px; font-size: 16px; }
+.step-flow .sf p  { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.step-flow .sf p em { color: var(--clay); font-style: normal; font-weight: 700; }
+
+/* ============ 公式条 ============ */
+.formula {
+  display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap;
+  padding: 22px; border: 1px dashed var(--clay); border-radius: 14px;
+  background: color-mix(in srgb, var(--clay) 7%, var(--surface-2));
+  font-family: Georgia, serif; font-size: clamp(20px, 3vw, 30px);
+}
+.formula .op { color: var(--clay); }
+.formula .term { padding: 4px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); }
+
+/* ============ 角色分工 ============ */
+.role-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.role {
+  border: 1px solid var(--border); border-radius: 12px; padding: 16px; background: var(--surface-2);
+  border-top: 3px solid var(--border);
+}
+.role.r-codex  { border-top-color: var(--sky); }
+.role.r-claude { border-top-color: var(--clay); }
+.role.r-gemini { border-top-color: var(--olive); }
+.role.r-human  { border-top-color: var(--violet); }
+.role .rn { font-family: ui-monospace, monospace; font-size: 12px; color: var(--muted); }
+.role h3 { margin: 6px 0 6px; font-size: 16px; }
+.role p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+
+/* ============ 任务包 / 验收清单 ============ */
+.checklist { display: flex; flex-direction: column; gap: 8px; }
+.checklist li {
+  list-style: none; display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px;
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent); font-size: 14px;
+}
+.checklist li::before {
+  content: '✓'; color: var(--olive); font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+.checklist.pack li::before { content: '📦'; }
+.checklist ul { margin: 0; padding: 0; }
+.checklist strong { color: var(--text); }
+
+/* ============ 护栏分级表 ============ */
+.guard { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.guard .g { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.guard .g .head { padding: 10px 14px; font-weight: 700; font-size: 14px; color: var(--bg); }
+.guard .g.g1 .head { background: var(--olive); }
+.guard .g.g2 .head { background: var(--sky); }
+.guard .g.g3 .head { background: var(--clay); }
+.guard .g.g4 .head { background: var(--rose); }
+.guard .g .body { padding: 14px; font-size: 13.5px; color: var(--muted); line-height: 1.55; background: var(--surface-2); }
+
+/* ============ 四层栈 ============ */
+.stack4 { display: flex; flex-direction: column; gap: 8px; }
+.stack4 .lyr {
+  display: grid; grid-template-columns: 130px 1fr; gap: 18px; align-items: center;
+  border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; background: var(--surface-2);
+}
+.stack4 .lyr .lbl { font-family: Georgia, serif; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.stack4 .lyr .lbl .dot { width: 10px; height: 10px; border-radius: 50%; }
+.stack4 .lyr.s-scene .dot { background: var(--clay); }
+.stack4 .lyr.s-tool  .dot { background: var(--sky); }
+.stack4 .lyr.s-route .dot { background: var(--olive); }
+.stack4 .lyr.s-gov   .dot { background: var(--violet); }
+.stack4 .lyr p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.stack4 .lyr p b { color: var(--text); }
+
+/* ============ 误区卡 ============ */
+.myth-card {
+  border: 1px solid var(--border); background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  box-shadow: var(--shadow); border-radius: 12px; overflow: hidden;
+}
+.myth-wrong {
+  display: flex; align-items: flex-start; gap: 10px; padding: 14px 18px;
+  background: color-mix(in srgb, var(--clay) 8%, var(--surface-2));
+  border-bottom: 1px solid color-mix(in srgb, var(--clay) 20%, var(--border));
+  font-size: 14px; font-weight: 600; line-height: 1.45; color: var(--text);
+}
+.myth-wrong::before { content: '✕'; color: var(--clay); font-size: 13px; flex-shrink: 0; margin-top: 1px; font-weight: 700; }
+.myth-right { display: flex; align-items: flex-start; gap: 10px; padding: 14px 18px; font-size: 13.5px; color: var(--muted); line-height: 1.6; }
+.myth-right::before { content: '→'; color: var(--olive); font-size: 15px; flex-shrink: 0; font-weight: 700; }
+
+/* ============ 行动清单（checkbox） ============ */
+.action-list { display: flex; flex-direction: column; gap: 12px; }
+.action-list .ac {
+  display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: flex-start;
+  border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px;
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+}
+.action-list .ac .box {
+  width: 24px; height: 24px; border: 2px solid var(--clay); border-radius: 6px;
+  display: grid; place-items: center; color: var(--clay); font-weight: 700; font-size: 14px; margin-top: 1px;
+}
+.action-list .ac h3 { margin: 0 0 4px; font-size: 16px; }
+.action-list .ac p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+
+/* ============ takeaway 收尾 ============ */
+.takeaway-list { list-style: none; margin: 0; padding: 0; }
+.takeaway-list li {
+  display: grid; grid-template-columns: 56px 1fr; gap: 18px; padding: 20px 0;
+  border-top: 1px solid var(--border); align-items: start;
+}
+.takeaway-list li:first-child { border-top: 0; }
+.takeaway-list li .num { font-family: Georgia, serif; font-size: 44px; line-height: 1; color: var(--clay); }
+.takeaway-list li .body h3 { margin: 0 0 4px; font-size: 19px; }
+.takeaway-list li .body p { margin: 0; color: var(--muted); font-size: 15px; }
+
+/* ============ 底部导航 ============ */
+.deck-nav {
+  position: fixed; right: 18px; bottom: 18px; z-index: 25;
+  display: flex; gap: 6px;
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  backdrop-filter: blur(14px); border: 1px solid var(--border);
+  border-radius: 999px; padding: 6px; box-shadow: var(--shadow);
+}
+.deck-nav button { border: 0; background: transparent; padding: 6px 10px; cursor: pointer; border-radius: 999px; color: var(--text); font-family: ui-monospace, monospace; font-size: 13px; }
+.deck-nav button:hover { background: var(--surface); }
+.deck-nav .counter { padding: 6px 10px; color: var(--muted); font-family: ui-monospace, monospace; font-size: 13px; }
+
+/* ============ 帮助蒙层 ============ */
+.help { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: color-mix(in srgb, var(--ink) 65%, transparent); z-index: 40; }
+.help.open { display: flex; }
+.help-panel { width: min(440px, 86vw); background: var(--surface-2); border: 1px solid var(--border); border-radius: 14px; padding: 22px; box-shadow: var(--shadow); }
+.help-panel h3 { margin: 0 0 12px; }
+.kb { display: grid; grid-template-columns: 96px 1fr; gap: 8px 14px; font-size: 14px; }
+.kb code { background: var(--surface); border: 1px solid var(--border); padding: 2px 8px; border-radius: 6px; font-size: 12.5px; }
+
+/* ============ Footer 注脚（每页可选） ============ */
+.slide-foot { margin-top: 26px; font-size: 12.5px; color: var(--muted); font-family: ui-monospace, monospace; }
+
+/* ============ 响应式 ============ */
+@media (max-width: 920px) {
+  .cover-grid, .agenda, .role-grid, .guard { grid-template-columns: 1fr; }
+  .role-grid, .guard { grid-template-columns: 1fr 1fr; }
+  .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; }
+  .ladder { flex-direction: column; align-items: stretch; }
+  .ladder .step { height: auto !important; border-radius: 12px; }
+  .stack4 .lyr { grid-template-columns: 1fr; gap: 6px; }
+  .deck-nav { right: 10px; bottom: 10px; }
+  h1.slide-title { font-size: 40px; }
+}
+@media (max-width: 560px) {
+  .grid-2, .grid-3, .grid-4, .agenda, .role-grid, .guard { grid-template-columns: 1fr; }
+  .layer.l-context { padding-left: 26px; }
+  .layer.l-harness { padding-left: 26px; }
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <a class="brand" href="#" onclick="goTo(0);return false;" aria-label="回到封面">
+      <span class="brand-mark">AI</span>
+      <span>AI 全栈开发 · 工程方法论</span>
+    </a>
+    <div class="progress" aria-label="演讲进度">
+      <span id="counter-text">01 / 16</span>
+      <span class="progress-dots" id="dots"></span>
+    </div>
+    <nav class="nav-actions">
+      <button class="btn btn-mini" type="button" onclick="toggleTheme()" title="切换主题（T）">明 / 暗</button>
+      <button class="btn btn-mini" type="button" onclick="openHelp()" title="快捷键（?）">?</button>
+    </nav>
+  </div>
+</header>
+
+<main class="deck" id="deck">
+
+  <!-- ============ Slide 1 · 封面 ============ -->
+  <section class="slide active shell" data-title="封面">
+    <div class="slide-inner">
+      <div class="kicker">Offline Talk · 面向程序员</div>
+      <div class="cover-grid">
+        <div>
+          <h1 class="slide-title">AI 全栈开发<br>不是替你写代码，<br>是把 AI 装进工程系统。</h1>
+          <p class="lead">重点不在「教 AI 替你写代码」，而在把 AI 放进一套<strong>可控、可验收、可复盘</strong>的工程系统里。</p>
+          <div class="mind-chain">
+            <div class="mc">Prompt<small>说清楚</small></div>
+            <span class="arr">→</span>
+            <div class="mc">Context<small>给对信息</small></div>
+            <span class="arr">→</span>
+            <div class="mc">Harness<small>控住执行</small></div>
+          </div>
+        </div>
+        <aside class="cover-meta panel">
+          <div class="row"><span>听众</span><b>有编程基础的程序员</b></div>
+          <div class="row"><span>缺什么</span><b>AI 协作的工程方法论</b></div>
+          <div class="row"><span>建议时长</span><b>60–75 分钟</b></div>
+          <div class="row"><span>含</span><b>演示 + Q&amp;A</b></div>
+          <div class="row"><span>核心心智模型</span><b>三层控制力</b></div>
+        </aside>
+      </div>
+      <div class="slide-foot">← / → 翻页 · 按 ? 看全部快捷键 · 按 T 切换明暗</div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 2 · 议程 ============ -->
+  <section class="slide shell" data-title="今天讲什么">
+    <div class="slide-inner">
+      <div class="module-no">AGENDA · 八个模块</div>
+      <h2 class="section-title">今天的主线</h2>
+      <p class="lead" style="margin-bottom:24px;">从「用了 AI」到「用对 AI」——一套可落地的全栈工程方法论。</p>
+      <div class="agenda">
+        <a onclick="goTo(2);return false;"><span class="an">1</span><div><h3>先打破幻觉</h3><p>效率只提升 10% 的真相</p></div></a>
+        <a onclick="goTo(4);return false;"><span class="an">2</span><div><h3>重新定义 AI 全栈</h3><p>Vibe Coding 的能力圈</p></div></a>
+        <a onclick="goTo(5);return false;"><span class="an">3</span><div><h3>核心心智模型</h3><p>Prompt · Context · Harness</p></div></a>
+        <a onclick="goTo(7);return false;"><span class="an">4</span><div><h3>文档驱动 + Agent</h3><p>能直接用的 SOP 四步法</p></div></a>
+        <a onclick="goTo(8);return false;"><span class="an">5</span><div><h3>实战拆解</h3><p>重构 / 全栈的标准作业流</p></div></a>
+        <a onclick="goTo(10);return false;"><span class="an">6</span><div><h3>多模型协作与验证</h3><p>像微服务一样编排 AI</p></div></a>
+        <a onclick="goTo(13);return false;"><span class="an">7</span><div><h3>从买工具到搭一套栈</h3><p>可治理的工作流栈</p></div></a>
+        <a onclick="goTo(14);return false;"><span class="an">8</span><div><h3>行动清单 + 误区</h3><p>离场就能做的 3 件事</p></div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 3 · 模块一 反直觉数据 ============ -->
+  <section class="slide shell" data-title="一·反直觉数据">
+    <div class="slide-inner">
+      <div class="module-no">模块一 · 先打破幻觉</div>
+      <div class="grid grid-2" style="align-items:center;">
+        <div>
+          <div class="big">93% <span style="font-size:.4em;color:var(--muted);">用</span></div>
+          <div class="big" style="color:var(--rose);margin-top:10px;">10% <span style="font-size:.4em;color:var(--muted);">提升</span></div>
+        </div>
+        <div>
+          <h2 class="section-title">问题不在工具，在用法。</h2>
+          <p class="lead">93% 的开发者都在用 AI 写代码，但整体效率只提升了约 <strong>10%</strong>。</p>
+          <div class="warning" style="margin-top:20px;">
+            <strong>真正的病根：</strong>大多数人把 AI 当「打字机」用——只让它<strong>生成</strong>，不让它<strong>理解</strong>。
+          </div>
+        </div>
+      </div>
+      <div class="slide-foot">数据来源：93% 用 AI、效率仅 +10%（方法库引用 [1]）</div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 4 · 模块一 放大镜 + 甜蜜点 ============ -->
+  <section class="slide shell" data-title="一·放大镜与甜蜜点">
+    <div class="slide-inner">
+      <div class="module-no">模块一 · 核心论点</div>
+      <h2 class="section-title">AI 是放大镜，不是外挂。</h2>
+      <p class="lead" style="margin-bottom:22px;">AI 编码不让个人凭空变强，而是把组织 / 流程水平<strong>暴露无遗</strong>。</p>
+      <div class="grid grid-2">
+        <div class="card" style="border-top:3px solid var(--olive);">
+          <h3>流程清晰的团队</h3>
+          <p>如虎添翼——AI 沿着既定轨道加速，产出可验收、可复盘。</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--rose);">
+          <h3>流程混乱的团队</h3>
+          <p>加速崩溃——AI 把混乱也一起放大，错误来得更快更多。</p>
+        </div>
+      </div>
+      <div class="note" style="margin-top:18px;">
+        <strong>真正的甜蜜点：</strong>不是让老手写得更快，而是<strong>让生手上手更快</strong>——用 AI 理解代码库、缩短新人到第 10 个 PR 的时间。
+      </div>
+      <p class="lead" style="margin-top:18px;font-size:16px;"><strong style="color:var(--clay);">本场目标：</strong>给你一套从「用了 AI」到「用对 AI」的全栈工程方法论。</p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 5 · 模块二 重新定义 + Vibe Coding 能力圈 ============ -->
+  <section class="slide shell" data-title="二·重新定义 AI 全栈">
+    <div class="slide-inner">
+      <div class="module-no">模块二 · 重新定义「AI 全栈开发」</div>
+      <h2 class="section-title">什么算 AI 全栈？</h2>
+      <p class="lead" style="margin-bottom:20px;">用 AI 完成 <strong>前端 + 后端 + 数据库</strong> 的完整闭环，做出一个<strong>能跑的产品</strong>——而不是片段代码。</p>
+      <div class="grid grid-2">
+        <div class="card" style="border-top:3px solid var(--olive);">
+          <h3>✓ Vibe Coding 适合</h3>
+          <p>0→1 的小工具、快速验证、原型。把想法快速变成能跑的东西。</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--rose);">
+          <h3>✕ Vibe Coding 不适合</h3>
+          <p>大型项目、大规模改动、精细化操作——这些 Vibe Coding 做不到。</p>
+        </div>
+      </div>
+      <blockquote class="quote" style="margin-top:20px;">
+        软件工程几十年的沉淀<span>不会被替代</span>，AI 是<span>加速器</span>，不是免死金牌。
+      </blockquote>
+      <p class="slide-foot">互动提问：在座各位用 AI 写代码，是在「生成」，还是在「理解」？</p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 6 · 模块三 三层控制力主图 ============ -->
+  <section class="slide shell" data-title="三·三层控制力（思想钢印）">
+    <div class="slide-inner">
+      <div class="module-no">模块三 · 核心心智模型</div>
+      <h2 class="section-title">三层控制力</h2>
+      <p class="lead" style="margin-bottom:18px;">三者不是替代，而是<strong>层层嵌套</strong>——Prompt 是 Context 的基础，Context 是 Harness 的基础。可以快进，但不能缺失。</p>
+      <div class="layer-stack">
+        <div class="layer l-prompt">
+          <span class="badge">P</span>
+          <div class="lcontent">
+            <div class="ltitle"><b>Prompt 工程</b><span class="en">控制表达意图</span></div>
+            <p class="ldesc">角色、任务、格式、约束、示例——让 AI 明白你到底要什么。</p>
+          </div>
+        </div>
+        <div class="layer l-context">
+          <span class="badge">C</span>
+          <div class="lcontent">
+            <div class="ltitle"><b>Context 工程</b><span class="en">控制信息环境</span></div>
+            <p class="ldesc">AI 回答前该看到哪些背景、记忆、资料、规则、业务状态。</p>
+          </div>
+        </div>
+        <div class="layer l-harness">
+          <span class="badge">H</span>
+          <div class="lcontent">
+            <div class="ltitle"><b>Harness 工程</b><span class="en">控制行动系统</span></div>
+            <p class="ldesc">让 AI 调工具、读写文件、执行代码、接受测试、产生日志——在约束中完成闭环。</p>
+          </div>
+        </div>
+      </div>
+      <p class="slide-foot">这是整场的「思想钢印」——建议用这一页讲透。</p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 7 · 模块三 金句 + 能力阶梯 ============ -->
+  <section class="slide shell" data-title="三·金句与能力阶梯">
+    <div class="slide-inner">
+      <div class="module-no">模块三 · 送给程序员的话</div>
+      <blockquote class="quote">
+        普通人学 <span>Prompt</span> 让 AI 答得更好；<br>
+        进阶者学 <span>Context</span> 让 AI 理解得更准；<br>
+        做落地的人学 <span>Harness</span>，让 AI 执行得可控、结果可验收、过程可复盘。
+      </blockquote>
+      <h3 style="margin:28px 0 14px;font-family:Georgia,serif;font-size:22px;">能力阶梯</h3>
+      <div class="ladder">
+        <div class="step s1"><div class="lv">LV.1</div><h3>对话使用者</h3><p>会写提示词，让 AI 答得好</p></div>
+        <div class="step s2"><div class="lv">LV.2</div><h3>流程设计者</h3><p>会组织上下文，让 AI 理解准</p></div>
+        <div class="step s3"><div class="lv">LV.3</div><h3>系统驾驭者</h3><p>会搭执行系统，让 AI 落地可控</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 8 · 模块四 文档驱动方法论 ============ -->
+  <section class="slide shell" data-title="四·文档驱动 + Agent">
+    <div class="slide-inner">
+      <div class="module-no">模块四 · 可落地的方法论</div>
+      <h2 class="section-title">文档驱动 + Agent</h2>
+      <div class="grid grid-2" style="margin-bottom:18px;">
+        <div class="note"><strong>为什么文档驱动？</strong><br>① 方便在不同 AI 工具间切换（Claude Code / Codex / Gemini）。<br>② 绕开上下文长度限制，让 AI 只聚焦文档相关内容，而非自由发挥。</div>
+        <div class="formula">
+          <span class="term">Agent</span><span class="op">+</span>
+          <span class="term">软件工程</span><span class="op">+</span>
+          <span class="term">文档驱动</span>
+        </div>
+      </div>
+      <div class="step-flow">
+        <div class="sf"><span class="n">1</span><div><h3>定义文档模板</h3><p>用<em>标准化模板</em>约束，而非让 AI 自由生成——否则文档会无限膨胀。</p></div></div>
+        <div class="sf"><span class="n">2</span><div><h3>SOP 流程化</h3><p>把整套流程沉淀进知识库，作为可复用的参考。</p></div></div>
+        <div class="sf"><span class="n">3</span><div><h3>逻辑确认机制</h3><p>让 AI <em>先描述逻辑，确认后再执行</em>，把幻觉挡在动手之前。</p></div></div>
+        <div class="sf"><span class="n">4</span><div><h3>最小化细粒度拆解</h3><p>以功能性最小单元拆任务——<em>人能读懂、AI 少幻觉</em>。</p></div></div>
+      </div>
+      <p class="slide-foot">本质：敏捷或瀑布都适用，文档驱动是中间的「公共协议」。</p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 9 · 模块五 实战五步流 ============ -->
+  <section class="slide shell" data-title="五·实战标准作业流">
+    <div class="slide-inner">
+      <div class="module-no">模块五 · 实战拆解（单体 → 模块化重构）</div>
+      <h2 class="section-title">标准作业流</h2>
+      <div class="step-flow">
+        <div class="sf"><span class="n">1</span><div><h3>先分析整个项目</h3><p>让分析型模型（如 Gemini）通读项目，建立全局认知。</p></div></div>
+        <div class="sf"><span class="n">2</span><div><h3>一起制定重构计划</h3><p>明确目标与详细步骤，人和 AI 对齐方向。</p></div></div>
+        <div class="sf"><span class="n">3</span><div><h3>计划确认后输出文档</h3><p>包含关键步骤与里程碑——<em>这一步极重要</em>。</p></div></div>
+        <div class="sf"><span class="n">4</span><div><h3>按文档逐步执行</h3><p>用执行型工具（如 Claude Code）落地，<em>实测准确率约 80%</em>。</p></div></div>
+        <div class="sf"><span class="n">5</span><div><h3>换一个模型对照检查</h3><p>用另一模型对照文档复核，捕捉偏差与遗漏。</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 10 · 模块五 单测陷阱 ============ -->
+  <section class="slide shell" data-title="五·单元测试的陷阱">
+    <div class="slide-inner">
+      <div class="module-no">模块五 · 程序员最有共鸣的点</div>
+      <h2 class="section-title">单元测试的关键陷阱</h2>
+      <div class="note" style="margin-bottom:18px;">
+        <strong>正确姿势：</strong>重构前先写好一部分单元测试，重构时<strong>跑测试验证</strong>，让测试守住业务行为不被改坏。
+      </div>
+      <div class="warning">
+        <strong>⚠️ 必须人工把关的一环：</strong><br>
+        AI 发现代码出错时，<strong>可能会偷偷改测试让它通过</strong>，而不真正验证业务逻辑——<br>
+        测试由绿变绿，业务却已经坏了。这一步，机器不能代替你点头。
+      </div>
+      <blockquote class="quote" style="margin-top:20px;">
+        测试不是用来「让它过」的，是用来<span>逼出真相</span>的。改测试取悦绿灯，是最危险的自欺。
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ============ Slide 11 · 模块六 角色分工 + 任务包 ============ -->
+  <section class="slide shell" data-title="六·角色分工与任务包">
+    <div class="slide-inner">
+      <div class="module-no">模块六 · 多模型协作（Harness 实战）</div>
+      <h2 class="section-title">像微服务一样编排 AI</h2>
+      <div class="role-grid" style="margin-bottom:20px;">
+        <div class="role r-codex"><div class="rn">EXEC</div><h3>Codex</h3><p>执行——按文档落地代码改动。</p></div>
+        <div class="role r-claude"><div class="rn">REVIEW</div><h3>Claude</h3><p>审查代码——把关质量与实现。</p></div>
+        <div class="role r-gemini"><div class="rn">RECHECK</div><h3>Gemini</h3><p>复核上下文遗漏——查全局一致性。</p></div>
+        <div class="role r-human"><div class="rn">DECIDE</div><h3>人类</h3><p>做最终判断——拍板与负责。</p></div>
+      </div>
+      <h3 style="margin:0 0 12px;font-family:Georgia,serif;font-size:20px;">交接要带「任务包」</h3>
+      <ul class="checklist pack grid grid-2" style="display:grid;">
+        <li>任务目标</li>
+        <li>执行过程</li>
+        <li>修改文件</li>
+        <li>自测结果</li>
+        <li>已知风险</li>
+        <li>待审查问题</li>
+      </ul>
+      <p class="slide-foot">执行完不能只丢结果——交接如同 PR 描述，让下一棒接得住。</p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 12 · 模块六 验收清单 + 护栏分级 ============ -->
+  <section class="slide shell" data-title="六·验收清单与护栏分级">
+    <div class="slide-inner">
+      <div class="module-no">模块六 · 质量门禁</div>
+      <h2 class="section-title">验收清单 + 权限护栏</h2>
+      <div class="grid grid-2" style="margin-bottom:18px;">
+        <div>
+          <h3 style="margin:0 0 10px;font-size:17px;">验收清单（质量门禁）</h3>
+          <ul class="checklist">
+            <li>格式 / 静态检查</li>
+            <li>单元测试</li>
+            <li>语义审查：是否符合目标、是否有幻觉、是否前后一致</li>
+            <li>人工验收</li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="margin:0 0 10px;font-size:17px;">权限与护栏分级</h3>
+          <div class="guard">
+            <div class="g g1"><div class="head">低风险</div><div class="body">自动执行</div></div>
+            <div class="g g2"><div class="head">中风险</div><div class="body">执行前确认</div></div>
+            <div class="g g3"><div class="head">高风险</div><div class="body">只出方案</div></div>
+            <div class="g g4"><div class="head">危险</div><div class="body">沙箱隔离</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="note">
+        <strong>失败回收：</strong>出问题时不只人工修一次——把缺失的<strong>工具、护栏、文档、反馈</strong>补回系统，让系统以后少犯同类错。
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 13 · 模块六 金句过渡 ============ -->
+  <section class="slide shell" data-title="六·从助手到劳动力">
+    <div class="slide-inner" style="align-items:flex-start;">
+      <div class="module-no">模块六 · 小结</div>
+      <blockquote class="quote" style="font-size:clamp(22px,3.6vw,38px);line-height:1.45;">
+        让 AI 从<span>「助手」</span>，<br>变成<span>「可管理的劳动力」</span>。
+      </blockquote>
+      <p class="lead" style="margin-top:24px;">有任务包、有验收门禁、有护栏分级、有失败回收——AI 才真正进入了你的工程系统，而不只是聊天框里的一次性帮手。</p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 14 · 模块七 四层栈 ============ -->
+  <section class="slide shell" data-title="七·搭一套栈">
+    <div class="slide-inner">
+      <div class="module-no">模块七 · 从「买工具」到「搭一套栈」</div>
+      <h2 class="section-title">四层栈框架</h2>
+      <p class="lead" style="margin-bottom:18px;">趋势：AI 落地正从「单点工具」转向「可治理的工作流栈」——<strong>试点拼速度，生产拼治理</strong>。</p>
+      <div class="stack4">
+        <div class="lyr s-scene"><div class="lbl"><span class="dot"></span>场景层</div><p>先问<b>「哪个流程最值得被 AI 改造」</b>，而非「哪个 Agent 最强」。</p></div>
+        <div class="lyr s-tool"><div class="lbl"><span class="dot"></span>工具层</div><p>选择执行工具与 <b>IDE 生态</b>。</p></div>
+        <div class="lyr s-route"><div class="lbl"><span class="dot"></span>模型路由层</div><p>别都丢给同一个模型，按<b>效果 / 成本 / 速度</b>路由。</p></div>
+        <div class="lyr s-gov"><div class="lbl"><span class="dot"></span>运行与治理层</div><p>统一入口、成本路由、<b>权限边界、可观测性</b>。</p></div>
+      </div>
+      <p class="slide-foot">给程序员的话：先画自己的 AI 工作流栈，再决定买什么工具。</p>
+    </div>
+  </section>
+
+  <!-- ============ Slide 15 · 模块八 行动清单 + 误区 ============ -->
+  <section class="slide shell" data-title="八·行动清单与误区">
+    <div class="slide-inner">
+      <div class="module-no">模块八 · 行动清单 + 常见误区</div>
+      <div class="grid grid-2">
+        <div>
+          <h3 style="margin:0 0 12px;font-size:18px;">离场就能做的 3 件事</h3>
+          <div class="action-list">
+            <div class="ac"><div class="box">☐</div><div><h3>写一份项目规则文档</h3><p>角色、约束、Do's &amp; Don'ts——让 AI 从「通用模型」变「专属队友」。</p></div></div>
+            <div class="ac"><div class="box">☐</div><div><h3>跑一遍最小闭环</h3><p>选一个最小功能：先描述逻辑 → 确认 → 执行 → 测试 → 审查。</p></div></div>
+            <div class="ac"><div class="box">☐</div><div><h3>把一次踩坑沉淀成规则</h3><p>变成一条新规则 / 新检查项，喂回系统。</p></div></div>
+          </div>
+        </div>
+        <div>
+          <h3 style="margin:0 0 12px;font-size:18px;">三大误区</h3>
+          <div class="grid" style="gap:10px;">
+            <div class="myth-card"><div class="myth-wrong">把 AI 当打字机</div><div class="myth-right">只用来「生成」，不用来「理解」。</div></div>
+            <div class="myth-card"><div class="myth-wrong">用 Vibe Coding 硬刚大型项目</div><div class="myth-right">超出能力圈，越改越乱。</div></div>
+            <div class="myth-card"><div class="myth-wrong">过早追求「全自动闭环」</div><div class="myth-right">忽略人机协作与关键节点把关。</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Slide 16 · 收尾 三句话 ============ -->
+  <section class="slide shell" data-title="带走这三句话">
+    <div class="slide-inner">
+      <div class="module-no">THE END · 带走这三句话</div>
+      <h2 class="section-title">让 AI 成为可管理的劳动力</h2>
+      <ul class="takeaway-list">
+        <li>
+          <div class="num">1</div>
+          <div class="body"><h3>方法论先于工具</h3><p>先画自己的 AI 工作流栈（Prompt → Context → Harness），再决定买什么工具。</p></div>
+        </li>
+        <li>
+          <div class="num">2</div>
+          <div class="body"><h3>文档驱动 + 逐步确认</h3><p>先描述逻辑、确认、再执行；测试守住业务，关键节点人工把关。</p></div>
+        </li>
+        <li>
+          <div class="num">3</div>
+          <div class="body"><h3>系统会变强，不是你一个人</h3><p>每次踩坑都把工具 / 护栏 / 文档补回系统——这才是 AI 全栈开发的终局。</p></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<!-- 浮动翻页 -->
+<nav class="deck-nav" aria-label="翻页">
+  <button type="button" onclick="prevSlide()" title="上一页（← / PgUp）">‹ 上一页</button>
+  <span class="counter"><span id="cur">1</span> / <span id="total">16</span></span>
+  <button type="button" onclick="nextSlide()" title="下一页（→ / PgDn / Space）">下一页 ›</button>
+</nav>
+
+<!-- 帮助蒙层 -->
+<div class="help" id="help" onclick="if(event.target===this)closeHelp()">
+  <div class="help-panel" role="dialog" aria-modal="true" aria-label="快捷键">
+    <h3>键盘快捷键</h3>
+    <div class="kb">
+      <code>← / PgUp</code><span>上一页</span>
+      <code>→ / PgDn / Space</code><span>下一页</span>
+      <code>Home / End</code><span>跳到首页 / 末页</span>
+      <code>T</code><span>切换明暗主题</span>
+      <code>F</code><span>全屏 / 退出全屏</span>
+      <code>?</code><span>显示这个面板</span>
+      <code>Esc</code><span>关闭这个面板</span>
+    </div>
+    <div style="margin-top: 16px; text-align: right;">
+      <button class="btn btn-mini" type="button" onclick="closeHelp()">知道了</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dotsBox = document.getElementById('dots');
+const curEl = document.getElementById('cur');
+const totalEl = document.getElementById('total');
+const counterText = document.getElementById('counter-text');
+let idx = 0;
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function renderDots() {
+  dotsBox.innerHTML = '';
+  slides.forEach((s, i) => {
+    const dot = document.createElement('i');
+    if (i === idx) dot.classList.add('active');
+    else if (i < idx) dot.classList.add('done');
+    dot.title = (i + 1) + '. ' + (s.dataset.title || '');
+    dot.addEventListener('click', () => goTo(i));
+    dotsBox.appendChild(dot);
+  });
+}
+function goTo(i) {
+  if (i < 0 || i >= slides.length) return;
+  slides[idx].classList.remove('active');
+  idx = i;
+  slides[idx].classList.add('active');
+  curEl.textContent = idx + 1;
+  totalEl.textContent = slides.length;
+  counterText.textContent = pad(idx + 1) + ' / ' + pad(slides.length);
+  renderDots();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+function nextSlide() { goTo(Math.min(idx + 1, slides.length - 1)); }
+function prevSlide() { goTo(Math.max(idx - 1, 0)); }
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('aifs-theme', next); } catch (e) {}
+}
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+  } else {
+    document.exitFullscreen && document.exitFullscreen();
+  }
+}
+function openHelp()  { document.getElementById('help').classList.add('open'); }
+function closeHelp() { document.getElementById('help').classList.remove('open'); }
+
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('help').classList.contains('open')) {
+    if (e.key === 'Escape') closeHelp();
+    return;
+  }
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch (e.key) {
+    case 'ArrowRight': case 'PageDown': case ' ':
+      e.preventDefault(); nextSlide(); break;
+    case 'ArrowLeft': case 'PageUp':
+      e.preventDefault(); prevSlide(); break;
+    case 'Home': e.preventDefault(); goTo(0); break;
+    case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
+    case 't': case 'T': toggleTheme(); break;
+    case 'f': case 'F': toggleFullscreen(); break;
+    case '?': case '/': openHelp(); break;
+  }
+});
+
+// 初始化
+(function init() {
+  try {
+    const t = localStorage.getItem('aifs-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  } catch (e) {}
+  renderDots();
+  totalEl.textContent = slides.length;
+  counterText.textContent = pad(1) + ' / ' + pad(slides.length);
+})();
+</script>
+</body>
+</html>
