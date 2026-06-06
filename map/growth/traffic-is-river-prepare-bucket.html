@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="做了一年自媒体，我才看懂「流量是一切商业模式的源头」。流量不是终点，只是水流进来了——你有没有桶接住它？拆解免费流量的隐性成本、有效流量公式，以及先搭好「接水的桶」的四件事。">
+  <title>流量是河，但你得先准备好接水的桶</title>
+  <style>
+    :root {
+      --hav-bg: #faf8f5;
+      --hav-surface: #f0ede8;
+      --hav-panel: #fffdfa;
+      --hav-border: #d4cfc7;
+      --hav-text: #2c2825;
+      --hav-muted: #8a837a;
+      --hav-soft: #e3dacc;
+      --hav-accent: #d97757;
+      --hav-accent-dark: #b8602a;
+      --hav-olive: #788c5d;
+      --hav-sky: #6a8caf;
+      --hav-slate: #141413;
+      --hav-danger: #b9524c;
+      --hav-shadow: 0 18px 50px rgba(44, 40, 37, .10);
+      --hav-radius: 18px;
+      --hav-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --hav-serif: Georgia, "Times New Roman", serif;
+      --hav-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --hav-bg: #17191c;
+        --hav-surface: #202226;
+        --hav-panel: #111214;
+        --hav-border: #3d3d39;
+        --hav-text: #eee9df;
+        --hav-muted: #aaa49a;
+        --hav-soft: #2e2d2a;
+        --hav-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body.hav-page {
+      margin: 0;
+      background: var(--hav-bg);
+      color: var(--hav-text);
+      font-family: var(--hav-sans);
+      line-height: 1.55;
+    }
+
+    .hav-shell {
+      width: min(1080px, calc(100vw - 32px));
+      margin: 0 auto;
+    }
+
+    /* ─── HERO ─── */
+    .hav-hero {
+      padding: 60px 0 36px;
+      border-bottom: 1px solid var(--hav-border);
+    }
+
+    .hav-kicker {
+      color: var(--hav-accent);
+      font: 700 12px/1 var(--hav-mono);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .hav-title {
+      margin: 16px 0 14px;
+      max-width: 920px;
+      font-family: var(--hav-serif);
+      font-size: clamp(38px, 6.4vw, 72px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hav-title em {
+      font-style: normal;
+      color: var(--hav-accent);
+    }
+
+    .hav-subtitle {
+      max-width: 720px;
+      color: var(--hav-muted);
+      font-size: clamp(17px, 2.2vw, 22px);
+      line-height: 1.5;
+    }
+
+    .tk-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .tk-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--hav-surface);
+      border: 1px solid var(--hav-border);
+      border-radius: 99px;
+      font: 600 12px/1 var(--hav-mono);
+      color: var(--hav-muted);
+    }
+
+    /* ─── ONE LINE THESIS ─── */
+    .tk-thesis {
+      margin: 32px 0 8px;
+      padding: 26px 28px;
+      background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-panel));
+      border: 1px solid color-mix(in srgb, var(--hav-accent) 32%, var(--hav-border));
+      border-left: 4px solid var(--hav-accent);
+      border-radius: var(--hav-radius);
+      box-shadow: var(--hav-shadow);
+    }
+
+    .tk-thesis .lbl {
+      font: 700 11px/1 var(--hav-mono);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--hav-accent);
+    }
+
+    .tk-thesis p {
+      margin: 12px 0 0;
+      font-size: clamp(19px, 2.6vw, 26px);
+      font-family: var(--hav-serif);
+      line-height: 1.4;
+    }
+
+    /* ─── TOC ─── */
+    .tk-toc {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: 0 -2px;
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--hav-bg) 88%, transparent);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--hav-border);
+    }
+
+    .tk-toc-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 0 2px 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tk-toc-row a {
+      flex: 0 0 auto;
+      padding: 6px 13px;
+      background: var(--hav-surface);
+      border: 1px solid var(--hav-border);
+      border-radius: 99px;
+      color: var(--hav-text);
+      text-decoration: none;
+      font: 500 13px/1 var(--hav-sans);
+      transition: all .15s;
+    }
+
+    .tk-toc-row a:hover {
+      border-color: var(--hav-accent);
+      color: var(--hav-accent);
+    }
+
+    /* ─── SECTION ─── */
+    .tk-section {
+      padding: 52px 0;
+      border-top: 1px solid var(--hav-border);
+    }
+
+    .tk-section:first-of-type { border-top: 0; }
+
+    .tk-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font: 700 12px/1 var(--hav-mono);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--hav-accent);
+      margin-bottom: 14px;
+    }
+
+    .tk-eyebrow .num {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--hav-accent) 16%, transparent);
+      color: var(--hav-accent);
+      font-size: 12px;
+    }
+
+    .tk-h2 {
+      margin: 0 0 16px;
+      font-family: var(--hav-serif);
+      font-size: clamp(26px, 4vw, 40px);
+      line-height: 1.08;
+    }
+
+    .tk-lead {
+      color: var(--hav-muted);
+      font-size: 17px;
+      line-height: 1.65;
+      max-width: 740px;
+      margin: 0 0 26px;
+    }
+
+    .tk-lead strong, .tk-p strong {
+      color: var(--hav-text);
+      background: color-mix(in srgb, var(--hav-accent) 18%, transparent);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .tk-p {
+      font-size: 16px;
+      line-height: 1.75;
+      max-width: 740px;
+      margin: 0 0 18px;
+    }
+
+    .tk-p.q {
+      color: var(--hav-muted);
+      font-style: italic;
+    }
+
+    /* ─── RIVER & BUCKET DIAGRAM ─── */
+    .tk-figure {
+      margin: 8px 0 24px;
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: var(--hav-radius);
+      overflow: hidden;
+      box-shadow: var(--hav-shadow);
+    }
+
+    .tk-figure svg { display: block; width: 100%; height: auto; }
+
+    .tk-figure figcaption {
+      padding: 12px 18px;
+      border-top: 1px solid var(--hav-border);
+      font: 12px/1.5 var(--hav-mono);
+      color: var(--hav-muted);
+    }
+
+    /* ─── RIVERBED PARTS ─── */
+    .tk-riverbed {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 8px 0 24px;
+    }
+
+    .tk-bed-card {
+      padding: 22px;
+      border-radius: 16px;
+      border: 1px solid var(--hav-border);
+      background: var(--hav-panel);
+    }
+
+    .tk-bed-card.water { border-top: 3px solid var(--hav-sky); }
+    .tk-bed-card.bed { border-top: 3px solid var(--hav-olive); }
+
+    .tk-bed-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      border-radius: 99px;
+      font: 700 11px/1 var(--hav-mono);
+      letter-spacing: .08em;
+      margin-bottom: 14px;
+    }
+
+    .tk-bed-card.water .tk-bed-tag {
+      background: color-mix(in srgb, var(--hav-sky) 14%, transparent);
+      color: var(--hav-sky);
+    }
+
+    .tk-bed-card.bed .tk-bed-tag {
+      background: color-mix(in srgb, var(--hav-olive) 16%, transparent);
+      color: var(--hav-olive);
+    }
+
+    .tk-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tk-chips span {
+      padding: 6px 12px;
+      border-radius: 99px;
+      background: var(--hav-surface);
+      border: 1px solid var(--hav-border);
+      font-size: 13.5px;
+    }
+
+    /* ─── COST CARDS (免费流量) ─── */
+    .tk-costs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 8px 0 24px;
+    }
+
+    .tk-cost {
+      padding: 22px 20px;
+      background: color-mix(in srgb, var(--hav-danger) 5%, var(--hav-panel));
+      border: 1px solid color-mix(in srgb, var(--hav-danger) 22%, var(--hav-border));
+      border-radius: 16px;
+    }
+
+    .tk-cost .ico { font-size: 26px; }
+    .tk-cost .nm { font-weight: 700; margin: 10px 0 6px; font-size: 16px; }
+    .tk-cost .ds { font-size: 13.5px; color: var(--hav-muted); line-height: 1.6; }
+
+    .tk-deferred {
+      margin-top: 8px;
+      padding: 20px 24px;
+      text-align: center;
+      background: color-mix(in srgb, var(--hav-slate) 4%, var(--hav-surface));
+      border: 1px dashed var(--hav-border);
+      border-radius: 14px;
+      font-family: var(--hav-serif);
+      font-size: clamp(18px, 2.6vw, 23px);
+    }
+
+    /* ─── FORMULA (有效流量) ─── */
+    .tk-formula {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      gap: 12px;
+      margin: 8px 0 22px;
+    }
+
+    .tk-fx {
+      padding: 22px 18px;
+      text-align: center;
+      border-radius: 16px;
+      border: 1px solid var(--hav-border);
+      background: var(--hav-panel);
+    }
+
+    .tk-fx.result {
+      background: color-mix(in srgb, var(--hav-accent) 9%, var(--hav-panel));
+      border-color: color-mix(in srgb, var(--hav-accent) 32%, var(--hav-border));
+    }
+
+    .tk-fx .k {
+      font: 700 11px/1 var(--hav-mono);
+      letter-spacing: .08em;
+      color: var(--hav-muted);
+      margin-bottom: 10px;
+    }
+
+    .tk-fx .v {
+      font-family: var(--hav-serif);
+      font-size: clamp(18px, 2.6vw, 24px);
+      line-height: 1.15;
+    }
+
+    .tk-fx.result .v { color: var(--hav-accent); }
+
+    .tk-fx .note { display: block; margin-top: 8px; font-size: 12px; color: var(--hav-muted); }
+
+    .tk-op {
+      display: grid;
+      place-items: center;
+      font-family: var(--hav-serif);
+      font-size: 28px;
+      color: var(--hav-muted);
+    }
+
+    /* ─── PAIN QUESTIONS (承接) ─── */
+    .tk-qstack {
+      display: grid;
+      gap: 1px;
+      background: var(--hav-border);
+      border: 1px solid var(--hav-border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 8px 0 22px;
+    }
+
+    .tk-qstack div {
+      background: var(--hav-panel);
+      padding: 14px 18px;
+      font-size: 15px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .tk-qstack div::before {
+      content: "?";
+      font: 700 14px/1 var(--hav-mono);
+      color: var(--hav-accent);
+      flex: 0 0 auto;
+    }
+
+    /* ─── METHOD CARDS (四件事) ─── */
+    .tk-methods { display: grid; gap: 18px; margin: 8px 0; }
+
+    .tk-method {
+      padding: 26px;
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: 16px;
+      box-shadow: var(--hav-shadow);
+    }
+
+    .tk-method-head {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .tk-method-no {
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      flex: 0 0 auto;
+      border-radius: 12px;
+      background: var(--hav-accent);
+      color: #fff;
+      font-family: var(--hav-serif);
+      font-size: 22px;
+    }
+
+    .tk-method-head h3 {
+      margin: 0 0 4px;
+      font-size: 20px;
+      font-family: var(--hav-serif);
+    }
+
+    .tk-method-head .sub { font-size: 14px; color: var(--hav-muted); }
+
+    .tk-method p { font-size: 15px; line-height: 1.7; color: var(--hav-muted); margin: 0 0 12px; }
+    .tk-method p:last-child { margin-bottom: 0; }
+    .tk-method p strong { color: var(--hav-text); }
+
+    /* ─── ACCOUNT TABLE (算账) ─── */
+    .tk-table-wrap { overflow-x: auto; margin: 6px 0 12px; border-radius: 12px; border: 1px solid var(--hav-border); }
+
+    table.tk-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      min-width: 460px;
+    }
+
+    .tk-table th, .tk-table td {
+      padding: 11px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--hav-border);
+    }
+
+    .tk-table thead th {
+      background: var(--hav-surface);
+      font: 700 12px/1.3 var(--hav-mono);
+      color: var(--hav-muted);
+      letter-spacing: .04em;
+    }
+
+    .tk-table tbody tr:last-child td { border-bottom: 0; }
+    .tk-table td:first-child { font-weight: 600; color: var(--hav-text); }
+
+    /* ─── CHECKLIST (接水的桶) ─── */
+    .tk-checklist {
+      display: grid;
+      gap: 1px;
+      background: var(--hav-border);
+      border: 1px solid var(--hav-border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 6px 0 12px;
+    }
+
+    .tk-checklist div {
+      background: var(--hav-panel);
+      padding: 13px 18px;
+      font-size: 14.5px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .tk-checklist div::before {
+      content: "✓";
+      font: 700 13px/1 var(--hav-mono);
+      color: var(--hav-olive);
+      flex: 0 0 auto;
+    }
+
+    /* ─── TRAPS (三个翻车点) ─── */
+    .tk-trio {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 8px 0 8px;
+    }
+
+    .tk-trio-card {
+      padding: 22px 20px;
+      background: color-mix(in srgb, var(--hav-danger) 5%, var(--hav-panel));
+      border: 1px solid color-mix(in srgb, var(--hav-danger) 22%, var(--hav-border));
+      border-radius: 16px;
+      border-top: 3px solid var(--hav-danger);
+    }
+
+    .tk-trio-card .no {
+      font: 700 12px/1 var(--hav-mono);
+      color: var(--hav-danger);
+      letter-spacing: .08em;
+    }
+
+    .tk-trio-card .nm { font-weight: 700; margin: 10px 0 6px; font-size: 16px; }
+    .tk-trio-card .ds { font-size: 13.5px; color: var(--hav-muted); line-height: 1.6; }
+
+    /* ─── FINAL ─── */
+    .tk-final {
+      padding: 32px;
+      background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-panel));
+      border: 1px solid color-mix(in srgb, var(--hav-accent) 30%, var(--hav-border));
+      border-radius: var(--hav-radius);
+      box-shadow: var(--hav-shadow);
+    }
+
+    .tk-final .hav-pill {
+      display: inline-block;
+      padding: 5px 13px;
+      border-radius: 99px;
+      background: var(--hav-accent);
+      color: #fff;
+      font: 700 11px/1 var(--hav-mono);
+      letter-spacing: .1em;
+    }
+
+    .tk-final h2 {
+      margin: 16px 0 14px;
+      font-family: var(--hav-serif);
+      font-size: clamp(24px, 3.4vw, 34px);
+      line-height: 1.2;
+    }
+
+    .tk-quote {
+      margin: 20px 0 0;
+      padding: 18px 22px;
+      border-left: 4px solid var(--hav-accent);
+      background: color-mix(in srgb, var(--hav-accent) 6%, transparent);
+      border-radius: 0 12px 12px 0;
+      font-family: var(--hav-serif);
+      font-size: clamp(18px, 2.6vw, 24px);
+      line-height: 1.4;
+    }
+
+    .tk-src {
+      margin-top: 22px;
+      font: 12px/1.5 var(--hav-mono);
+      color: var(--hav-muted);
+    }
+
+    /* ─── FOOTER ─── */
+    .tk-footer {
+      padding: 28px 0 48px;
+      border-top: 1px solid var(--hav-border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--hav-muted);
+      font: 13px/1.5 var(--hav-mono);
+    }
+
+    .tk-footer a { color: var(--hav-accent); text-decoration: none; }
+
+    .tk-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--hav-border);
+      border-radius: 12px;
+      background: var(--hav-panel);
+      color: var(--hav-text);
+      cursor: pointer;
+      box-shadow: var(--hav-shadow);
+      font-size: 16px;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 720px) {
+      .tk-riverbed, .tk-costs, .tk-trio { grid-template-columns: 1fr; }
+      .tk-formula { grid-template-columns: 1fr; }
+      .tk-op { height: 30px; }
+    }
+  </style>
+</head>
+
+<body class="hav-page">
+
+  <article>
+    <!-- HERO -->
+    <header class="hav-hero">
+      <div class="hav-shell">
+        <div class="hav-kicker">自媒体一年复盘 · 小白向重构</div>
+        <h1 class="hav-title">流量是<em>河</em>，<br>但你得先准备好接水的桶</h1>
+        <p class="hav-subtitle">做了一年自媒体内容，我才慢慢看懂刘润那句：「流量是一切商业模式的源头。」一年前我以为最难的是涨粉，后来才发现——难的从来不是水来不来。</p>
+        <div class="tk-meta">
+          <span class="tk-tag">🌊 适合内容创作者 / 个人 IP / 自媒体新人</span>
+          <span class="tk-tag">⏱ 约 7 分钟</span>
+          <span class="tk-tag">🪣 引水 → 算账 → 承接</span>
+        </div>
+
+        <div class="tk-thesis">
+          <span class="lbl">一句话核心</span>
+          <p>流量不是终点，它只是水流进来了。真正的问题是——你有没有桶，能把它接住。</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- TOC -->
+    <nav class="tk-toc">
+      <div class="hav-shell tk-toc-row">
+        <a href="#s0">① 那场退潮</a>
+        <a href="#s1">② 河床再好，没水也没用</a>
+        <a href="#s2">③ 免费流量并不免费</a>
+        <a href="#s3">④ 比引流更难的是承接</a>
+        <a href="#s4">⑤ 我先做的四件事</a>
+        <a href="#s5">⑥ 三个翻车点</a>
+        <a href="#final">⑦ 补半句话</a>
+      </div>
+    </nav>
+
+    <main class="hav-shell">
+
+      <!-- 开篇 -->
+      <section class="tk-section" id="s0">
+        <span class="tk-eyebrow"><span class="num">1</span>开篇 · 真实经历</span>
+        <h2 class="tk-h2">那波人，像退潮一样走了</h2>
+        <p class="tk-lead">一年前，我以为做自媒体最难的是涨粉。每发完一篇就盯后台：阅读量涨一点，松一口气；停住了，又开始怀疑标题、选题、发布时间。我当时的想法很简单——<strong>只要流量来了，后面的事应该都会变容易。</strong></p>
+        <p class="tk-p">后来有一篇笔记真的爆了。几千人一下涌进来，评论、私信、合作咨询一起冒出来。开心没几天，我就发现不对劲：很多私信没来得及回，有人问合作我没有现成介绍，有人想进一步了解我也不知道怎么引导。</p>
+
+        <figure class="tk-figure">
+          <svg viewBox="0 0 800 360" role="img" aria-label="流量之河与接水的桶：有桶接住，没桶流走">
+            <defs>
+              <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#8fb3d6"/>
+                <stop offset="1" stop-color="#6a8caf"/>
+              </linearGradient>
+            </defs>
+            <!-- 流量之河 -->
+            <rect x="40" y="30" width="720" height="58" rx="14" fill="url(#water)" opacity="0.92"/>
+            <path d="M40 60 q30 -12 60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0 t60 0" fill="none" stroke="#fff" stroke-width="2" opacity="0.45"/>
+            <text x="400" y="66" text-anchor="middle" font-size="20" font-weight="700" fill="#fff" font-family="Georgia, serif">流 量 之 河</text>
+            <text x="752" y="52" text-anchor="end" font-size="11" fill="#eef4fa" font-family="monospace">爆文 · 推荐 · 搜索</text>
+
+            <!-- 左：没有桶 -->
+            <g>
+              <path d="M232 88 C232 150, 218 200, 220 250" fill="none" stroke="url(#water)" stroke-width="14" stroke-linecap="round"/>
+              <!-- 溅开的水 -->
+              <path d="M170 282 q22 -34 46 -30 M270 282 q-22 -34 -46 -30" fill="none" stroke="#9bb8d4" stroke-width="5" stroke-linecap="round" opacity="0.7"/>
+              <circle cx="160" cy="276" r="4" fill="#9bb8d4" opacity="0.7"/>
+              <circle cx="280" cy="278" r="4" fill="#9bb8d4" opacity="0.7"/>
+              <circle cx="300" cy="262" r="3" fill="#9bb8d4" opacity="0.6"/>
+              <line x1="120" y1="296" x2="320" y2="296" stroke="#d4cfc7" stroke-width="2"/>
+              <text x="220" y="324" text-anchor="middle" font-size="16" font-weight="700" fill="#b9524c" font-family="sans-serif">❌ 没有桶</text>
+              <text x="220" y="346" text-anchor="middle" font-size="12.5" fill="#8a837a" font-family="sans-serif">水从眼前流过 · 留下的很少</text>
+            </g>
+
+            <!-- 右：有桶接住 -->
+            <g>
+              <path d="M568 88 C568 140, 560 175, 562 205" fill="none" stroke="url(#water)" stroke-width="14" stroke-linecap="round"/>
+              <!-- 桶 -->
+              <path d="M508 212 L516 296 L624 296 L632 212 Z" fill="#fffdfa" stroke="#788c5d" stroke-width="2.5"/>
+              <path d="M508 212 L632 212" stroke="#788c5d" stroke-width="2.5"/>
+              <!-- 桶里的水 -->
+              <path d="M520 245 L628 245 L624 290 L524 290 Z" fill="url(#water)" opacity="0.9"/>
+              <path d="M520 245 q27 -9 54 0 t54 0" fill="none" stroke="#fff" stroke-width="2" opacity="0.5"/>
+              <!-- 桶把手 -->
+              <path d="M515 214 Q570 186 625 214" fill="none" stroke="#788c5d" stroke-width="2.5"/>
+              <text x="570" y="324" text-anchor="middle" font-size="16" font-weight="700" fill="#788c5d" font-family="sans-serif">✅ 有桶接住</text>
+              <text x="570" y="346" text-anchor="middle" font-size="12.5" fill="#8a837a" font-family="sans-serif">沉淀为关注 · 咨询 · 合作</text>
+            </g>
+          </svg>
+          <figcaption>同样一场大水，有没有桶，结果完全不同——这就是「承接」的差距。</figcaption>
+        </figure>
+
+        <p class="tk-p">几天后，数据慢慢掉下去，那波人像退潮一样走了。留下来的东西很少。也是那次之后我才意识到：<strong>你没有桶，水再大，也只是从眼前流过去。</strong></p>
+      </section>
+
+      <!-- 一 -->
+      <section class="tk-section" id="s1">
+        <span class="tk-eyebrow"><span class="num">2</span>原理 · 流量之河</span>
+        <h2 class="tk-h2">河床修得再漂亮，没水也只是一道干沟</h2>
+        <p class="tk-lead">第一次认真读刘润的《5 分钟商学院》，印象最深的就是「流量之河」。核心意思是：<strong>流量是一切商业模式的源头。</strong>如果把销售过程看成一条河床，流量就是从不同地方汇进来的水。</p>
+
+        <div class="tk-riverbed">
+          <div class="tk-bed-card water">
+            <span class="tk-bed-tag">💧 水 · 流量从哪来</span>
+            <div class="tk-chips">
+              <span>小某书</span><span>公众号</span><span>朋友圈</span><span>转介绍</span><span>搜索</span><span>付费投放</span>
+            </div>
+            <p class="tk-p" style="margin:14px 0 0;font-size:14px;color:var(--hav-muted)">每一种来源背后的成本都不一样——有的明显，有的藏起来了。</p>
+          </div>
+          <div class="tk-bed-card bed">
+            <span class="tk-bed-tag">🪨 河床 · 接住流量的结构</span>
+            <div class="tk-chips">
+              <span>主页介绍</span><span>产品页面</span><span>私信话术</span><span>成交路径</span><span>社群承接</span>
+            </div>
+            <p class="tk-p" style="margin:14px 0 0;font-size:14px;color:var(--hav-muted)">这些当然重要。但没有水流进来，河床修得再漂亮也只是干沟。</p>
+          </div>
+        </div>
+
+        <p class="tk-p">很多人说「先把转化做好」，这没错。但对个人创作者，我想补一句：<strong>你也得先知道水从哪里来。</strong>有些成本很明显——投流、推广、买量，钱花出去数据摆在那里；有些成本没那么明显——口碑、复购、朋友推荐，表面不花钱，其实不是。</p>
+      </section>
+
+      <!-- 二 -->
+      <section class="tk-section" id="s2">
+        <span class="tk-eyebrow"><span class="num">3</span>误区 · 免费流量</span>
+        <h2 class="tk-h2">「免费流量」并不免费，只是成本藏起来了</h2>
+        <p class="tk-lead">这是我这一年最大的一个误解。以前我也很喜欢「免费流量」这个词——不花钱，还能涨粉，还能带来机会。但后来发现，所谓免费，很多时候只是<strong>你没有直接付钱而已。</strong></p>
+
+        <div class="tk-costs">
+          <div class="tk-cost">
+            <div class="ico">⏳</div>
+            <div class="nm">时间成本</div>
+            <div class="ds">写一篇内容要几个小时，反复改标题、调封面，这些时间不会凭空出现。</div>
+          </div>
+          <div class="tk-cost">
+            <div class="ico">🔋</div>
+            <div class="nm">精力成本</div>
+            <div class="ds">回评论、维护关系、持续输出。短期看不见，长期一直在消耗。</div>
+          </div>
+          <div class="tk-cost">
+            <div class="ico">🤝</div>
+            <div class="nm">信任成本</div>
+            <div class="ds">别人转发你，等于替你背书。内容不够好，他会觉得丢面子——这是有风险的。</div>
+          </div>
+        </div>
+
+        <p class="tk-p">刘润讲「免费」时提过一个意思：<strong>很多免费，本质上是另一段收费。</strong>放在流量上也一样——你今天看起来没花钱，是因为钱、时间和精力早就花在前面了。</p>
+
+        <div class="tk-deferred">所以我现在不太把「免费流量」当捷径。<br>它更像一种<strong style="color:var(--hav-accent)">延期回报</strong>：先投入，后面才可能看见水流回来。</div>
+      </section>
+
+      <!-- 三 -->
+      <section class="tk-section" id="s3">
+        <span class="tk-eyebrow"><span class="num">4</span>关键 · 承接能力</span>
+        <h2 class="tk-h2">比引流更难的，是承接</h2>
+        <p class="tk-lead">以前我最关心的是：怎么让更多人看到我。后来才发现，<strong>看到只是第一步。</strong>人来了以后，下面这些问题，决定了他会不会留下来：</p>
+
+        <div class="tk-qstack">
+          <div>他知不知道你是做什么的？</div>
+          <div>他能不能在三秒内明白你能帮他解决什么问题？</div>
+          <div>他想进一步了解你，有没有入口？</div>
+          <div>他发来私信，你有没有一句清楚的话接住他？</div>
+        </div>
+
+        <p class="tk-p">刘润有个公式我后来才真正理解。以前我只看前半截，现在我更在意后半截：</p>
+
+        <div class="tk-formula">
+          <div class="tk-fx result">
+            <div class="k">RESULT</div>
+            <div class="v">有效流量</div>
+            <span class="note">真正能留下、能转化的人</span>
+          </div>
+          <div class="tk-op">=</div>
+          <div class="tk-fx">
+            <div class="k">FLOW</div>
+            <div class="v">流量</div>
+            <span class="note">抓的是注意力</span>
+          </div>
+          <div class="tk-op">×</div>
+          <div class="tk-fx">
+            <div class="k">RATE</div>
+            <div class="v">转化率</div>
+            <span class="note">考验的是承接力</span>
+          </div>
+        </div>
+
+        <p class="tk-p">账号有积累后，商业机会真的会自己冒出来：有人问合作、有人咨询服务、有人想认识你。<strong>但能不能接住，是另一件事。</strong>很多人每天研究怎么涨粉，却很少想「涨粉之后怎么办」——机会来敲门了，门把手还没装好。这就很可惜。</p>
+      </section>
+
+      <!-- 四 -->
+      <section class="tk-section" id="s4">
+        <span class="tk-eyebrow"><span class="num">5</span>行动 · 四件事</span>
+        <h2 class="tk-h2">我现在会先做的四件事</h2>
+        <p class="tk-lead">想清楚原理之后，落到具体动作上，我现在会按顺序做这四件事——<strong>先算账，再分阶段，把桶搭好，最后给免费流量提前付款。</strong></p>
+
+        <div class="tk-methods">
+
+          <div class="tk-method">
+            <div class="tk-method-head">
+              <div class="tk-method-no">1</div>
+              <div>
+                <h3>给每一种流量算一笔账</h3>
+                <div class="sub">不再简单地说「这个渠道免费」</div>
+              </div>
+            </div>
+            <p>把流量来源一个个列出来，逐个问自己：实际花了多少时间？带来多少有效关注？有没有咨询、合作、复购？投流成本好算，难的是<strong>内容成本</strong>——一篇笔记花 1 小时，按自己时薪算，它就不是免费的。</p>
+            <div class="tk-table-wrap">
+              <table class="tk-table">
+                <thead>
+                  <tr><th>渠道</th><th>时间成本</th><th>有效关注</th><th>是否带来咨询/合作</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>小某书</td><td>每篇约 1h</td><td>？</td><td>？</td></tr>
+                  <tr><td>公众号</td><td>每篇约 2h</td><td>？</td><td>？</td></tr>
+                  <tr><td>转介绍</td><td>关系维护</td><td>？</td><td>？</td></tr>
+                  <tr><td>付费投放</td><td>钱（好算）</td><td>？</td><td>？</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p style="margin-bottom:0;font-size:14px">这个动作有时挺扎心：你会发现有些很骄傲的「免费内容」回报并不高。但看清楚之后，才知道力气该放哪。</p>
+          </div>
+
+          <div class="tk-method">
+            <div class="tk-method-head">
+              <div class="tk-method-no">2</div>
+              <div>
+                <h3>不同阶段，别抢同一种流量</h3>
+                <div class="sub">冷启动靠内容，验证后再用付费放大</div>
+              </div>
+            </div>
+            <p>冷启动时，最重要的不是急着变现，而是<strong>先让别人知道你是谁</strong>。这个阶段适合靠内容去试选题、试表达、试定位，顺便攒第一批信任。等某类内容被验证有效了，再考虑用付费流量放大。</p>
+            <p style="margin-bottom:0">我以前的问题是什么都想要：既想涨粉又想成交，既想做口碑又想马上有结果。资源有限时，最怕每条路都走一点。冷启动期很难熬，但这段时间不是没用——它是在铺底。</p>
+          </div>
+
+          <div class="tk-method">
+            <div class="tk-method-head">
+              <div class="tk-method-no">3</div>
+              <div>
+                <h3>先把「接水的桶」搭好</h3>
+                <div class="sub">别等爆了再去想怎么承接</div>
+              </div>
+            </div>
+            <p>这是我最想提醒新账号的一点。至少先把几个基础问题想清楚，到流量来的时候，它们会决定你能不能接住：</p>
+            <div class="tk-checklist">
+              <div>主页有没有说清楚你是谁？</div>
+              <div>别人为什么要关注你？</div>
+              <div>你能提供什么价值？</div>
+              <div>想合作的人，应该怎么找到你？</div>
+              <div>私信来了，你第一句话怎么回？</div>
+            </div>
+            <p style="margin-bottom:0">我之前就吃了这个亏。爆文来的时候，我一边高兴一边手忙脚乱——那种感觉就像终于下雨了，结果桶还没拿出来。</p>
+          </div>
+
+          <div class="tk-method">
+            <div class="tk-method-head">
+              <div class="tk-method-no">4</div>
+              <div>
+                <h3>主动投入「免费流量」的隐性成本</h3>
+                <div class="sub">给未来的免费流量提前付款</div>
+              </div>
+            </div>
+            <p>想要口碑，就不能只等别人主动推荐，得先做一些慢动作：认真回有价值的评论、把老粉当回事、持续输出真能帮到人的内容。不要每篇都只想数据，而是想<strong>这篇有没有被收藏、被转发的理由</strong>。</p>
+            <p style="margin-bottom:0">这些事短期不一定涨粉，甚至让你觉得效率很低。但长期看，口碑不是突然爆出来的，它是一点点被别人记住的。</p>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 五 -->
+      <section class="tk-section" id="s5">
+        <span class="tk-eyebrow"><span class="num">6</span>避坑 · 三个翻车点</span>
+        <h2 class="tk-h2">最后，三个最容易翻车的地方</h2>
+        <p class="tk-lead">把这一年的教训浓缩成三句话，每一句我都亲自踩过：</p>
+
+        <div class="tk-trio">
+          <div class="tk-trio-card">
+            <div class="no">TRAP 01</div>
+            <div class="nm">迷信免费流量</div>
+            <div class="ds">它不是没有成本，只是没写在账单上。你要么花钱，要么花时间，要么花信任——总要付一种。</div>
+          </div>
+          <div class="tk-trio-card">
+            <div class="no">TRAP 02</div>
+            <div class="nm">只顾涨粉，不管承接</div>
+            <div class="ds">流量会来也会走。重要的不是来了多少人，而是有多少人愿意留下来、愿意继续了解你。</div>
+          </div>
+          <div class="tk-trio-card">
+            <div class="no">TRAP 03</div>
+            <div class="nm">等机会来了才准备</div>
+            <div class="ds">账号到一定阶段，合作、咨询、转化确实会出现。但机会不等人，门把手得提前装好。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FINAL -->
+      <section class="tk-section" id="final">
+        <div class="tk-final">
+          <span class="hav-pill">补半句话</span>
+          <h2>刘润说，流量是河。<br>做了一年之后，我想给这句话补半句。</h2>
+          <blockquote class="tk-quote">河水不会因为你没准备好，就停下来等你。<br>所以，先把桶备好，再去挖渠。</blockquote>
+          <p class="tk-src">本文为基于原文的小白向结构化重构与可视化整理 · 概念出处：刘润《5 分钟商学院》「流量之河」。</p>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="tk-footer">
+        <span>Bin哥的知识地图 · 个人成长 / 自媒体</span>
+        <span>来源：<a href="https://app.notion.com/p/377acc097f07805da6ace970f0d393f3">Notion 原文</a></span>
+      </footer>
+    </main>
+  </article>
+
+  <button class="tk-top" data-back-top aria-label="返回顶部">↑</button>
+  <script>
+    document.querySelector('[data-back-top]')?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+<script src="/nav.js" defer></script>
+</body>
+
+</html>

@@ -863,6 +863,8 @@ a { color: inherit; text-decoration: none; }
 /* ── JS FILTER HIDE ──────────────────────────────────────── */
 .section[data-hidden] { display: none; }
 .card[data-hidden] { display: none; }
+/* 空分类（0 篇）自动隐藏，有文章后自动显示；!important 保证「全部」筛选时仍隐藏 */
+.is-empty-cat { display: none !important; }
   </style>
 </head>
 <body>
@@ -1112,9 +1114,33 @@ a { color: inherit; text-decoration: none; }
           <h2 class="section-title">
             <span class="section-icon">🌱</span>个人成长
           </h2>
-          <span class="section-count" id="count-growth">1 篇</span>
+          <span class="section-count" id="count-growth">2 篇</span>
         </div>
         <div class="card-grid" id="grid-growth">
+
+          <!-- CARD: traffic-is-river-prepare-bucket -->
+          <a href="map/growth/traffic-is-river-prepare-bucket.html" class="card"
+             data-category="growth"
+             data-title="流量是河，但你得先准备好接水的桶"
+             data-desc="做了一年自媒体，我才看懂「流量是一切商业模式的源头」。流量不是终点，只是水流进来了——免费流量的隐性成本、有效流量公式，以及先搭好接水的桶的四件事。">
+            <div class="card-body">
+              <span class="card-category">
+                <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#9b84b3"/></svg>
+                个人成长 · 自媒体
+              </span>
+              <div class="card-title">流量是河，但你得先准备好接水的桶</div>
+              <p class="card-desc">
+                一年前我以为做自媒体最难的是涨粉。后来一篇笔记爆了，几千人涌进来又像退潮一样走了——才看懂：流量不是终点，你得先有桶接住它。
+              </p>
+              <div class="card-footer">
+                <span class="card-date">2026-06-06</span>
+                <span class="card-arrow">→</span>
+              </div>
+            </div>
+            <div class="card-visual">
+              <div class="visual-badge">🪣</div>
+            </div>
+          </a>
 
           <!-- CARD: trend-is-ticket-not-moat -->
           <a href="map/growth/trend-is-ticket-not-moat.html" class="card"
@@ -1200,7 +1226,7 @@ a { color: inherit; text-decoration: none; }
                 <span class="topic-item-icon">📚</span>
                 <span>全部文章</span>
               </div>
-              <span class="topic-count" id="nav-all">6</span>
+              <span class="topic-count" id="nav-all">7</span>
             </div>
             <div class="topic-item" data-nav-filter="ai">
               <div class="topic-item-left">
@@ -1214,7 +1240,7 @@ a { color: inherit; text-decoration: none; }
                 <span class="topic-item-icon">🌱</span>
                 <span>个人成长</span>
               </div>
-              <span class="topic-count" id="nav-growth">1</span>
+              <span class="topic-count" id="nav-growth">2</span>
             </div>
             <div class="topic-item" data-nav-filter="ops">
               <div class="topic-item-left">
@@ -1239,6 +1265,13 @@ a { color: inherit; text-decoration: none; }
         <div class="widget-header">最近更新</div>
         <div class="widget-body">
           <div class="recent-list">
+            <a href="map/growth/traffic-is-river-prepare-bucket.html" class="recent-item">
+              <div class="recent-dot"></div>
+              <div class="recent-info">
+                <div class="recent-title">流量是河，但你得先准备好接水的桶</div>
+                <div class="recent-meta">个人成长 · 2026-06-06</div>
+              </div>
+            </a>
             <a href="map/ai/ai-workflow-four-layer-stack.html" class="recent-item">
               <div class="recent-dot"></div>
               <div class="recent-info">
@@ -1303,6 +1336,29 @@ a { color: inherit; text-decoration: none; }
   const navBtns    = document.querySelectorAll('[data-nav-filter]');
   const sections   = document.querySelectorAll('.section[data-category]');
   const cards      = document.querySelectorAll('.card[data-category]');
+
+  // ── Auto-hide empty categories ────────────────────────────
+  // 按真实卡片数量动态计数；0 篇的分类隐藏其 section / 筛选按钮 / 侧边栏导航项，
+  // 该分类有文章后自动恢复显示，计数也自动更新，无需手动维护数字。
+  const CATEGORIES = ['ai', 'growth', 'ops', 'management'];
+  let totalCount = 0;
+  CATEGORIES.forEach(cat => {
+    const n = document.querySelectorAll(`.card[data-category="${cat}"]`).length;
+    totalCount += n;
+
+    const countEl = document.getElementById('count-' + cat);
+    if (countEl) countEl.textContent = `${n} 篇`;
+    const navEl = document.getElementById('nav-' + cat);
+    if (navEl) navEl.textContent = n;
+
+    if (n === 0) {
+      document.querySelector(`.section[data-category="${cat}"]`)?.classList.add('is-empty-cat');
+      document.querySelector(`[data-filter="${cat}"]`)?.classList.add('is-empty-cat');
+      document.querySelector(`[data-nav-filter="${cat}"]`)?.classList.add('is-empty-cat');
+    }
+  });
+  const navAllEl = document.getElementById('nav-all');
+  if (navAllEl) navAllEl.textContent = totalCount;
 
   function applyFilter(cat) {
     filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === cat));
