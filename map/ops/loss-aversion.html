@@ -1,0 +1,1031 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="损失规避：人对「失去」的痛苦约是「得到」快乐的 2~2.5 倍。从卡尼曼前景理论、进化根源到四种心理机制与六式商业应用——把营销从「你会得到什么」转向「你会错过什么」。">
+  <title>损失规避：别说用户会得到什么，说他会错过什么</title>
+  <style>
+    :root {
+      --hav-bg: #faf8f5;
+      --hav-surface: #f0ede8;
+      --hav-panel: #fffdfa;
+      --hav-border: #d4cfc7;
+      --hav-text: #2c2825;
+      --hav-muted: #8a837a;
+      --hav-soft: #e3dacc;
+      --hav-accent: #d97757;
+      --hav-accent-dark: #b8602a;
+      --hav-olive: #788c5d;
+      --hav-sky: #6a8caf;
+      --hav-slate: #141413;
+      --hav-danger: #b9524c;
+      --hav-shadow: 0 18px 50px rgba(44, 40, 37, .10);
+      --hav-radius: 18px;
+      --hav-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --hav-serif: Georgia, "Times New Roman", serif;
+      --hav-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --hav-bg: #17191c;
+        --hav-surface: #202226;
+        --hav-panel: #111214;
+        --hav-border: #3d3d39;
+        --hav-text: #eee9df;
+        --hav-muted: #aaa49a;
+        --hav-soft: #2e2d2a;
+        --hav-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body.hav-page {
+      margin: 0;
+      background: var(--hav-bg);
+      color: var(--hav-text);
+      font-family: var(--hav-sans);
+      line-height: 1.55;
+    }
+
+    .hav-shell {
+      width: min(1080px, calc(100vw - 32px));
+      margin: 0 auto;
+    }
+
+    /* ─── HERO ─── */
+    .hav-hero {
+      padding: 60px 0 36px;
+      border-bottom: 1px solid var(--hav-border);
+    }
+
+    .hav-kicker {
+      color: var(--hav-accent);
+      font: 700 12px/1 var(--hav-mono);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .hav-title {
+      margin: 16px 0 14px;
+      max-width: 940px;
+      font-family: var(--hav-serif);
+      font-size: clamp(36px, 6vw, 68px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .hav-title em {
+      font-style: normal;
+      color: var(--hav-accent);
+    }
+
+    .hav-subtitle {
+      max-width: 720px;
+      color: var(--hav-muted);
+      font-size: clamp(17px, 2.2vw, 22px);
+      line-height: 1.5;
+    }
+
+    .tk-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 22px;
+    }
+
+    .tk-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      background: var(--hav-surface);
+      border: 1px solid var(--hav-border);
+      border-radius: 99px;
+      font: 600 12px/1 var(--hav-mono);
+      color: var(--hav-muted);
+    }
+
+    /* ─── ONE LINE THESIS ─── */
+    .tk-thesis {
+      margin: 32px 0 8px;
+      padding: 26px 28px;
+      background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-panel));
+      border: 1px solid color-mix(in srgb, var(--hav-accent) 32%, var(--hav-border));
+      border-left: 4px solid var(--hav-accent);
+      border-radius: var(--hav-radius);
+      box-shadow: var(--hav-shadow);
+    }
+
+    .tk-thesis .lbl {
+      font: 700 11px/1 var(--hav-mono);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--hav-accent);
+    }
+
+    .tk-thesis p {
+      margin: 12px 0 0;
+      font-size: clamp(19px, 2.6vw, 26px);
+      font-family: var(--hav-serif);
+      line-height: 1.4;
+    }
+
+    /* ─── TOC ─── */
+    .tk-toc {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: 0 -2px;
+      padding: 12px 0;
+      background: color-mix(in srgb, var(--hav-bg) 88%, transparent);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--hav-border);
+    }
+
+    .tk-toc-row {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding: 0 2px 4px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .tk-toc-row a {
+      flex: 0 0 auto;
+      padding: 6px 13px;
+      background: var(--hav-surface);
+      border: 1px solid var(--hav-border);
+      border-radius: 99px;
+      color: var(--hav-text);
+      text-decoration: none;
+      font: 500 13px/1 var(--hav-sans);
+      transition: all .15s;
+    }
+
+    .tk-toc-row a:hover {
+      border-color: var(--hav-accent);
+      color: var(--hav-accent);
+    }
+
+    /* ─── SECTION ─── */
+    .tk-section {
+      padding: 52px 0;
+      border-top: 1px solid var(--hav-border);
+    }
+
+    .tk-section:first-of-type { border-top: 0; }
+
+    .tk-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font: 700 12px/1 var(--hav-mono);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--hav-accent);
+      margin-bottom: 14px;
+    }
+
+    .tk-eyebrow .num {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: color-mix(in srgb, var(--hav-accent) 16%, transparent);
+      color: var(--hav-accent);
+      font-size: 12px;
+    }
+
+    .tk-h2 {
+      margin: 0 0 16px;
+      font-family: var(--hav-serif);
+      font-size: clamp(26px, 4vw, 40px);
+      line-height: 1.08;
+    }
+
+    .tk-lead {
+      color: var(--hav-muted);
+      font-size: 17px;
+      line-height: 1.65;
+      max-width: 760px;
+      margin: 0 0 26px;
+    }
+
+    .tk-lead strong, .tk-p strong {
+      color: var(--hav-text);
+      background: color-mix(in srgb, var(--hav-accent) 18%, transparent);
+      padding: 1px 5px;
+      border-radius: 4px;
+    }
+
+    .tk-p {
+      font-size: 16px;
+      line-height: 1.75;
+      max-width: 760px;
+      margin: 0 0 18px;
+    }
+
+    /* ─── FIGURE ─── */
+    .tk-figure {
+      margin: 8px 0 24px;
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: var(--hav-radius);
+      overflow: hidden;
+      box-shadow: var(--hav-shadow);
+    }
+
+    .tk-figure svg { display: block; width: 100%; height: auto; }
+
+    .tk-figure figcaption {
+      padding: 12px 18px;
+      border-top: 1px solid var(--hav-border);
+      font: 12px/1.5 var(--hav-mono);
+      color: var(--hav-muted);
+    }
+
+    /* ─── QUOTE / KEY ─── */
+    .tk-quote {
+      margin: 20px 0;
+      padding: 18px 22px;
+      border-left: 4px solid var(--hav-accent);
+      background: color-mix(in srgb, var(--hav-accent) 6%, transparent);
+      border-radius: 0 12px 12px 0;
+      font-family: var(--hav-serif);
+      font-size: clamp(18px, 2.6vw, 24px);
+      line-height: 1.4;
+    }
+
+    /* ─── KEY POINTS (三个要点) ─── */
+    .tk-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin: 18px 0 8px;
+    }
+
+    .tk-point {
+      padding: 22px 20px;
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: 16px;
+      border-top: 3px solid var(--hav-sky);
+    }
+
+    .tk-point .no {
+      font: 700 12px/1 var(--hav-mono);
+      color: var(--hav-sky);
+      letter-spacing: .08em;
+    }
+
+    .tk-point .nm { font-weight: 700; margin: 10px 0 6px; font-size: 16px; }
+    .tk-point .ds { font-size: 13.5px; color: var(--hav-muted); line-height: 1.6; }
+
+    /* ─── MECHANISM GRID (四种心理机制) ─── */
+    .tk-mech {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 8px 0;
+    }
+
+    .tk-mech-card {
+      padding: 22px;
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: 16px;
+    }
+
+    .tk-mech-head {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tk-mech-head h3 {
+      margin: 0;
+      font-size: 18px;
+      font-family: var(--hav-serif);
+    }
+
+    .tk-mech-kw {
+      font: 700 11px/1 var(--hav-mono);
+      color: var(--hav-accent);
+      background: color-mix(in srgb, var(--hav-accent) 12%, transparent);
+      padding: 4px 9px;
+      border-radius: 99px;
+    }
+
+    .tk-mech-card p { margin: 0 0 8px; font-size: 14.5px; line-height: 1.65; color: var(--hav-muted); }
+    .tk-mech-card .eg {
+      margin: 0;
+      font-size: 13px;
+      color: var(--hav-text);
+      padding: 10px 14px;
+      background: var(--hav-surface);
+      border-radius: 10px;
+    }
+    .tk-mech-card .eg b { color: var(--hav-accent); font-weight: 700; }
+
+    /* ─── SCENE (场景分析 · 可折叠) ─── */
+    .tk-scenes { display: grid; gap: 16px; margin: 8px 0; }
+
+    .tk-scene {
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: 16px;
+      box-shadow: var(--hav-shadow);
+      overflow: hidden;
+    }
+
+    .tk-scene-body { padding: 24px 26px 6px; }
+
+    .tk-scene-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      border-radius: 99px;
+      font: 700 11px/1 var(--hav-mono);
+      letter-spacing: .06em;
+      background: color-mix(in srgb, var(--hav-sky) 14%, transparent);
+      color: var(--hav-sky);
+      margin-bottom: 12px;
+    }
+
+    .tk-scene-body h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      font-family: var(--hav-serif);
+    }
+
+    .tk-scene-body p { margin: 0 0 12px; font-size: 15px; line-height: 1.7; color: var(--hav-muted); }
+    .tk-scene-body p strong { color: var(--hav-text); }
+
+    .tk-ask {
+      margin: 4px 0 18px;
+      padding: 14px 18px;
+      background: var(--hav-surface);
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .tk-ask b { color: var(--hav-text); }
+
+    details.tk-answer {
+      border-top: 1px solid var(--hav-border);
+      background: color-mix(in srgb, var(--hav-danger) 5%, var(--hav-panel));
+    }
+
+    details.tk-answer > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 16px 26px;
+      font: 700 14px/1 var(--hav-sans);
+      color: var(--hav-danger);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    details.tk-answer > summary::-webkit-details-marker { display: none; }
+    details.tk-answer > summary::before { content: "💡"; }
+    details.tk-answer > summary::after {
+      content: "点击展开";
+      margin-left: auto;
+      font: 500 12px/1 var(--hav-mono);
+      color: var(--hav-muted);
+    }
+    details.tk-answer[open] > summary::after { content: "收起"; }
+
+    .tk-answer-body { padding: 0 26px 22px; }
+    .tk-answer-body p { margin: 0 0 12px; font-size: 14.5px; line-height: 1.75; }
+    .tk-answer-body p:last-child { margin-bottom: 0; }
+    .tk-answer-body strong { color: var(--hav-text); background: color-mix(in srgb, var(--hav-accent) 16%, transparent); padding: 1px 4px; border-radius: 4px; }
+    .tk-answer-body .punch {
+      margin: 4px 0 12px;
+      padding: 14px 18px;
+      border-left: 4px solid var(--hav-danger);
+      background: color-mix(in srgb, var(--hav-danger) 7%, transparent);
+      border-radius: 0 10px 10px 0;
+      font-family: var(--hav-serif);
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    /* ─── PRICING TABLE / GENERIC TABLE ─── */
+    .tk-table-wrap { overflow-x: auto; margin: 6px 0 16px; border-radius: 12px; border: 1px solid var(--hav-border); }
+
+    table.tk-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      min-width: 460px;
+    }
+
+    .tk-table th, .tk-table td {
+      padding: 11px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--hav-border);
+      vertical-align: top;
+    }
+
+    .tk-table thead th {
+      background: var(--hav-surface);
+      font: 700 12px/1.3 var(--hav-mono);
+      color: var(--hav-muted);
+      letter-spacing: .04em;
+    }
+
+    .tk-table tbody tr:last-child td { border-bottom: 0; }
+    .tk-table td:first-child { font-weight: 600; color: var(--hav-text); white-space: nowrap; }
+
+    /* ─── STRATEGY FLOW (核心公式三步) ─── */
+    .tk-flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: stretch;
+      gap: 10px;
+      margin: 8px 0 22px;
+    }
+
+    .tk-flow-step {
+      padding: 22px 18px;
+      text-align: center;
+      border-radius: 16px;
+      border: 1px solid var(--hav-border);
+      background: var(--hav-panel);
+    }
+
+    .tk-flow-step.s3 {
+      background: color-mix(in srgb, var(--hav-accent) 9%, var(--hav-panel));
+      border-color: color-mix(in srgb, var(--hav-accent) 32%, var(--hav-border));
+    }
+
+    .tk-flow-step .ic { font-size: 26px; }
+    .tk-flow-step .k {
+      font: 700 11px/1 var(--hav-mono);
+      letter-spacing: .06em;
+      color: var(--hav-muted);
+      margin: 8px 0 6px;
+    }
+    .tk-flow-step .v { font-family: var(--hav-serif); font-size: 17px; line-height: 1.25; }
+    .tk-flow-step.s3 .v { color: var(--hav-accent); }
+
+    .tk-flow-arrow {
+      display: grid;
+      place-items: center;
+      font-size: 22px;
+      color: var(--hav-accent);
+    }
+
+    /* ─── TACTICS (六式商业应用) ─── */
+    .tk-tactics { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 8px 0; }
+
+    .tk-tactic {
+      padding: 20px 22px;
+      background: var(--hav-panel);
+      border: 1px solid var(--hav-border);
+      border-radius: 14px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .tk-tactic .no {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
+      border-radius: 10px;
+      background: var(--hav-accent);
+      color: #fff;
+      font-family: var(--hav-serif);
+      font-size: 18px;
+    }
+
+    .tk-tactic h3 { margin: 0 0 6px; font-size: 16px; }
+    .tk-tactic .mech { margin: 0 0 8px; font-size: 13.5px; color: var(--hav-muted); line-height: 1.6; }
+    .tk-tactic .eg { margin: 0; font-size: 12.5px; color: var(--hav-sky); font-family: var(--hav-mono); }
+
+    /* ─── LIMITS ─── */
+    .tk-limits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 8px 0; }
+    .tk-limit {
+      padding: 20px;
+      background: color-mix(in srgb, var(--hav-slate) 4%, var(--hav-surface));
+      border: 1px dashed var(--hav-border);
+      border-radius: 14px;
+    }
+    .tk-limit .nm { font-weight: 700; margin-bottom: 8px; font-size: 15px; }
+    .tk-limit .ds { font-size: 13px; color: var(--hav-muted); line-height: 1.6; }
+
+    /* ─── CHEATSHEET (速查三句) ─── */
+    .tk-cheats { display: grid; gap: 12px; margin: 8px 0; }
+    .tk-cheat {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 20px 24px;
+      background: color-mix(in srgb, var(--hav-accent) 7%, var(--hav-panel));
+      border: 1px solid color-mix(in srgb, var(--hav-accent) 28%, var(--hav-border));
+      border-radius: 16px;
+    }
+    .tk-cheat .n { font-family: var(--hav-serif); font-size: 30px; color: var(--hav-accent); line-height: 1; }
+    .tk-cheat .t { font-family: var(--hav-serif); font-size: clamp(16px, 2.4vw, 21px); line-height: 1.4; }
+    .tk-cheat .t b { color: var(--hav-accent); }
+
+    /* ─── FINAL ─── */
+    .tk-final {
+      padding: 32px;
+      background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-panel));
+      border: 1px solid color-mix(in srgb, var(--hav-accent) 30%, var(--hav-border));
+      border-radius: var(--hav-radius);
+      box-shadow: var(--hav-shadow);
+    }
+
+    .tk-final .hav-pill {
+      display: inline-block;
+      padding: 5px 13px;
+      border-radius: 99px;
+      background: var(--hav-accent);
+      color: #fff;
+      font: 700 11px/1 var(--hav-mono);
+      letter-spacing: .1em;
+    }
+
+    .tk-final h2 {
+      margin: 16px 0 14px;
+      font-family: var(--hav-serif);
+      font-size: clamp(24px, 3.4vw, 34px);
+      line-height: 1.2;
+    }
+
+    .tk-final p { font-size: 15.5px; line-height: 1.75; color: var(--hav-muted); margin: 0 0 12px; max-width: 720px; }
+    .tk-final p strong { color: var(--hav-text); }
+
+    .tk-src {
+      margin-top: 22px;
+      font: 12px/1.5 var(--hav-mono);
+      color: var(--hav-muted);
+    }
+
+    /* ─── FOOTER ─── */
+    .tk-footer {
+      padding: 28px 0 48px;
+      border-top: 1px solid var(--hav-border);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      color: var(--hav-muted);
+      font: 13px/1.5 var(--hav-mono);
+    }
+
+    .tk-footer a { color: var(--hav-accent); text-decoration: none; }
+
+    .tk-top {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      width: 44px;
+      height: 44px;
+      border: 1px solid var(--hav-border);
+      border-radius: 12px;
+      background: var(--hav-panel);
+      color: var(--hav-text);
+      cursor: pointer;
+      box-shadow: var(--hav-shadow);
+      font-size: 16px;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 760px) {
+      .tk-points, .tk-mech, .tk-tactics, .tk-limits { grid-template-columns: 1fr; }
+      .tk-flow { grid-template-columns: 1fr; }
+      .tk-flow-arrow { height: 28px; transform: rotate(90deg); }
+    }
+  </style>
+</head>
+
+<body class="hav-page">
+
+  <article>
+    <!-- HERO -->
+    <header class="hav-hero">
+      <div class="hav-shell">
+        <div class="hav-kicker">商业知识 · 营销心理学 · 概念卡</div>
+        <h1 class="hav-title">损失规避：别说用户会<em>得到</em>什么，<br>说他会<em>错过</em>什么</h1>
+        <p class="hav-subtitle">人对「失去」的痛苦，大约是对「得到」同等快乐的 2~2.5 倍。理解这条卡尼曼的发现，你就握住了定价、文案与转化背后那根最隐蔽的杠杆。</p>
+        <div class="tk-meta">
+          <span class="tk-tag">🧠 行为经济学 · 前景理论</span>
+          <span class="tk-tag">⏱ 约 9 分钟</span>
+          <span class="tk-tag">🎯 定价 / 文案 / 转化</span>
+        </div>
+
+        <div class="tk-thesis">
+          <span class="lbl">一句话核心</span>
+          <p>丢掉 100 元的痛苦，远大于捡到 100 元的快乐。营销不是展示「你有多好」，而是先解决用户「怕亏」的问题。</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- TOC -->
+    <nav class="tk-toc">
+      <div class="hav-shell tk-toc-row">
+        <a href="#s1">① 它是什么</a>
+        <a href="#s2">② 进化根源</a>
+        <a href="#s3">③ 四种心理机制</a>
+        <a href="#s4">④ 三个真实场景</a>
+        <a href="#s5">⑤ 商业应用六式</a>
+        <a href="#s6">⑥ 边界与关联</a>
+        <a href="#s7">⑦ 实战速查</a>
+      </div>
+    </nav>
+
+    <main class="hav-shell">
+
+      <!-- 一 -->
+      <section class="tk-section" id="s1">
+        <span class="tk-eyebrow"><span class="num">1</span>定义 · 它是什么</span>
+        <h2 class="tk-h2">同样 100 元，失去的痛，是得到的两倍多</h2>
+        <p class="tk-lead"><strong>损失规避（Loss Aversion）</strong>是行为经济学的核心概念，由诺贝尔经济学奖得主丹尼尔·卡尼曼与阿莫斯·特沃斯基在 1979 年的<strong>前景理论</strong>中首次系统阐述。它的表述非常简洁：</p>
+
+        <blockquote class="tk-quote">人们对「失去」的痛苦感受，大约是对「得到」同等数量快乐感受的 <b>2 到 2.5 倍</b>。</blockquote>
+
+        <figure class="tk-figure">
+          <svg viewBox="0 0 800 220" role="img" aria-label="损失与获得的心理权重不对称：失去的痛苦约为得到快乐的 2.5 倍">
+            <!-- 中轴 -->
+            <line x1="400" y1="24" x2="400" y2="196" stroke="#d4cfc7" stroke-width="2"/>
+            <text x="400" y="16" text-anchor="middle" font-size="11" fill="#8a837a" font-family="monospace">参考点（0）</text>
+
+            <!-- 得到 100 元的快乐：向右，短 -->
+            <rect x="400" y="56" width="150" height="44" rx="8" fill="#788c5d" opacity="0.92"/>
+            <text x="412" y="83" font-size="15" font-weight="700" fill="#fff" font-family="sans-serif">得到 100 元</text>
+            <text x="566" y="83" font-size="20" font-weight="700" fill="#788c5d" font-family="Georgia, serif">+1</text>
+            <text x="566" y="46" font-size="12" fill="#788c5d" font-family="sans-serif">😊 快乐</text>
+
+            <!-- 失去 100 元的痛苦：向左，长 2.5 倍 -->
+            <rect x="25" y="120" width="375" height="44" rx="8" fill="#b9524c" opacity="0.92"/>
+            <text x="388" y="147" text-anchor="end" font-size="15" font-weight="700" fill="#fff" font-family="sans-serif">失去 100 元</text>
+            <text x="40" y="148" text-anchor="start" font-size="20" font-weight="700" fill="#fff" font-family="Georgia, serif">−2.5</text>
+            <text x="32" y="110" font-size="12" fill="#b9524c" font-family="sans-serif">😣 痛苦（约 2.5 倍）</text>
+          </svg>
+          <figcaption>同等金额，心理权重并不对称——这正是一切「怕亏」决策的源头。</figcaption>
+        </figure>
+
+        <p class="tk-p">这不是理性计算的结果，而是人类大脑根深蒂固的心理倾向。它解释了一个反常识的事实：<strong>让人「不亏」的吸引力，往往强过让人「赚到」。</strong></p>
+      </section>
+
+      <!-- 二 -->
+      <section class="tk-section" id="s2">
+        <span class="tk-eyebrow"><span class="num">2</span>根源 · 为什么会这样</span>
+        <h2 class="tk-h2">大脑不是为「最优结果」设计的，而是为「避免最坏」设计的</h2>
+        <p class="tk-lead">损失规避背后的底层模式可以归结为一句话：<strong>人类的决策系统，是围绕「避免最坏结果」而非「追求最优结果」运转的。</strong>这要追溯到进化。</p>
+
+        <figure class="tk-figure">
+          <svg viewBox="0 0 800 280" role="img" aria-label="远古原始人的两种选择：冒险觅食可能被猎杀，保守留守得以存活">
+            <!-- 起点 -->
+            <rect x="318" y="20" width="164" height="46" rx="12" fill="#2c2825"/>
+            <text x="400" y="48" text-anchor="middle" font-size="15" font-weight="700" fill="#f0ede8" font-family="sans-serif">远古原始人</text>
+            <!-- 分叉线 -->
+            <path d="M400 66 C400 100, 200 100, 200 128" fill="none" stroke="#d4cfc7" stroke-width="2"/>
+            <path d="M400 66 C400 100, 600 100, 600 128" fill="none" stroke="#d4cfc7" stroke-width="2"/>
+
+            <!-- A 冒险 -->
+            <rect x="60" y="128" width="280" height="50" rx="12" fill="#f4e2d8" stroke="#d97757" stroke-width="1.5"/>
+            <text x="78" y="150" font-size="14" font-weight="700" fill="#9b4a2e" font-family="sans-serif">选择 A · 冒险觅食</text>
+            <text x="78" y="169" font-size="12" fill="#b5654a" font-family="sans-serif">可能获得丰盛食物（收益）</text>
+            <path d="M200 178 L200 210" stroke="#d4cfc7" stroke-width="2"/>
+            <rect x="60" y="212" width="280" height="48" rx="10" fill="#f7ecec" stroke="#b9524c" stroke-width="1.5"/>
+            <text x="200" y="241" text-anchor="middle" font-size="13.5" font-weight="700" fill="#b9524c" font-family="sans-serif">💀 更高概率被猎杀 · 基因淘汰</text>
+
+            <!-- B 保守 -->
+            <rect x="460" y="128" width="280" height="50" rx="12" fill="#e4e9db" stroke="#788c5d" stroke-width="1.5"/>
+            <text x="478" y="150" font-size="14" font-weight="700" fill="#4f5e3a" font-family="sans-serif">选择 B · 留守洞穴</text>
+            <text x="478" y="169" font-size="12" fill="#637349" font-family="sans-serif">饿一点，但避免危险（避损）</text>
+            <path d="M600 178 L600 210" stroke="#d4cfc7" stroke-width="2"/>
+            <rect x="460" y="212" width="280" height="48" rx="10" fill="#e8efe0" stroke="#788c5d" stroke-width="1.5"/>
+            <text x="600" y="241" text-anchor="middle" font-size="13.5" font-weight="700" fill="#4f5e3a" font-family="sans-serif">✅ 活下来 · 基因延续至今</text>
+          </svg>
+          <figcaption>对「危险信号」更敏感的个体活了下来，把「避损优先」写进了我们的基因。</figcaption>
+        </figure>
+
+        <p class="tk-p">所以损失规避解决的根本问题是：<strong>在不确定环境下的生存优先级排序</strong>——宁可错过机会，也不要陷入危险。它不是性格缺陷，而是数万年自然选择的结果。提炼成三个层次：</p>
+
+        <div class="tk-points">
+          <div class="tk-point">
+            <div class="no">POINT 01</div>
+            <div class="nm">心理不对称性</div>
+            <div class="ds">同等量级的得与失，在人脑中的权重不对等——失去的权重约为获得的 2~2.5 倍。</div>
+          </div>
+          <div class="tk-point">
+            <div class="no">POINT 02</div>
+            <div class="nm">行为后果</div>
+            <div class="ds">不对称会导致非理性决策：维持现状、回避风险、拒绝改变，哪怕改变明显更有利。</div>
+          </div>
+          <div class="tk-point">
+            <div class="no">POINT 03</div>
+            <div class="nm">进化根源</div>
+            <div class="ds">这不是缺陷，而是写在基因里的生存本能，是自然选择留下的「安全机制」。</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 三 -->
+      <section class="tk-section" id="s3">
+        <span class="tk-eyebrow"><span class="num">3</span>机制 · 它如何影响决策</span>
+        <h2 class="tk-h2">损失规避衍生出的四种心理</h2>
+        <p class="tk-lead">理解了核心，再看它在日常决策中派生出的四种典型现象——它们经常被混为一谈，但关键词各不相同。</p>
+
+        <div class="tk-mech">
+          <div class="tk-mech-card">
+            <div class="tk-mech-head"><h3>参考点依赖</h3><span class="tk-mech-kw">看相对，不看绝对</span></div>
+            <p>人不靠「绝对值」判断得失，而是相对一个<strong style="background:none;color:var(--hav-text)">参考点</strong>，看自己是「赢了」还是「亏了」。</p>
+            <p class="eg">同样月薪 1 万：从 <b>8 千涨上来</b> 觉得开心，从 <b>1.2 万降下来</b> 觉得痛苦。</p>
+          </div>
+          <div class="tk-mech-card">
+            <div class="tk-mech-head"><h3>现状偏见</h3><span class="tk-mech-kw">不愿改变</span></div>
+            <p>改变现状 = 可能失去当前拥有的东西，于是倾向于<strong style="background:none;color:var(--hav-text)">维持不变</strong>。</p>
+            <p class="eg">明知道 <b>换一份工作更好</b>，但就是不想动。</p>
+          </div>
+          <div class="tk-mech-card">
+            <div class="tk-mech-head"><h3>禀赋效应</h3><span class="tk-mech-kw">我的东西更值钱</span></div>
+            <p>一旦拥有某样东西，就会<strong style="background:none;color:var(--hav-text)">高估它的价值</strong>。</p>
+            <p class="eg">自己的 <b>二手车</b>，总觉得能值更多钱。</p>
+          </div>
+          <div class="tk-mech-card">
+            <div class="tk-mech-head"><h3>沉没成本谬误</h3><span class="tk-mech-kw">不能白费</span></div>
+            <p>已投入的钱、时间、精力让人不愿放弃，即使继续投入明显不划算。</p>
+            <p class="eg">电影不好看，但 <b>票都买了</b>，硬着头皮看完。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 四 -->
+      <section class="tk-section" id="s4">
+        <span class="tk-eyebrow"><span class="num">4</span>实战 · 三个真实场景</span>
+        <h2 class="tk-h2">同一条原理，三种生意的破局</h2>
+        <p class="tk-lead">先看问题，自己想一想，再点开看损失规避视角下的解法——关键不是「让损失规避对付你」，而是<strong>让它为你工作</strong>。</p>
+
+        <div class="tk-scenes">
+
+          <!-- 场景一 -->
+          <div class="tk-scene">
+            <div class="tk-scene-body">
+              <span class="tk-scene-tag">🏋️ 场景一 · 健身房年卡困局</span>
+              <h3>更便宜的年卡，为什么反而没人买？</h3>
+              <p>社区健身房原本卖月卡（299 元/月），流失率很高。老板想改成年卡（2688 元/年，月均 224 元），明显更划算。可大多数新客户在付款页犹豫很久，最后还是选月卡，甚至直接离开。</p>
+              <div class="tk-ask"><b>想一想：</b>客户在年卡付款页到底在「害怕失去」什么？如果是你，怎样利用损失规避反过来促成年卡？</div>
+            </div>
+            <details class="tk-answer">
+              <summary>损失规避视角下的解法</summary>
+              <div class="tk-answer-body">
+                <p>用户怕的不是「花了 2688 元」，而是<strong>「花了 2688 元之后，如果我不去了怎么办？」</strong>——他们害怕失去的是这笔钱的「确定性回报」。月卡亏的上限是 299，年卡亏的上限是 2688。<strong>损失上限被放大，恐惧就被放大。</strong></p>
+                <div class="punch">更精准的策略：「先按月付，三个月后转年卡，已交月费全额抵扣。」</div>
+                <p>妙处在于：先按月付不会恐惧；三个月后若不转年卡，那三个月就「白多花了」——这时<strong>损失规避反过来推动用户转年卡</strong>。让它为你工作，而不是和你作对。</p>
+              </div>
+            </details>
+          </div>
+
+          <!-- 场景二 -->
+          <div class="tk-scene">
+            <div class="tk-scene-body">
+              <span class="tk-scene-tag">📕 场景二 · 小红书付费社群</span>
+              <h3>点赞收藏一堆，为什么没人付款？</h3>
+              <p>2 万粉的博主推出付费社群（年费 365 元），推广笔记写着：「加入你将获得：每周独家干货、一对一答疑、全套资源包……」一周后阅读不错，但付费转化很低。</p>
+              <div class="tk-ask"><b>想一想：</b>这篇文案从损失规避看犯了什么根本性错误？用损失规避重写核心卖点，你会怎么说？</div>
+            </div>
+            <details class="tk-answer">
+              <summary>损失规避视角下的解法</summary>
+              <div class="tk-answer-body">
+                <p>原文案全在说「你将获得……」——这是<strong>收益框架</strong>。但获得的快乐只有损失痛苦的一半，所以推动力天然就弱。</p>
+                <div class="punch">换成损失框架：不是「加入你会得到什么」，而是「不加入你会错过什么」。</div>
+                <p>比如：「上周社群里分享的一个选题技巧，已帮 3 个成员的笔记突破 1 万阅读。<strong>这些内容不会在公开平台发布，错过就没有了。</strong>」前者让人觉得「听起来不错」，后者让人觉得「不加入好像亏了」——这就是框架转换的力量。</p>
+              </div>
+            </details>
+          </div>
+
+          <!-- 场景三 -->
+          <div class="tk-scene">
+            <div class="tk-scene-body">
+              <span class="tk-scene-tag">💻 场景三 · SaaS 定价难题</span>
+              <h3>明明好用，为什么不肯从免费版升级？</h3>
+              <p>企业协作 SaaS 提供三档，80% 用户停留在免费基础版，降价、打广告都没用。</p>
+              <div class="tk-table-wrap">
+                <table class="tk-table">
+                  <thead><tr><th>版本</th><th>月费</th><th>功能</th></tr></thead>
+                  <tbody>
+                    <tr><td>基础版</td><td>免费</td><td>5 人协作、1GB 存储</td></tr>
+                    <tr><td>专业版</td><td>99 元/月</td><td>20 人协作、50GB 存储、数据分析</td></tr>
+                    <tr><td>旗舰版</td><td>299 元/月</td><td>无限协作、无限存储、全部高级功能</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="tk-ask"><b>想一想：</b>为什么用户觉得好用却不愿升级？用损失规避设计一个促升级策略（不靠降价）。</div>
+            </div>
+            <details class="tk-answer">
+              <summary>损失规避视角下的解法</summary>
+              <div class="tk-answer-body">
+                <div class="punch">让免费用户先「拥有」专业版功能，然后再「拿走」。</div>
+                <p>直接给所有免费用户开通 <strong>14 天专业版体验</strong>。14 天里用户习惯了 20 人协作、50GB、数据分析。到期时系统提示：「您的专业版体验已到期，以下功能将在 24 小时后关闭……」</p>
+                <p>这时用户面对的不是「要不要花 99 元买新东西」，而是<strong>「要不要花 99 元保住我已经在用的东西」</strong>。这就是几乎所有 SaaS 都用「免费试用」的底层原因——它不是在展示产品多好，而是在<strong>制造一次「即将失去」的体验</strong>。</p>
+              </div>
+            </details>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 五 -->
+      <section class="tk-section" id="s5">
+        <span class="tk-eyebrow"><span class="num">5</span>应用 · 商业六式</span>
+        <h2 class="tk-h2">企业如何让损失规避替自己工作</h2>
+        <p class="tk-lead">三个场景背后是同一个公式。记住它，六种打法都是它的变体。</p>
+
+        <div class="tk-flow">
+          <div class="tk-flow-step">
+            <div class="ic">🎁</div>
+            <div class="k">STEP 1</div>
+            <div class="v">先让用户「拥有」</div>
+          </div>
+          <div class="tk-flow-arrow">→</div>
+          <div class="tk-flow-step">
+            <div class="ic">🔗</div>
+            <div class="k">STEP 2</div>
+            <div class="v">建立心理所有权</div>
+          </div>
+          <div class="tk-flow-arrow">→</div>
+          <div class="tk-flow-step s3">
+            <div class="ic">⏳</div>
+            <div class="k">STEP 3</div>
+            <div class="v">用「即将失去」<br>驱动行动</div>
+          </div>
+        </div>
+
+        <div class="tk-tactics">
+          <div class="tk-tactic">
+            <div class="no">1</div>
+            <div>
+              <h3>免费试用 / 先享后付</h3>
+              <p class="mech">让用户先「拥有」，再用「害怕失去」促成付费。</p>
+              <p class="eg">视频 7 天会员 · SaaS 14 天体验</p>
+            </div>
+          </div>
+          <div class="tk-tactic">
+            <div class="no">2</div>
+            <div>
+              <h3>限时 / 限量策略</h3>
+              <p class="mech">制造「即将失去购买机会」的紧迫感。</p>
+              <p class="eg">双十一倒计时 · 仅剩最后 3 件</p>
+            </div>
+          </div>
+          <div class="tk-tactic">
+            <div class="no">3</div>
+            <div>
+              <h3>会员体系与积分锁定</h3>
+              <p class="mech">累积的积分、等级、权益让用户不舍得离开。</p>
+              <p class="eg">航司里程 · 电商等级</p>
+            </div>
+          </div>
+          <div class="tk-tactic">
+            <div class="no">4</div>
+            <div>
+              <h3>退款保障 / 无风险承诺</h3>
+              <p class="mech">降低「买错就亏了」的恐惧。</p>
+              <p class="eg">不满意全额退款</p>
+            </div>
+          </div>
+          <div class="tk-tactic">
+            <div class="no">5</div>
+            <div>
+              <h3>平台生态锁定（先给后收）</h3>
+              <p class="mech">先用福利让用户积累资产，再靠「不愿失去积累」形成依赖。</p>
+              <p class="eg">新账号流量扶持 · 游戏新手赠道具</p>
+            </div>
+          </div>
+          <div class="tk-tactic">
+            <div class="no">6</div>
+            <div>
+              <h3>机会损失暗示（不买就亏）</h3>
+              <p class="mech">把决策从「我是否需要」转成「我能不能承受错过」。</p>
+              <p class="eg">优惠券倒计时 · 今日特价明天恢复</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 六 -->
+      <section class="tk-section" id="s6">
+        <span class="tk-eyebrow"><span class="num">6</span>边界 · 局限与关联</span>
+        <h2 class="tk-h2">它很强，但不是万能的</h2>
+        <p class="tk-lead">任何心理杠杆都有边界。用过头，反噬同样真实。</p>
+
+        <div class="tk-limits">
+          <div class="tk-limit">
+            <div class="nm">个体差异</div>
+            <div class="ds">风险偏好、文化背景不同，损失规避的强度因人而异。</div>
+          </div>
+          <div class="tk-limit">
+            <div class="nm">金额敏感度</div>
+            <div class="ds">小额交易中，损失规避的效果明显减弱。</div>
+          </div>
+          <div class="tk-limit">
+            <div class="nm">过度使用的反噬</div>
+            <div class="ds">消费者识破套路后，会产生反感和信任危机。</div>
+          </div>
+        </div>
+
+        <p class="tk-p" style="margin-top:26px">它也很少单打独斗，常和这几个概念联手：</p>
+        <div class="tk-table-wrap">
+          <table class="tk-table">
+            <thead><tr><th>概念</th><th>与损失规避的关系</th></tr></thead>
+            <tbody>
+              <tr><td>锚定效应</td><td>用高原价设定「锚点」扭曲价值判断，常与损失规避联手。</td></tr>
+              <tr><td>框架效应</td><td>同一信息用收益/损失框架表达效果迥异，损失框架驱动力更强。</td></tr>
+              <tr><td>从众心理</td><td>「别人都在买」暗示「不买就落后」，间接触发损失规避。</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 七 -->
+      <section class="tk-section" id="s7">
+        <span class="tk-eyebrow"><span class="num">7</span>速查 · 三句话随时调用</span>
+        <h2 class="tk-h2">实战速查</h2>
+
+        <div class="tk-cheats">
+          <div class="tk-cheat">
+            <div class="n">1</div>
+            <div class="t"><b>本质：</b>人对「失去」的恐惧，是对「得到」渴望的两倍。</div>
+          </div>
+          <div class="tk-cheat">
+            <div class="n">2</div>
+            <div class="t"><b>策略公式：</b>先让用户拥有 → 建立心理所有权 → 用「即将失去」驱动行动。</div>
+          </div>
+          <div class="tk-cheat">
+            <div class="n">3</div>
+            <div class="t"><b>文案铁律：</b>别说用户会得到什么，说用户会错过什么。</div>
+          </div>
+        </div>
+
+        <!-- 收尾：烘焙店案例 -->
+        <div class="tk-final" style="margin-top:28px">
+          <span class="hav-pill">大白话版</span>
+          <h2>朋友的蛋糕很好吃，为什么没人下单？</h2>
+          <p>朋友圈一直写「纯手工、新鲜奶油、口感细腻」——说的全是「有多好」，可用户心里想的是「<strong>万一踩雷怎么办、钱花了就没了怎么办</strong>」。卖东西，不是拼你有多好，而是先解决别人「怕亏」的问题。三招联动正好对应完整公式：</p>
+          <div class="tk-flow" style="margin-bottom:6px">
+            <div class="tk-flow-step">
+              <div class="ic">🍰</div>
+              <div class="k">先拥有</div>
+              <div class="v">送朋友免费试吃<br>（换真实评价）</div>
+            </div>
+            <div class="tk-flow-arrow">→</div>
+            <div class="tk-flow-step">
+              <div class="ic">🛡️</div>
+              <div class="k">消除恐惧</div>
+              <div class="v">第一次买<br>不满意直接退款</div>
+            </div>
+            <div class="tk-flow-arrow">→</div>
+            <div class="tk-flow-step s3">
+              <div class="ic">⏳</div>
+              <div class="k">制造紧迫</div>
+              <div class="v">今天只做 10 个<br>卖完就没了</div>
+            </div>
+          </div>
+          <p>本来是「要不要买」，现在变成「会不会亏、会不会错过」——决策的重心，就这么被悄悄挪了过去。</p>
+          <p class="tk-src">本文为基于原文的结构化重构与可视化整理 · 概念出处：卡尼曼 & 特沃斯基《前景理论》(1979)。</p>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="tk-footer">
+        <span>Bin哥的知识地图 · 运营 / 营销心理学</span>
+        <span>来源：<a href="https://app.notion.com/p/339acc097f07809c94e7eab22aa94d0a">Notion 原文</a></span>
+      </footer>
+    </main>
+  </article>
+
+  <button class="tk-top" data-back-top aria-label="返回顶部">↑</button>
+  <script>
+    document.querySelector('[data-back-top]')?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+<script src="/nav.js" defer></script>
+</body>
+
+</html>
