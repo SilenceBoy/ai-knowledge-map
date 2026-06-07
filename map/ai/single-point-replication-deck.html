@@ -1,0 +1,856 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="单点复刻：用 AI 复制高手的一项具体能力。以「金牌客服李姐 → 新人小张的 AI 助手」为贯穿案例，用聊天气泡、决策分支、Prompt、客服工作台等图形化界面，讲清楚如何把高手经验拆成样本、标准、流程和边界，做成新人可调用、团队可复用的工作助手。">
+  <title>单点复刻：用 AI 复制高手的一项具体能力</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --surface: #f0ede8;
+      --panel: #fffdfa;
+      --border: #d4cfc7;
+      --border-soft: rgba(212, 207, 199, .55);
+      --text: #2c2825;
+      --muted: #8a837a;
+      --soft: #e3dacc;
+      --accent: #d97757;
+      --accent-dark: #b8602a;
+      --accent-soft: rgba(217, 119, 87, .10);
+      --olive: #6f8a4f;
+      --olive-soft: rgba(111, 138, 79, .12);
+      --sky: #6a8caf;
+      --danger: #b9524c;
+      --danger-soft: rgba(185, 82, 76, .10);
+      --amber: #c8923a;
+      --slate: #141413;
+      --shadow: 0 18px 50px rgba(44, 40, 37, .10);
+      --shadow-sm: 0 4px 16px rgba(44, 40, 37, .05);
+      --radius: 18px;
+      --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+      --serif: 'Noto Serif SC', Georgia, serif;
+      --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, "PingFang SC", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #15171a;
+        --surface: #1e2024;
+        --panel: #191b1e;
+        --border: #34352f;
+        --border-soft: rgba(255, 255, 255, .07);
+        --text: #eee9df;
+        --muted: #a39a8f;
+        --soft: #2e2d2a;
+        --accent-soft: rgba(217, 119, 87, .16);
+        --olive: #93b06d;
+        --olive-soft: rgba(147, 176, 109, .16);
+        --danger: #d9817b;
+        --danger-soft: rgba(217, 129, 123, .15);
+        --amber: #d9ad60;
+        --shadow: 0 18px 50px rgba(0, 0, 0, .38);
+        --shadow-sm: 0 4px 16px rgba(0, 0, 0, .25);
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      line-height: 1.5;
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── DECK ─────────────────────────────────────────────── */
+    .deck { position: fixed; inset: 0; }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(28px, 4.5vh, 56px) clamp(28px, 6vw, 96px);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px) scale(.992);
+      transition: opacity .5s cubic-bezier(.25, .8, .25, 1), transform .5s cubic-bezier(.25, .8, .25, 1);
+      overflow-y: auto;
+    }
+
+    .slide.active { opacity: 1; visibility: visible; transform: none; z-index: 2; }
+    .slide.prev { transform: translateY(-14px) scale(.992); }
+
+    .inner { width: min(1140px, 100%); margin: auto; }
+
+    /* ── COMMON ───────────────────────────────────────────── */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font: 700 13px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 18px;
+    }
+    .eyebrow .num {
+      display: grid; place-items: center; min-width: 26px; height: 26px; padding: 0 7px;
+      border-radius: 8px; background: var(--accent-soft); font-weight: 700;
+    }
+    .eyebrow.case { color: var(--olive); }
+    .eyebrow.case .num { background: var(--olive-soft); }
+
+    .s-title {
+      font-family: var(--serif); font-weight: 700;
+      font-size: clamp(28px, 4vw, 50px); line-height: 1.12; letter-spacing: -.01em;
+    }
+    .s-title em { font-style: normal; color: var(--accent); }
+
+    .lead {
+      margin-top: 16px; color: var(--muted);
+      font-size: clamp(15px, 1.9vw, 20px); line-height: 1.55; max-width: 900px;
+    }
+
+    .thesis {
+      margin-top: 24px; padding: 22px 26px;
+      background: color-mix(in srgb, var(--accent) 8%, var(--panel));
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius); box-shadow: var(--shadow-sm);
+    }
+    .thesis .lbl { font: 700 11px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+    .thesis p { margin-top: 12px; font-family: var(--serif); font-weight: 500; font-size: clamp(18px, 2.3vw, 25px); line-height: 1.45; }
+    .thesis p b { color: var(--accent-dark); font-weight: 700; }
+
+    .grid { display: grid; gap: 16px; margin-top: 26px; }
+    .g2 { grid-template-columns: repeat(2, 1fr); }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+
+    .card {
+      background: var(--panel); border: 1px solid var(--border); border-radius: 14px;
+      padding: 20px 22px; box-shadow: var(--shadow-sm);
+    }
+    .card .ic { font-size: 24px; line-height: 1; margin-bottom: 12px; }
+    .card h4 { font-size: 17px; font-weight: 700; margin-bottom: 7px; display: flex; align-items: center; gap: 9px; }
+    .card h4 .tag { font: 600 11px/1 var(--mono); color: var(--accent); background: var(--accent-soft); padding: 4px 8px; border-radius: 6px; }
+    .card p { color: var(--muted); font-size: 14.5px; line-height: 1.55; }
+    .card .accent { color: var(--accent-dark); font-weight: 600; }
+
+    .flist { margin-top: 22px; display: grid; gap: 11px; }
+    .flist li { list-style: none; display: flex; align-items: flex-start; gap: 14px; font-size: clamp(15px, 1.8vw, 19px); line-height: 1.5; }
+    .flist li .dot { flex: 0 0 auto; margin-top: 5px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+    .flist li b { font-weight: 700; }
+    .flist li .x { color: var(--muted); }
+
+    .tbl {
+      width: 100%; margin-top: 22px; border-collapse: separate; border-spacing: 0;
+      border: 1px solid var(--border); border-radius: 14px; overflow: hidden;
+      box-shadow: var(--shadow-sm); font-size: clamp(13px, 1.4vw, 15.5px);
+    }
+    .tbl th, .tbl td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border-soft); vertical-align: top; line-height: 1.45; }
+    .tbl thead th { background: var(--surface); font: 700 12.5px/1.2 var(--mono); letter-spacing: .04em; text-transform: uppercase; color: var(--muted); }
+    .tbl tbody tr:last-child td { border-bottom: 0; }
+    .tbl tbody tr:nth-child(even) td { background: color-mix(in srgb, var(--surface) 45%, transparent); }
+    .tbl td.k { font-weight: 600; white-space: nowrap; }
+    .tbl .good { color: var(--olive); font-weight: 600; }
+    .tbl .bad { color: var(--danger); font-weight: 600; }
+    .tbl .hl { color: var(--accent-dark); font-weight: 600; }
+    .tbl .score { font: 700 14px/1 var(--mono); color: var(--accent); white-space: nowrap; }
+
+    .flow { margin-top: 28px; display: flex; align-items: stretch; gap: 8px; flex-wrap: wrap; }
+    .flow .step {
+      flex: 1 1 0; min-width: 110px; background: var(--panel); border: 1px solid var(--border);
+      border-radius: 14px; padding: 16px 12px; text-align: center; box-shadow: var(--shadow-sm);
+    }
+    .flow .step .n { font: 700 11px/1 var(--mono); color: var(--accent); letter-spacing: .1em; }
+    .flow .step .t { font-weight: 700; font-size: clamp(14px, 1.6vw, 17px); margin: 8px 0 5px; }
+    .flow .step .d { color: var(--muted); font-size: 12.5px; line-height: 1.4; }
+    .flow .arrow { align-self: center; color: var(--accent); font-size: 18px; font-weight: 700; }
+    .flow .step.hl { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 7%, var(--panel)); }
+
+    .code {
+      background: var(--slate); color: #e8e3d8; border-radius: 14px; padding: 18px 20px;
+      font: 500 13.5px/1.65 var(--mono); box-shadow: var(--shadow); white-space: pre-wrap; overflow-x: auto;
+    }
+    .code .c { color: #d97757; }
+    .code .m { color: #8aa6c0; }
+
+    .formula {
+      margin-top: 28px; padding: 32px 30px; background: var(--panel);
+      border: 1px dashed color-mix(in srgb, var(--accent) 45%, var(--border)); border-radius: var(--radius);
+      text-align: center; box-shadow: var(--shadow-sm);
+      font-family: var(--serif); font-weight: 500; font-size: clamp(17px, 2.5vw, 28px); line-height: 1.7;
+    }
+    .formula b { color: var(--accent-dark); font-weight: 700; }
+    .formula .plus { color: var(--accent); padding: 0 6px; }
+
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 22px; align-items: start; }
+    .split.s64 { grid-template-columns: 1.25fr 1fr; }
+    .panel-h { font: 700 12px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .panel-h .ico { color: var(--accent); }
+    .panel-h.olive { color: var(--olive); }
+
+    .checks { margin-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 26px; }
+    .checks li { list-style: none; display: flex; align-items: center; gap: 13px; font-size: clamp(15px, 1.7vw, 19px); line-height: 1.45; }
+    .checks li .seq { flex: 0 0 auto; width: 26px; height: 26px; display: grid; place-items: center; border-radius: 8px; background: var(--accent-soft); color: var(--accent-dark); font: 700 13px/1 var(--mono); }
+
+    .note { margin-top: 20px; font-size: 14.5px; color: var(--muted); display: flex; align-items: flex-start; gap: 9px; line-height: 1.5; }
+    .note .b { color: var(--accent); font-weight: 700; flex: 0 0 auto; }
+    .note.olive .b { color: var(--olive); }
+
+    /* ── CASE STRIP (贯穿案例标识) ───────────────────────── */
+    .casebar {
+      display: inline-flex; align-items: center; gap: 9px; margin-bottom: 14px;
+      padding: 6px 13px 6px 9px; border-radius: 99px;
+      background: var(--olive-soft); border: 1px solid color-mix(in srgb, var(--olive) 30%, transparent);
+      font: 700 11.5px/1 var(--mono); letter-spacing: .06em; color: var(--olive);
+    }
+    .casebar .pin { font-size: 13px; }
+
+    /* ── CHAT BUBBLES ─────────────────────────────────────── */
+    .chat { display: flex; flex-direction: column; gap: 12px; }
+    .row { display: flex; gap: 10px; align-items: flex-end; }
+    .row.right { flex-direction: row-reverse; }
+    .ava { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 17px; flex: 0 0 auto; background: var(--surface); border: 1px solid var(--border); }
+    .ava.expert { background: var(--olive-soft); border-color: color-mix(in srgb, var(--olive) 40%, transparent); }
+    .ava.ai { background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 40%, transparent); }
+    .bubble { max-width: 80%; padding: 11px 15px; border-radius: 15px; font-size: clamp(13.5px, 1.5vw, 15.5px); line-height: 1.55; box-shadow: var(--shadow-sm); }
+    .bubble .who { display: block; font: 700 10.5px/1 var(--mono); letter-spacing: .04em; margin-bottom: 5px; opacity: .75; }
+    .bubble.user { background: var(--panel); border: 1px solid var(--border); border-bottom-left-radius: 5px; }
+    .bubble.expert { background: var(--olive-soft); border: 1px solid color-mix(in srgb, var(--olive) 32%, var(--border)); border-bottom-left-radius: 5px; }
+    .bubble.ai { background: var(--accent); color: #fff; border-bottom-right-radius: 5px; }
+    .bubble.ai .who { opacity: .85; }
+    .bubble.bad { background: var(--danger-soft); border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--border)); border-bottom-right-radius: 5px; }
+    .bubble.good { background: var(--olive-soft); border: 1px solid color-mix(in srgb, var(--olive) 38%, var(--border)); border-bottom-right-radius: 5px; }
+    .bubble.bad .who { color: var(--danger); opacity: 1; }
+    .bubble.good .who { color: var(--olive); opacity: 1; }
+
+    /* ── PERSONA CARDS ────────────────────────────────────── */
+    .persona { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 24px; }
+    .pcard { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 26px; box-shadow: var(--shadow-sm); position: relative; overflow: hidden; }
+    .pcard.star { border-color: color-mix(in srgb, var(--olive) 45%, var(--border)); }
+    .pcard.rookie { border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+    .pcard .top { display: flex; align-items: center; gap: 14px; }
+    .pcard .face { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-size: 26px; flex: 0 0 auto; background: var(--surface); border: 1px solid var(--border); }
+    .pcard.star .face { background: var(--olive-soft); }
+    .pcard.rookie .face { background: var(--accent-soft); }
+    .pcard .name { font-family: var(--serif); font-weight: 700; font-size: 22px; }
+    .pcard .role { font: 700 11.5px/1.3 var(--mono); letter-spacing: .04em; margin-top: 4px; }
+    .pcard.star .role { color: var(--olive); }
+    .pcard.rookie .role { color: var(--accent-dark); }
+    .pcard .quote { margin-top: 16px; font-size: 15px; line-height: 1.6; color: var(--muted); }
+    .pcard .quote b { color: var(--text); font-weight: 600; }
+
+    /* ── DECISION CHIPS (judgment branch) ─────────────────── */
+    .branch { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip {
+      display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px;
+      background: var(--panel); border: 1px solid var(--border); border-radius: 12px;
+      font-size: 14px; box-shadow: var(--shadow-sm);
+    }
+    .chip .q { color: var(--accent); font-weight: 700; }
+
+    /* ── WORKBENCH MOCKUP ─────────────────────────────────── */
+    .app { border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: var(--shadow); background: var(--panel); }
+    .app-bar { display: flex; align-items: center; gap: 7px; padding: 11px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+    .app-bar .d { width: 11px; height: 11px; border-radius: 50%; }
+    .app-bar .d.r { background: #e0685c; } .app-bar .d.y { background: #e0a93c; } .app-bar .d.g { background: #6fae5e; }
+    .app-bar .ttl { margin-left: 10px; font: 700 12px/1 var(--mono); color: var(--muted); letter-spacing: .04em; }
+    .app-body { display: grid; grid-template-columns: 1fr 1.05fr; }
+    .app-left { padding: 18px; border-right: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 35%, transparent); }
+    .app-left .lbl, .app-right .lbl { font: 700 10.5px/1 var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+    .app-right { padding: 18px; }
+    .sug { display: flex; flex-direction: column; gap: 12px; }
+    .sug .tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .sug .t { padding: 4px 11px; border-radius: 99px; font: 700 11.5px/1.4 var(--mono); }
+    .sug .t.cat { background: var(--accent-soft); color: var(--accent-dark); }
+    .sug .t.emo { background: var(--danger-soft); color: var(--danger); }
+    .sug .block { background: var(--panel); border: 1px solid var(--border); border-radius: 11px; padding: 12px 14px; }
+    .sug .block .h { font: 700 11px/1 var(--mono); color: var(--muted); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .sug .block .h.ok { color: var(--olive); }
+    .sug .block .h.warn { color: var(--danger); }
+    .sug .block p { font-size: 13.5px; line-height: 1.55; }
+    .sug .esc { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px; border-radius: 11px; background: var(--danger-soft); border: 1px solid color-mix(in srgb, var(--danger) 35%, var(--border)); font: 700 13px/1 var(--sans); color: var(--danger); }
+
+    /* ── TRAFFIC LIGHTS ───────────────────────────────────── */
+    .lights { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+    .lt { display: inline-flex; align-items: center; gap: 9px; padding: 9px 15px; border-radius: 12px; border: 1px solid var(--border); background: var(--panel); font-size: 14px; box-shadow: var(--shadow-sm); }
+    .lt .o { width: 11px; height: 11px; border-radius: 50%; flex: 0 0 auto; }
+    .lt .o.r { background: var(--danger); } .lt .o.y { background: var(--amber); } .lt .o.g { background: var(--olive); }
+
+    /* ── BEFORE / AFTER ───────────────────────────────────── */
+    .ba { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 24px; }
+    .ba .col { border-radius: var(--radius); padding: 22px 24px; box-shadow: var(--shadow-sm); }
+    .ba .before { background: var(--danger-soft); border: 1px solid color-mix(in srgb, var(--danger) 30%, var(--border)); }
+    .ba .after { background: var(--olive-soft); border: 1px solid color-mix(in srgb, var(--olive) 35%, var(--border)); }
+    .ba .col .hd { font: 700 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .ba .before .hd { color: var(--danger); }
+    .ba .after .hd { color: var(--olive); }
+    .ba .col ul { list-style: none; display: grid; gap: 10px; }
+    .ba .col li { display: flex; align-items: flex-start; gap: 10px; font-size: clamp(14px, 1.6vw, 16.5px); line-height: 1.45; }
+    .ba .col li .m { flex: 0 0 auto; font-weight: 700; }
+    .ba .before li .m { color: var(--danger); }
+    .ba .after li .m { color: var(--olive); }
+
+    /* ── COVER / QUOTE ────────────────────────────────────── */
+    .cover .kick { font: 700 14px/1 var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--accent); }
+    .cover h1 { margin-top: 26px; font-family: var(--serif); font-weight: 900; font-size: clamp(40px, 7vw, 86px); line-height: 1.05; letter-spacing: -.02em; }
+    .cover h1 em { font-style: normal; color: var(--accent); }
+    .cover .sub { margin-top: 24px; color: var(--muted); font-size: clamp(17px, 2.3vw, 24px); line-height: 1.5; max-width: 780px; }
+    .cover .by { margin-top: 38px; display: flex; align-items: center; gap: 14px; font: 600 14px/1 var(--mono); color: var(--muted); }
+    .cover .by .line { width: 38px; height: 2px; background: var(--accent); }
+
+    .quote { text-align: center; }
+    .quote .mark { font-family: var(--serif); font-size: 90px; line-height: .6; color: var(--accent); opacity: .5; }
+    .quote p { font-family: var(--serif); font-weight: 700; font-size: clamp(25px, 3.8vw, 44px); line-height: 1.45; max-width: 940px; margin: 18px auto 0; }
+    .quote p em { font-style: normal; color: var(--accent); }
+    .quote .foot { margin-top: 34px; color: var(--muted); font: 600 14px/1 var(--mono); letter-spacing: .08em; }
+
+    /* ── CHROME ───────────────────────────────────────────── */
+    .progress { position: fixed; left: 0; bottom: 0; height: 3px; background: var(--accent); width: 0; z-index: 50; transition: width .45s cubic-bezier(.25, .8, .25, 1); }
+    .ctrl { position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; gap: 6px; padding: 6px; background: color-mix(in srgb, var(--panel) 90%, transparent); border: 1px solid var(--border); border-radius: 99px; backdrop-filter: blur(14px); box-shadow: var(--shadow-sm); opacity: .35; transition: opacity .25s; }
+    .ctrl:hover { opacity: 1; }
+    .ctrl button { width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: transparent; color: var(--text); cursor: pointer; font-size: 16px; transition: background .2s, color .2s; }
+    .ctrl button:hover { background: var(--accent-soft); color: var(--accent-dark); }
+    .ctrl .pageno { min-width: 72px; text-align: center; font: 700 13px/1 var(--mono); color: var(--muted); user-select: none; }
+    .ctrl .pageno b { color: var(--accent); }
+    .zone { position: fixed; top: 0; bottom: 60px; width: 11%; z-index: 40; cursor: pointer; }
+    .zone.l { left: 0; } .zone.r { right: 0; }
+    .overview { position: fixed; inset: 0; z-index: 80; background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(8px); padding: clamp(24px, 5vh, 56px); overflow-y: auto; display: none; }
+    .overview.show { display: block; }
+    .overview h3 { font: 700 13px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+    .ov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 13px; }
+    .ov-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px 16px 17px; cursor: pointer; transition: border-color .2s, transform .2s, box-shadow .2s; }
+    .ov-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+    .ov-card.cur { border-color: var(--accent); background: var(--accent-soft); }
+    .ov-card .n { font: 700 12px/1 var(--mono); color: var(--accent); }
+    .ov-card .t { margin-top: 9px; font-size: 14px; font-weight: 600; line-height: 1.4; }
+    .hint { position: fixed; right: 18px; bottom: 22px; z-index: 55; font: 500 12px/1 var(--mono); color: var(--muted); opacity: .55; user-select: none; }
+    @media (max-width: 720px) { .hint { display: none; } }
+
+    @media (max-width: 880px) {
+      .g2, .g3, .g4, .split, .split.s64, .persona, .ba, .checks, .app-body { grid-template-columns: 1fr; }
+      .flow { flex-direction: column; } .flow .arrow { transform: rotate(90deg); }
+      .app-left { border-right: 0; border-bottom: 1px solid var(--border); }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="deck" id="deck">
+
+    <!-- 01 COVER -->
+    <section class="slide active" data-title="封面">
+      <div class="inner cover">
+        <div class="kick">AI 应用落地 · 对外分享</div>
+        <h1>单点复刻<br>用 AI 复制高手的<em>一项</em>具体能力</h1>
+        <p class="sub">本场用一个贯穿到底的故事讲清楚：<br>怎么把「金牌客服李姐」变成每个新人都能用的 AI 助手。</p>
+        <div class="by"><span class="line"></span> Bin哥的知识地图 · AI 工程</div>
+      </div>
+    </section>
+
+    <!-- 02 开场痛点 -->
+    <section class="slide" data-title="开场痛点">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">00</span> 开场</div>
+        <h2 class="s-title">为什么新人总是<em>上手慢</em>？</h2>
+        <ul class="flist">
+          <li><span class="dot"></span><span><b>老员工的本事都在脑子里</b> —— 说不清、带不走、教不会。</span></li>
+          <li><span class="dot"></span><span>新人只能靠<b>问、靠猜、靠反复踩坑</b>。</span></li>
+          <li><span class="dot"></span><span>培训材料有，但<span class="x">不好用、用不起来</span>。</span></li>
+          <li><span class="dot"></span><span>管理者每天<b>重复救火、重复解释同样的问题</b>。</span></li>
+        </ul>
+        <div class="note"><span class="b">→</span> 企业真正缺的，不只是 AI 工具，而是把优秀员工的经验<b style="color:var(--accent-dark)">复制给整个团队</b>的能力。</div>
+      </div>
+    </section>
+
+    <!-- 03 认识两位主角 -->
+    <section class="slide" data-title="认识两位主角">
+      <div class="inner">
+        <div class="casebar"><span class="pin">📁</span> 贯穿案例 · 客服小助手</div>
+        <h2 class="s-title">先认识两个人</h2>
+        <div class="persona">
+          <div class="pcard star">
+            <div class="top"><div class="face">👩‍💼</div><div><div class="name">李姐</div><div class="role">金牌客服 · 入职 5 年</div></div></div>
+            <p class="quote">客户一问价格、问发票、闹退款，她都能<b>又快又稳</b>地接住，该安抚安抚、该转人工绝不乱承诺。<b>全公司就她一个。</b></p>
+          </div>
+          <div class="pcard rookie">
+            <div class="top"><div class="face">🧑‍💻</div><div><div class="name">小张</div><div class="role">新客服 · 入职 2 周</div></div></div>
+            <p class="quote">客户一问就慌，要么<b>答不上来去问主管</b>，要么<b>随口乱承诺</b>，三天被投诉两次，主管天天替他擦屁股。</p>
+          </div>
+        </div>
+        <div class="note olive"><span class="b">？</span> 老板的愿望：<b style="color:var(--text)">能不能把李姐「复制」一个，分给每个新人？</b></div>
+      </div>
+    </section>
+
+    <!-- 04 核心观点 -->
+    <section class="slide" data-title="核心观点">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">01</span> 核心观点</div>
+        <h2 class="s-title">不复制李姐<em>这个人</em>，<br>复制她「<em>回复客户</em>」这一项能力。</h2>
+        <div class="thesis">
+          <span class="lbl">One Line</span>
+          <p>单点复刻的本质，是把<b>个人经验</b>变成<b>团队资产</b>。</p>
+        </div>
+        <p class="lead">性格、人缘、责任心复制不了；但「怎么判断客户、怎么回复、什么时候转人工」这套<b style="color:var(--accent-dark)">能被看见、能被记录</b>的本事，可以拆出来给 AI。</p>
+      </div>
+    </section>
+
+    <!-- 05 误区澄清 -->
+    <section class="slide" data-title="误区澄清">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">02</span> 先破再立</div>
+        <h2 class="s-title">单点复刻 <em>≠</em> 数字分身</h2>
+        <table class="tbl">
+          <thead><tr><th>常见误区</th><th>正确认知</th></tr></thead>
+          <tbody>
+            <tr><td class="bad">造一个「数字李姐」替代真人</td><td class="good">复刻李姐「回复客户」这一项能力</td></tr>
+            <tr><td class="bad">AI 替掉客服岗</td><td class="good">AI 当新人的「随身教练」</td></tr>
+            <tr><td class="bad">AI 一次生成就能用</td><td class="good">要拿真实问题测试、让李姐打分校准</td></tr>
+            <tr><td class="bad">写好 Prompt 就够了</td><td class="good">样本、标准、知识库、流程更关键</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 06 定义 -->
+    <section class="slide" data-title="定义">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">03</span> 定义</div>
+        <h2 class="s-title">什么是单点复刻？</h2>
+        <div class="thesis" style="margin-top:28px;">
+          <span class="lbl">Definition</span>
+          <p>不复制一个完整的人，而是把他在<b>某个具体场景下反复稳定</b>的能力 —— 拆成样本、规则、判断标准和输出格式，再用 AI 做成<b>可调用、可测试、可迭代</b>的助手。</p>
+        </div>
+        <p class="lead">钉在墙上的一句话：AI 复刻的不是「李姐这个人」，而是她身上<b style="color:var(--accent-dark)">可样本化、可标准化、可测试化</b>的一项能力。</p>
+      </div>
+    </section>
+
+    <!-- 07 能力可拆 -->
+    <section class="slide" data-title="能力可拆">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">04</span> 关键认知</div>
+        <h2 class="s-title">人不能完整复制，但<em>能力可以拆</em></h2>
+        <p class="lead">把「李姐」这个整体拆开，真正能交给 AI 的是这四块：</p>
+        <div class="grid g4">
+          <div class="card"><div class="ic">🧠</div><h4>经验判断</h4><p>客户这句话，是比价、没看到价值，还是单纯有情绪？</p></div>
+          <div class="card"><div class="ic">💬</div><h4>表达方式</h4><p>先共情、再解释的语气和标准话术。</p></div>
+          <div class="card"><div class="ic">🔁</div><h4>操作流程</h4><p>先分类 → 查知识库 → 给回复 → 判断转人工。</p></div>
+          <div class="card"><div class="ic">🚧</div><h4>边界意识</h4><p>退款、投诉、赔偿，绝不自己拍板，立刻转人工。</p></div>
+        </div>
+        <div class="note"><span class="b">→</span> 不要问「AI 能不能复制李姐」，要问「李姐身上有没有一项能力<b style="color:var(--accent-dark)">值得被拆出来</b>」。</div>
+      </div>
+    </section>
+
+    <!-- 08 能力地图 -->
+    <section class="slide" data-title="可复刻能力地图">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">05</span> 能力地图</div>
+        <h2 class="s-title">不止客服 —— 各岗位都能拆出一项来复刻</h2>
+        <table class="tbl">
+          <thead><tr><th style="width:120px">岗位</th><th>可复刻的具体能力</th></tr></thead>
+          <tbody>
+            <tr><td class="k">客服 <span style="color:var(--olive)">★本场</span></td><td><span class="hl">高频问答</span>、问题分类、情绪安抚、退换货说明、<span class="hl">转人工判断</span></td></tr>
+            <tr><td class="k">销售</td><td>开场破冰、需求挖掘、异议处理、竞品比较、成交推进、跟进提醒</td></tr>
+            <tr><td class="k">运营</td><td>选题判断、标题判断、多平台改写、发布前风险检查、数据复盘</td></tr>
+            <tr><td class="k">审核</td><td>禁用词检查、夸大承诺识别、政策误读、品牌口径、风险提示补充</td></tr>
+            <tr><td class="k">培训</td><td>新人答疑、学习路径、SOP 陪跑、典型案例讲解、模拟练习评分</td></tr>
+            <tr><td class="k">管理</td><td>周报整理、会议纪要、风险识别、任务拆解、决策事项提取</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 09 适配度判断 -->
+    <section class="slide" data-title="适配度判断">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">06</span> 适配度判断</div>
+        <h2 class="s-title">为什么<em>客服</em>特别适合「先」复刻？</h2>
+        <table class="tbl">
+          <thead><tr><th style="width:90px">维度</th><th>适合复刻 ✓</th><th>客服场景符合吗？</th></tr></thead>
+          <tbody>
+            <tr><td class="k">频率</td><td class="good">高频重复</td><td>同样的问题每天问几十遍 ✓</td></tr>
+            <tr><td class="k">样本</td><td class="good">有记录、有话术</td><td>聊天记录、标准回复一抓一大把 ✓</td></tr>
+            <tr><td class="k">标准</td><td class="good">有明确好坏</td><td>回得对不对、该不该转人工，能判断 ✓</td></tr>
+            <tr><td class="k">风险</td><td class="good">出错成本可控</td><td>大多是答疑，敏感的转人工就行 ✓</td></tr>
+            <tr><td class="k">结果</td><td class="good">可评分可对比</td><td>能让李姐给 AI 回复打分 ✓</td></tr>
+          </tbody>
+        </table>
+        <div class="note"><span class="b">→</span> 最适合先落地的，是 <b style="color:var(--accent-dark)">高频 · 低风险 · 有样本 · 有标准 · 可评估</b> 的工作 —— 客服几乎全中。</div>
+      </div>
+    </section>
+
+    <!-- 10 核心公式 -->
+    <section class="slide" data-title="核心公式">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">07</span> 核心公式</div>
+        <h2 class="s-title">单点复刻 = ?</h2>
+        <div class="formula">
+          <b>具体场景</b><span class="plus">+</span>高手样本<span class="plus">+</span>判断标准<br>
+          <span class="plus">+</span>提示词 / 知识库<span class="plus">+</span>测试校准<br>
+          <span class="plus">+</span>工作流固化<span class="plus">+</span><b>人工边界</b>
+        </div>
+        <p class="lead" style="text-align:center;margin:24px auto 0;">下面就拿李姐当例子，一步步把这个公式跑完。</p>
+      </div>
+    </section>
+
+    <!-- 11 五步法总览 -->
+    <section class="slide" data-title="五步法总览">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">08</span> 方法论主干</div>
+        <h2 class="s-title">五步，把李姐变成<em>小张的助手</em></h2>
+        <div class="flow">
+          <div class="step"><div class="n">STEP 1</div><div class="t">收集样本</div><div class="d">扒李姐的聊天记录</div></div>
+          <div class="arrow">→</div>
+          <div class="step"><div class="n">STEP 2</div><div class="t">提炼标准</div><div class="d">把她的判断写成规则</div></div>
+          <div class="arrow">→</div>
+          <div class="step"><div class="n">STEP 3</div><div class="t">提示词 / 知识库</div><div class="d">怎么做 + 依据</div></div>
+          <div class="arrow">→</div>
+          <div class="step"><div class="n">STEP 4</div><div class="t">测试校准</div><div class="d">让李姐打分</div></div>
+          <div class="arrow">→</div>
+          <div class="step"><div class="n">STEP 5</div><div class="t">固化使用</div><div class="d">装进小张工作台</div></div>
+        </div>
+        <p class="lead" style="text-align:center;margin:28px auto 0;">每一步，都跟着客服这个故事走一帧。</p>
+      </div>
+    </section>
+
+    <!-- 12 步骤一 收集样本 -->
+    <section class="slide" data-title="① 收集样本（案例）">
+      <div class="inner">
+        <div class="casebar"><span class="pin">📁</span> STEP 1 · 收集样本</div>
+        <h2 class="s-title">把李姐过去的<em>聊天记录</em>扒出来</h2>
+        <div class="split s64">
+          <div>
+            <div class="panel-h olive"><span class="ico" style="color:var(--olive)">▍</span>李姐的真实样本（节选）</div>
+            <div class="chat">
+              <div class="row"><div class="ava">🙋</div><div class="bubble user"><span class="who">客户</span>你们代账一个月多少钱？</div></div>
+              <div class="row right"><div class="ava expert">👩‍💼</div><div class="bubble expert"><span class="who">李姐</span>看公司类型和开票量，小规模一般 200–300/月～方便问下您是小规模还是一般纳税人？这样给您算得准。</div></div>
+              <div class="row"><div class="ava">🙋</div><div class="bubble user"><span class="who">客户</span>能不能便宜点，别家才 150。</div></div>
+              <div class="row right"><div class="ava expert">👩‍💼</div><div class="bubble expert"><span class="who">李姐</span>理解您想省成本～便宜的多是只做申报、不管账务核对。我们含每月对账和风险提醒，帮您先看划不划算？</div></div>
+            </div>
+          </div>
+          <div>
+            <div class="panel-h"><span class="ico">▍</span>要收集的样本清单</div>
+            <ul class="flist" style="margin-top:6px;gap:9px;">
+              <li><span class="dot"></span><span>高频问题 & 标准回复</span></li>
+              <li><span class="dot"></span><span>成交 / 流失的聊天记录</span></li>
+              <li><span class="dot"></span><span>投诉处理、退款对话</span></li>
+              <li><span class="dot"></span><span>转人工的记录</span></li>
+              <li><span class="dot"></span><span>价格表、发票政策等资料</span></li>
+            </ul>
+            <div class="note" style="margin-top:14px;"><span class="b">⚠</span> 不只收<b style="color:var(--olive)">回得好</b>的，<b style="color:var(--accent-dark)">也要收她翻过车、被投诉过</b>的 —— AI 才知道哪些坑不能踩。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 步骤二 提炼标准 -->
+    <section class="slide" data-title="② 提炼标准（案例）">
+      <div class="inner">
+        <div class="casebar"><span class="pin">📁</span> STEP 2 · 提炼标准</div>
+        <h2 class="s-title">把李姐<em>脑子里的判断</em>，翻译成规则</h2>
+        <div class="row" style="margin-top:14px;"><div class="ava">🙋</div><div class="bubble user" style="max-width:60%"><span class="who">客户</span>你们怎么比别家贵这么多？</div></div>
+        <div style="margin:12px 0 2px;font:700 11px/1 var(--mono);color:var(--olive);letter-spacing:.08em;">李姐脑子里 0.5 秒闪过的判断 ↓</div>
+        <div class="branch">
+          <span class="chip"><span class="q">?</span> 是在比价，还是单纯砍价</span>
+          <span class="chip"><span class="q">?</span> 是没看到价值，还是真没预算</span>
+          <span class="chip"><span class="q">?</span> 语气里有没有火、要不要先安抚</span>
+        </div>
+        <table class="tbl" style="margin-top:18px;">
+          <thead><tr><th>问题类型</th><th>识别信号</th><th>标准动作 ✓</th><th>禁忌 ✗</th></tr></thead>
+          <tbody>
+            <tr><td class="k">嫌贵 / 比价</td><td>「别家才…」「太贵」</td><td class="good">先共情，再讲清差在哪、贵在哪</td><td class="bad">「我们不贵」</td></tr>
+            <tr><td class="k">问能否加急</td><td>「快点」「急」</td><td class="good">说可安排，时效让顾问按资料定</td><td class="bad">随口承诺「3 天搞定」</td></tr>
+            <tr><td class="k">要退款 / 投诉</td><td>带情绪、要钱</td><td class="good">先安抚，<b>立即转人工</b></td><td class="bad">自己答应退款金额</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 14 步骤三 提示词/知识库 -->
+    <section class="slide" data-title="③ 提示词/知识库（案例）">
+      <div class="inner">
+        <div class="casebar"><span class="pin">📁</span> STEP 3 · 提示词 / 知识库</div>
+        <h2 class="s-title">提示词管<em>怎么做</em>，知识库管<em>依据是什么</em></h2>
+        <div class="split">
+          <div>
+            <div class="panel-h"><span class="ico">▍</span>提示词 · 客服助手设定</div>
+            <pre class="code"><span class="c">你是公司的资深客服助手。</span>
+不替客服直接发消息，而是根据用户
+提问，给客服一份「回复建议」。
+
+<span class="m"># 按这个结构输出</span>
+1. 问题分类
+2. 推荐回复（先共情，再解决）
+3. 风险提示
+4. 是否需要转人工</pre>
+          </div>
+          <div>
+            <div class="panel-h"><span class="ico">▍</span>知识库 · 回复的依据</div>
+            <div class="card" style="padding:16px 20px;">
+              <p style="color:var(--text);font-size:14.5px;line-height:2;">
+                价格表 · 发票 / 专票政策<br>
+                退款流程 · 服务范围说明<br>
+                标准话术库 · 投诉处理 SOP
+              </p>
+            </div>
+            <div class="note" style="margin-top:14px;"><span class="b">→</span> 没有知识库，AI 只会说「请咨询客服」这种废话；有了它，才能报出<b style="color:var(--accent-dark)">真实价格和公司口径</b>。</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15 步骤四 测试校准 -->
+    <section class="slide" data-title="④ 测试校准（案例）">
+      <div class="inner">
+        <div class="casebar"><span class="pin">📁</span> STEP 4 · 测试校准</div>
+        <h2 class="s-title">拿真实问题测，让<em>李姐打分</em></h2>
+        <div class="split s64">
+          <div>
+            <table class="tbl" style="margin-top:6px;">
+              <thead><tr><th>测试问题</th><th>AI 第一版的问题</th><th>评分</th></tr></thead>
+              <tbody>
+                <tr><td class="k">能加急吗</td><td>直接承诺「3 天搞定」</td><td class="score">5/10</td></tr>
+                <tr><td class="k">我要退款</td><td>没识别是投诉，没转人工</td><td class="score">4/10</td></tr>
+                <tr><td class="k">能开专票吗</td><td>漏了「需一般纳税人资质」</td><td class="score">7/10</td></tr>
+              </tbody>
+            </table>
+            <div class="note"><span class="b">→</span> 每个低分，都变成一条新规则或一段知识库补充，<b style="color:var(--accent-dark)">分数从 60 慢慢爬到 85</b>。</div>
+          </div>
+          <div>
+            <div class="panel-h"><span class="ico">▍</span>「能加急吗」校准前后</div>
+            <div class="chat">
+              <div class="row right"><div class="ava ai">🤖</div><div class="bubble bad"><span class="who">改之前 · 5 分</span>可以的，3 天就能搞定！</div></div>
+              <div class="row right"><div class="ava ai">🤖</div><div class="bubble good"><span class="who">改之后 · 9 分</span>加急可以安排～具体时效要看资料齐全度。我先帮您登记，让顾问 1 小时内回您准确时间。</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16 步骤五 固化使用 -->
+    <section class="slide" data-title="⑤ 固化使用（案例）">
+      <div class="inner">
+        <div class="casebar"><span class="pin">📁</span> STEP 5 · 固化使用</div>
+        <h2 class="s-title">装进小张的<em>客服工作台</em></h2>
+        <div class="app" style="margin-top:14px;">
+          <div class="app-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="ttl">客服工作台 · AI 回复助手</span></div>
+          <div class="app-body">
+            <div class="app-left">
+              <div class="lbl">客户消息</div>
+              <div class="chat">
+                <div class="row"><div class="ava">😤</div><div class="bubble user"><span class="who">客户</span>我要退款！你们服务太差了，办个执照拖了半个月！</div></div>
+              </div>
+            </div>
+            <div class="app-right">
+              <div class="lbl">AI 给小张的回复建议</div>
+              <div class="sug">
+                <div class="tags"><span class="t cat">投诉</span><span class="t cat">退款</span><span class="t emo">情绪激动</span></div>
+                <div class="block"><div class="h ok">✓ 推荐回复</div><p>非常抱歉给您添麻烦了！耽误这么久确实是我们的问题。我马上为您转接专属顾问，优先帮您核实进度和退款～</p></div>
+                <div class="block"><div class="h warn">⚠ 风险提示</div><p>涉及退款 + 投诉，<b>不要自行承诺金额或时间</b>。</p></div>
+                <div class="esc">🔴 建议立即转人工</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="note olive"><span class="b">→</span> 小张<b style="color:var(--text)">不用懂提示词</b>，照着建议改一句就能发 —— 高手经验，变成了普通人也能用的入口。</div>
+      </div>
+    </section>
+
+    <!-- 17 成果对比 -->
+    <section class="slide" data-title="成果对比">
+      <div class="inner">
+        <div class="casebar"><span class="pin">📁</span> 结果 · 小张的变化</div>
+        <h2 class="s-title">同一个小张，<em>用前 vs 用后</em></h2>
+        <div class="ba">
+          <div class="col before">
+            <div class="hd">✗ 用之前</div>
+            <ul>
+              <li><span class="m">×</span>客户一问就慌，回得慢</li>
+              <li><span class="m">×</span>口径全凭感觉，每人答得不一样</li>
+              <li><span class="m">×</span>动不动乱承诺「马上好」</li>
+              <li><span class="m">×</span>该转人工不转，三天被投诉两次</li>
+              <li><span class="m">×</span>主管天天替他救火</li>
+            </ul>
+          </div>
+          <div class="col after">
+            <div class="hd">✓ 用之后</div>
+            <ul>
+              <li><span class="m">✓</span>30 秒出一版稳妥回复</li>
+              <li><span class="m">✓</span>全员口径统一，按公司标准</li>
+              <li><span class="m">✓</span>风险表达被自动拦下</li>
+              <li><span class="m">✓</span>该转人工自动提醒</li>
+              <li><span class="m">✓</span>李姐从「带新人」变成「维护标准 + 处理疑难」</li>
+            </ul>
+          </div>
+        </div>
+        <div class="note olive"><span class="b">→</span> AI 没有取代谁 —— <b style="color:var(--text)">它让小张更快接近李姐的经验区间</b>，让李姐的本事不再只属于她一个人。</div>
+      </div>
+    </section>
+
+    <!-- 18 辅助案例 -->
+    <section class="slide" data-title="同样的五步 · 换个场景">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">09</span> 举一反三</div>
+        <h2 class="s-title">同样的五步，换个场景<em>照样能跑</em></h2>
+        <div class="grid g2">
+          <div class="card"><h4>💼 销售 <span class="tag">异议处理</span></h4><p>样本=成交/流失记录；标准=异议分类；助手=实时给「下一句话」建议。<span class="accent">但成交责任仍在销售。</span></p></div>
+          <div class="card"><h4>✍️ 运营 <span class="tag">内容判断</span></h4><p>样本=爆款/改稿记录；标准=选题评分表；助手=选题→初稿→合规审核一条龙。<span class="accent">老运营只审关键内容。</span></p></div>
+          <div class="card"><h4>🎓 培训 <span class="tag">新手陪跑</span></h4><p>样本=SOP+答疑记录；标准=学习路径；助手=随时答疑 + 场景陪练 + 打分。<span class="accent">把老师经验变成随身教练。</span></p></div>
+          <div class="card"><h4>🔍 审核 <span class="tag">风险初审</span></h4><p>样本=违规/通过案例；标准=风险清单；助手=红黄绿灯初审 + 修改建议。<span class="accent">终审责任仍由人担。</span></p></div>
+        </div>
+        <div class="lights"><span class="lt"><span class="o g"></span>绿 · 通过</span><span class="lt"><span class="o y"></span>黄 · 需人工确认</span><span class="lt"><span class="o r"></span>红 · 违规拦截</span></div>
+      </div>
+    </section>
+
+    <!-- 19 边界 -->
+    <section class="slide" data-title="复刻边界">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">10</span> 边界</div>
+        <h2 class="s-title">AI 能复制经验，<em>但不能替代责任</em></h2>
+        <table class="tbl">
+          <thead><tr><th>AI 能复刻 ✓</th><th>仍然要李姐（人）来扛 ✗</th></tr></thead>
+          <tbody>
+            <tr><td class="good">经验 · 怎么判断、怎么避坑</td><td class="bad">关系 · 老客户的信任与人情</td></tr>
+            <tr><td class="good">表达 · 标准话术、语气</td><td class="bad">责任 · 退款金额、赔偿承诺</td></tr>
+            <tr><td class="good">分类与初审 · 该不该转人工</td><td class="bad">临场 · 重大投诉、合同纠纷</td></tr>
+            <tr><td class="good">初稿 · 一版稳妥回复</td><td class="bad">价值选择 · 这单要不要让步</td></tr>
+          </tbody>
+        </table>
+        <div class="note"><span class="b">⚑</span> <b style="color:var(--accent-dark)">AI 复刻不了一个组织没沉淀下来的能力。</b> 如果李姐的本事只在脑子里、没样本没标准，AI 也复制不出来。</div>
+      </div>
+    </section>
+
+    <!-- 20 落地清单 -->
+    <section class="slide" data-title="落地清单">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">11</span> 落地清单</div>
+        <h2 class="s-title">回去就能做的 <em>8 步</em></h2>
+        <ul class="checks">
+          <li><span class="seq">1</span><span>选一个<b>具体能力</b>（如客服回复）</span></li>
+          <li><span class="seq">2</span><span>找到那个<b>高手</b>（你的「李姐」）</span></li>
+          <li><span class="seq">3</span><span>收集 <b>20–50 个样本</b></span></li>
+          <li><span class="seq">4</span><span>提炼<b>判断标准</b></span></li>
+          <li><span class="seq">5</span><span>写成<b>提示词 + 知识库</b></span></li>
+          <li><span class="seq">6</span><span>用<b>真实问题</b>测试、让高手打分</span></li>
+          <li><span class="seq">7</span><span>固化成<b>工作入口</b></span></li>
+          <li><span class="seq">8</span><span>保留<b>人工确认</b>与边界</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 21 结尾 -->
+    <section class="slide" data-title="结尾金句">
+      <div class="inner quote">
+        <div class="mark">&ldquo;</div>
+        <p>不要问 AI 能不能替代某个人。<br>先问：这个人身上，<em>有没有一项能力值得被复刻？</em><br>如果有 —— 把它拆出来、标准化、知识库化、工具化。</p>
+        <div class="foot">企业做 AI，不要从「大而全」开始，要从一个单点开始。</div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- chrome -->
+  <div class="progress" id="progress"></div>
+  <div class="zone l" id="zoneL" aria-label="上一页"></div>
+  <div class="zone r" id="zoneR" aria-label="下一页"></div>
+
+  <div class="ctrl">
+    <button id="btnPrev" aria-label="上一页">‹</button>
+    <span class="pageno"><b id="cur">1</b> / <span id="total">21</span></span>
+    <button id="btnNext" aria-label="下一页">›</button>
+    <button id="btnOv" aria-label="总览" title="总览 (O)">⊞</button>
+  </div>
+
+  <div class="hint">← / → / 空格 翻页 · <b>O</b> 总览 · <b>F</b> 全屏</div>
+
+  <div class="overview" id="overview">
+    <h3>幻灯片总览 · 点击跳转</h3>
+    <div class="ov-grid" id="ovGrid"></div>
+  </div>
+
+  <script>
+    (function () {
+      var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+      var total = slides.length;
+      var idx = 0;
+      var progress = document.getElementById('progress');
+      var curEl = document.getElementById('cur');
+      var ov = document.getElementById('overview');
+      var ovGrid = document.getElementById('ovGrid');
+
+      document.getElementById('total').textContent = total;
+
+      slides.forEach(function (s, i) {
+        var c = document.createElement('div');
+        c.className = 'ov-card';
+        c.innerHTML = '<div class="n">' + String(i + 1).padStart(2, '0') + '</div>' +
+                      '<div class="t">' + (s.dataset.title || ('第 ' + (i + 1) + ' 页')) + '</div>';
+        c.addEventListener('click', function () { go(i); hideOv(); });
+        ovGrid.appendChild(c);
+      });
+      var ovCards = ovGrid.children;
+
+      function go(n) {
+        n = Math.max(0, Math.min(total - 1, n));
+        if (n === idx) return;
+        slides[idx].classList.remove('active');
+        slides[idx].classList.toggle('prev', n > idx);
+        idx = n;
+        slides[idx].classList.remove('prev');
+        slides[idx].classList.add('active');
+        slides[idx].scrollTop = 0;
+        update();
+      }
+      function next() { go(idx + 1); }
+      function prev() { go(idx - 1); }
+
+      function update() {
+        progress.style.width = ((idx + 1) / total * 100) + '%';
+        curEl.textContent = idx + 1;
+        for (var i = 0; i < ovCards.length; i++) ovCards[i].classList.toggle('cur', i === idx);
+        location.hash = idx + 1;
+      }
+
+      function hideOv() { ov.classList.remove('show'); }
+      function toggleOv() { ov.classList.toggle('show'); }
+
+      document.getElementById('btnNext').addEventListener('click', next);
+      document.getElementById('btnPrev').addEventListener('click', prev);
+      document.getElementById('btnOv').addEventListener('click', toggleOv);
+      document.getElementById('zoneR').addEventListener('click', next);
+      document.getElementById('zoneL').addEventListener('click', prev);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { hideOv(); return; }
+        if (ov.classList.contains('show')) { if (e.key === 'o' || e.key === 'O') hideOv(); return; }
+        switch (e.key) {
+          case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown': e.preventDefault(); next(); break;
+          case 'ArrowLeft': case 'ArrowUp': case 'PageUp': e.preventDefault(); prev(); break;
+          case 'Home': e.preventDefault(); go(0); break;
+          case 'End': e.preventDefault(); go(total - 1); break;
+          case 'o': case 'O': toggleOv(); break;
+          case 'f': case 'F':
+            if (!document.fullscreenElement) { document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }
+            else { document.exitFullscreen && document.exitFullscreen(); }
+            break;
+        }
+      });
+
+      var start = parseInt(location.hash.replace('#', ''), 10);
+      if (start && start >= 1 && start <= total) { idx = start - 1; slides.forEach(function (s, i) { s.classList.toggle('active', i === idx); }); }
+      update();
+    })();
+  </script>
+
+  <script src="/nav.js" defer></script>
+</body>
+
+</html>
