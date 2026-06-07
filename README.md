@@ -35,6 +35,7 @@
 | [AI 八大使用场景 · 线下分享专题](map/ai/ai_eight_use_scenarios_offline/index.html) | AI & 工程 | 2026-05-20 |
 | [你收藏了 30 个 AI 神器，为什么稿子还是憋不出来](map/ai/ai-workflow-four-layer-stack.html) | AI & 工程 | 2026-05-31 |
 | [趋势是入场券，不是护城河](map/growth/trend-is-ticket-not-moat.html) | 个人成长 | 2026-05-21 |
+| [一家公司一个月烧掉 5 亿美元之后](map/management/token-not-kpi-ai-cost-governance.html) | 管理 | 2026-06-04 |
 
 
 ## 目录结构
