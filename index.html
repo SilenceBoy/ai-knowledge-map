@@ -863,6 +863,8 @@ a { color: inherit; text-decoration: none; }
 /* ── JS FILTER HIDE ──────────────────────────────────────── */
 .section[data-hidden] { display: none; }
 .card[data-hidden] { display: none; }
+/* 空分类（0 篇）自动隐藏，有文章后自动显示；!important 保证「全部」筛选时仍隐藏 */
+.is-empty-cat { display: none !important; }
   </style>
 </head>
 <body>
@@ -1112,9 +1114,33 @@ a { color: inherit; text-decoration: none; }
           <h2 class="section-title">
             <span class="section-icon">🌱</span>个人成长
           </h2>
-          <span class="section-count" id="count-growth">1 篇</span>
+          <span class="section-count" id="count-growth">2 篇</span>
         </div>
         <div class="card-grid" id="grid-growth">
+
+          <!-- CARD: traffic-is-river-prepare-bucket -->
+          <a href="map/growth/traffic-is-river-prepare-bucket.html" class="card"
+             data-category="growth"
+             data-title="流量是河，但你得先准备好接水的桶"
+             data-desc="做了一年自媒体，我才看懂「流量是一切商业模式的源头」。流量不是终点，只是水流进来了——免费流量的隐性成本、有效流量公式，以及先搭好接水的桶的四件事。">
+            <div class="card-body">
+              <span class="card-category">
+                <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#9b84b3"/></svg>
+                个人成长 · 自媒体
+              </span>
+              <div class="card-title">流量是河，但你得先准备好接水的桶</div>
+              <p class="card-desc">
+                一年前我以为做自媒体最难的是涨粉。后来一篇笔记爆了，几千人涌进来又像退潮一样走了——才看懂：流量不是终点，你得先有桶接住它。
+              </p>
+              <div class="card-footer">
+                <span class="card-date">2026-06-06</span>
+                <span class="card-arrow">→</span>
+              </div>
+            </div>
+            <div class="card-visual">
+              <div class="visual-badge">🪣</div>
+            </div>
+          </a>
 
           <!-- CARD: trend-is-ticket-not-moat -->
           <a href="map/growth/trend-is-ticket-not-moat.html" class="card"
@@ -1152,9 +1178,31 @@ a { color: inherit; text-decoration: none; }
           <span class="section-count" id="count-ops">0 篇</span>
         </div>
         <div class="card-grid" id="grid-ops">
-          <div class="empty-section">
-            暂无文章 — 整理中……
-          </div>
+
+          <!-- CARD: loss-aversion -->
+          <a href="map/ops/loss-aversion.html" class="card"
+             data-category="ops"
+             data-title="损失规避：别说用户会得到什么，说他会错过什么"
+             data-desc="人对失去的痛苦约是得到快乐的 2~2.5 倍。从卡尼曼前景理论、进化根源到四种心理机制与六式商业应用，把营销从「你会得到什么」转向「你会错过什么」。">
+            <div class="card-body">
+              <span class="card-category">
+                <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#d97757"/></svg>
+                运营 · 营销心理学
+              </span>
+              <div class="card-title">损失规避：别说用户会得到什么，说他会错过什么</div>
+              <p class="card-desc">
+                丢掉 100 元的痛，远大于捡到 100 元的乐。读懂这条卡尼曼的发现，你就握住了定价、文案与转化背后那根最隐蔽的杠杆。
+              </p>
+              <div class="card-footer">
+                <span class="card-date">2026-04-05</span>
+                <span class="card-arrow">→</span>
+              </div>
+            </div>
+            <div class="card-visual">
+              <div class="visual-badge">🧠</div>
+            </div>
+          </a>
+
         </div>
       </section>
 
@@ -1236,7 +1284,7 @@ a { color: inherit; text-decoration: none; }
                 <span class="topic-item-icon">🌱</span>
                 <span>个人成长</span>
               </div>
-              <span class="topic-count" id="nav-growth">1</span>
+              <span class="topic-count" id="nav-growth">2</span>
             </div>
             <div class="topic-item" data-nav-filter="ops">
               <div class="topic-item-left">
@@ -1261,6 +1309,13 @@ a { color: inherit; text-decoration: none; }
         <div class="widget-header">最近更新</div>
         <div class="widget-body">
           <div class="recent-list">
+            <a href="map/growth/traffic-is-river-prepare-bucket.html" class="recent-item">
+              <div class="recent-dot"></div>
+              <div class="recent-info">
+                <div class="recent-title">流量是河，但你得先准备好接水的桶</div>
+                <div class="recent-meta">个人成长 · 2026-06-06</div>
+              </div>
+            </a>
             <a href="map/management/token-not-kpi-ai-cost-governance.html" class="recent-item">
               <div class="recent-dot"></div>
               <div class="recent-info">
@@ -1303,6 +1358,13 @@ a { color: inherit; text-decoration: none; }
                 <div class="recent-meta">AI · 2026-05-18</div>
               </div>
             </a>
+            <a href="map/ops/loss-aversion.html" class="recent-item">
+              <div class="recent-dot"></div>
+              <div class="recent-info">
+                <div class="recent-title">损失规避：别说用户会得到什么，说他会错过什么</div>
+                <div class="recent-meta">运营 · 2026-04-05</div>
+              </div>
+            </a>
             <a href="map/ai/html-as-agent-output-format.html" class="recent-item">
               <div class="recent-dot"></div>
               <div class="recent-info">
@@ -1332,6 +1394,29 @@ a { color: inherit; text-decoration: none; }
   const navBtns    = document.querySelectorAll('[data-nav-filter]');
   const sections   = document.querySelectorAll('.section[data-category]');
   const cards      = document.querySelectorAll('.card[data-category]');
+
+  // ── Auto-hide empty categories ────────────────────────────
+  // 按真实卡片数量动态计数；0 篇的分类隐藏其 section / 筛选按钮 / 侧边栏导航项，
+  // 该分类有文章后自动恢复显示，计数也自动更新，无需手动维护数字。
+  const CATEGORIES = ['ai', 'growth', 'ops', 'management'];
+  let totalCount = 0;
+  CATEGORIES.forEach(cat => {
+    const n = document.querySelectorAll(`.card[data-category="${cat}"]`).length;
+    totalCount += n;
+
+    const countEl = document.getElementById('count-' + cat);
+    if (countEl) countEl.textContent = `${n} 篇`;
+    const navEl = document.getElementById('nav-' + cat);
+    if (navEl) navEl.textContent = n;
+
+    if (n === 0) {
+      document.querySelector(`.section[data-category="${cat}"]`)?.classList.add('is-empty-cat');
+      document.querySelector(`[data-filter="${cat}"]`)?.classList.add('is-empty-cat');
+      document.querySelector(`[data-nav-filter="${cat}"]`)?.classList.add('is-empty-cat');
+    }
+  });
+  const navAllEl = document.getElementById('nav-all');
+  if (navAllEl) navAllEl.textContent = totalCount;
 
   function applyFilter(cat) {
     filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === cat));
