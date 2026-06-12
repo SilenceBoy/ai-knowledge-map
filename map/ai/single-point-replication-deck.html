@@ -8,7 +8,14 @@
   <title>单点复刻：用 AI 复制高手的一项具体能力</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- 字体异步加载：会场网络不通时不阻塞渲染，自动退回系统字体（苹方 / Georgia / Menlo） -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  </noscript>
   <style>
     :root {
       --bg: #faf8f5;
@@ -335,6 +342,10 @@
     .hint { position: fixed; right: 18px; bottom: 22px; z-index: 55; font: 500 12px/1 var(--mono); color: var(--muted); opacity: .55; user-select: none; }
     @media (max-width: 720px) { .hint { display: none; } }
 
+    /* 演示全屏时隐藏外部 nav.js 注入的「回到首页」悬浮按钮，避免遮挡幻灯片 */
+    :fullscreen #_nav_home { display: none !important; }
+    :-webkit-full-screen #_nav_home { display: none !important; }
+
     @media (max-width: 880px) {
       .g2, .g3, .g4, .split, .split.s64, .persona, .ba, .checks, .app-body { grid-template-columns: 1fr; }
       .flow { flex-direction: column; } .flow .arrow { transform: rotate(90deg); }
@@ -546,6 +557,7 @@
               <li><span class="dot"></span><span>价格表、发票政策等资料</span></li>
             </ul>
             <div class="note" style="margin-top:14px;"><span class="b">⚠</span> 不只收<b style="color:var(--olive)">回得好</b>的，<b style="color:var(--accent-dark)">也要收她翻过车、被投诉过</b>的 —— AI 才知道哪些坑不能踩。</div>
+            <div class="note" style="margin-top:10px;"><span class="b">🔒</span> 喂给 AI 前先<b style="color:var(--accent-dark)">脱敏</b>：抹掉客户手机号、姓名、公司名等隐私信息。</div>
           </div>
         </div>
       </div>
@@ -716,7 +728,7 @@
         <div class="eyebrow"><span class="num">10</span> 边界</div>
         <h2 class="s-title">AI 能复制经验，<em>但不能替代责任</em></h2>
         <table class="tbl">
-          <thead><tr><th>AI 能复刻 ✓</th><th>仍然要李姐（人）来扛 ✗</th></tr></thead>
+          <thead><tr><th>AI 能复刻 ✓</th><th>AI 替代不了，仍要人来扛 ✗</th></tr></thead>
           <tbody>
             <tr><td class="good">经验 · 怎么判断、怎么避坑</td><td class="bad">关系 · 老客户的信任与人情</td></tr>
             <tr><td class="good">表达 · 标准话术、语气</td><td class="bad">责任 · 退款金额、赔偿承诺</td></tr>
@@ -746,7 +758,63 @@
       </div>
     </section>
 
-    <!-- 21 结尾 -->
+    <!-- 21 新手怎么起步（工具） -->
+    <section class="slide" data-title="新手怎么起步">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">12</span> 起步姿势</div>
+        <h2 class="s-title">新手别慌 —— <em>不用编程</em>，三个阶段往上走</h2>
+        <p class="lead">最容易劝退的误会是「这得会写代码、得搭平台」。其实第一版，<b style="color:var(--accent-dark)">一个聊天窗口就够了</b>。</p>
+        <div class="grid g3">
+          <div class="card">
+            <div class="ic">💬</div>
+            <h4>阶段一 · 今天就能试 <span class="tag">0 成本</span></h4>
+            <p>打开 <b>豆包 / Kimi / DeepSeek</b> 任意一个，把<span class="accent">样本 + 标准</span>整理成一份文档贴进去，让它按你定的结构回复 —— 当场就能跑通。</p>
+          </div>
+          <div class="card">
+            <div class="ic">🧩</div>
+            <h4>阶段二 · 固化给团队 <span class="tag">零代码</span></h4>
+            <p>效果稳了，再用 <b>扣子 Coze / Dify / 飞书智能伙伴</b> 搭成一个固定助手，挂上知识库，同事点开就能用。</p>
+          </div>
+          <div class="card">
+            <div class="ic">🔌</div>
+            <h4>阶段三 · 接进业务 <span class="tag">进阶</span></h4>
+            <p>再把助手接到 <b>企微 / 飞书 / 钉钉</b> 里，变成日常工作流里的一环 —— 这一步可以慢慢来，甚至外包。</p>
+          </div>
+        </div>
+        <div class="note"><span class="b">→</span> 千万别一上来就追求「智能体、工作流、平台」。<b style="color:var(--accent-dark)">先用最笨的办法把一个能力跑出效果，再谈固化。</b></div>
+      </div>
+    </section>
+
+    <!-- 22 这对你意味着什么 -->
+    <section class="slide" data-title="这对你意味着什么">
+      <div class="inner">
+        <div class="eyebrow"><span class="num">13</span> 和你有什么关系</div>
+        <h2 class="s-title">那么，这对「<em>你</em>」意味着什么？</h2>
+        <div class="grid g3">
+          <div class="card">
+            <div class="ic">🏪</div>
+            <h4>你有自己的生意</h4>
+            <p>把你摊子里那个「李姐」复刻出来 —— 客服、销售话术、内容初稿，省下的是<span class="accent">实打实的人力和时间</span>。</p>
+          </div>
+          <div class="card">
+            <div class="ic">💼</div>
+            <h4>你在公司打工</h4>
+            <p>主动当那个<b>整理样本、维护标准</b>的人。喂 AI、调 AI 的人，是 AI 时代<span class="accent">新的稀缺位置</span>，不容易被替代。</p>
+          </div>
+          <div class="card">
+            <div class="ic">🚀</div>
+            <h4>你想靠 AI 接活</h4>
+            <p>帮别的企业把高手经验复刻成助手，<span class="accent">这本身就是一门生意</span> —— 也是 AI 落地最实在的切口。</p>
+          </div>
+        </div>
+        <div class="thesis" style="margin-top:24px;">
+          <span class="lbl">One Line</span>
+          <p>AI 不会淘汰你 —— 但<b>先学会用 AI 复刻经验的人</b>，会把还没动手的人甩在后面。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 23 结尾 -->
     <section class="slide" data-title="结尾金句">
       <div class="inner quote">
         <div class="mark">&ldquo;</div>
@@ -764,7 +832,7 @@
 
   <div class="ctrl">
     <button id="btnPrev" aria-label="上一页">‹</button>
-    <span class="pageno"><b id="cur">1</b> / <span id="total">21</span></span>
+    <span class="pageno"><b id="cur">1</b> / <span id="total">23</span></span>
     <button id="btnNext" aria-label="下一页">›</button>
     <button id="btnOv" aria-label="总览" title="总览 (O)">⊞</button>
   </div>
