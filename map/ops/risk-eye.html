@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="风险之眼：买卖的本质，是对风险的洞察与管控。买卖的对象其实就是风险本身——用炒股的分批止盈止损机制说清如何不靠预测、靠规则管理风险，以及看透人性与数据这两种风险洞察力。">
+  <title>风险之眼：买卖的本质，是洞察与管控风险</title>
+  <style>
+    :root {
+      --hav-bg: #faf8f5;
+      --hav-surface: #f0ede8;
+      --hav-panel: #fffdfa;
+      --hav-border: #d4cfc7;
+      --hav-text: #2c2825;
+      --hav-muted: #8a837a;
+      --hav-soft: #e3dacc;
+      --hav-accent: #d97757;
+      --hav-accent-dark: #b8602a;
+      --hav-olive: #788c5d;
+      --hav-sky: #6a8caf;
+      --hav-slate: #141413;
+      --hav-danger: #b9524c;
+      --hav-shadow: 0 18px 50px rgba(44, 40, 37, .10);
+      --hav-radius: 18px;
+      --hav-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --hav-serif: Georgia, "Times New Roman", serif;
+      --hav-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --hav-bg: #17191c;
+        --hav-surface: #202226;
+        --hav-panel: #111214;
+        --hav-border: #3d3d39;
+        --hav-text: #eee9df;
+        --hav-muted: #aaa49a;
+        --hav-soft: #2e2d2a;
+        --hav-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body.hav-page { margin: 0; background: var(--hav-bg); color: var(--hav-text); font-family: var(--hav-sans); line-height: 1.55; }
+    .hav-shell { width: min(1080px, calc(100vw - 32px)); margin: 0 auto; }
+
+    /* ─── HERO ─── */
+    .hav-hero { padding: 60px 0 36px; border-bottom: 1px solid var(--hav-border); }
+    .hav-kicker { color: var(--hav-accent); font: 700 12px/1 var(--hav-mono); letter-spacing: .16em; text-transform: uppercase; }
+    .hav-title { margin: 16px 0 14px; max-width: 940px; font-family: var(--hav-serif); font-size: clamp(36px, 6vw, 70px); line-height: 1.04; }
+    .hav-title em { font-style: normal; color: var(--hav-accent); }
+    .hav-subtitle { max-width: 720px; color: var(--hav-muted); font-size: clamp(17px, 2.2vw, 22px); line-height: 1.5; }
+    .tk-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .tk-tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: var(--hav-surface); border: 1px solid var(--hav-border); border-radius: 99px; font: 600 12px/1 var(--hav-mono); color: var(--hav-muted); }
+
+    /* ─── THESIS ─── */
+    .tk-thesis {
+      margin: 32px 0 8px; padding: 26px 28px;
+      background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-panel));
+      border: 1px solid color-mix(in srgb, var(--hav-accent) 32%, var(--hav-border));
+      border-left: 4px solid var(--hav-accent); border-radius: var(--hav-radius); box-shadow: var(--hav-shadow);
+    }
+    .tk-thesis .lbl { font: 700 11px/1 var(--hav-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--hav-accent); }
+    .tk-thesis p { margin: 12px 0 0; font-size: clamp(19px, 2.6vw, 26px); font-family: var(--hav-serif); line-height: 1.4; }
+
+    /* ─── TOC ─── */
+    .tk-toc { position: sticky; top: 0; z-index: 20; margin: 0 -2px; padding: 12px 0; background: color-mix(in srgb, var(--hav-bg) 88%, transparent); backdrop-filter: blur(16px); border-bottom: 1px solid var(--hav-border); }
+    .tk-toc-row { display: flex; gap: 8px; overflow-x: auto; padding: 0 2px 4px; -webkit-overflow-scrolling: touch; }
+    .tk-toc-row a { flex: 0 0 auto; padding: 6px 13px; background: var(--hav-surface); border: 1px solid var(--hav-border); border-radius: 99px; color: var(--hav-text); text-decoration: none; font: 500 13px/1 var(--hav-sans); transition: all .15s; }
+    .tk-toc-row a:hover { border-color: var(--hav-accent); color: var(--hav-accent); }
+
+    /* ─── SECTION ─── */
+    .tk-section { padding: 52px 0; border-top: 1px solid var(--hav-border); }
+    .tk-section:first-of-type { border-top: 0; }
+    .tk-eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 12px/1 var(--hav-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--hav-accent); margin-bottom: 14px; }
+    .tk-eyebrow .num { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; background: color-mix(in srgb, var(--hav-accent) 16%, transparent); color: var(--hav-accent); font-size: 12px; }
+    .tk-h2 { margin: 0 0 16px; font-family: var(--hav-serif); font-size: clamp(26px, 4vw, 40px); line-height: 1.08; }
+    .tk-lead { color: var(--hav-muted); font-size: 17px; line-height: 1.65; max-width: 760px; margin: 0 0 26px; }
+    .tk-lead strong, .tk-p strong { color: var(--hav-text); background: color-mix(in srgb, var(--hav-accent) 18%, transparent); padding: 1px 5px; border-radius: 4px; }
+    .tk-p { font-size: 16px; line-height: 1.75; max-width: 760px; margin: 0 0 18px; }
+
+    /* ─── FIGURE ─── */
+    .tk-figure { margin: 8px 0 24px; background: var(--hav-panel); border: 1px solid var(--hav-border); border-radius: var(--hav-radius); overflow: hidden; box-shadow: var(--hav-shadow); }
+    .tk-figure svg { display: block; width: 100%; height: auto; }
+    .tk-figure figcaption { padding: 12px 18px; border-top: 1px solid var(--hav-border); font: 12px/1.5 var(--hav-mono); color: var(--hav-muted); }
+
+    /* ─── QUOTE ─── */
+    .tk-quote { margin: 20px 0; padding: 18px 22px; border-left: 4px solid var(--hav-accent); background: color-mix(in srgb, var(--hav-accent) 6%, transparent); border-radius: 0 12px 12px 0; font-family: var(--hav-serif); font-size: clamp(18px, 2.6vw, 24px); line-height: 1.4; }
+
+    /* ─── TRANSFORM (买卖 → 风险) ─── */
+    .tk-flow { display: grid; grid-template-columns: 1fr auto 1fr; align-items: stretch; gap: 12px; margin: 8px 0 22px; }
+    .tk-flow-step { padding: 24px 20px; text-align: center; border-radius: 16px; border: 1px solid var(--hav-border); background: var(--hav-panel); }
+    .tk-flow-step.core { background: color-mix(in srgb, var(--hav-accent) 9%, var(--hav-panel)); border-color: color-mix(in srgb, var(--hav-accent) 32%, var(--hav-border)); }
+    .tk-flow-step .ic { font-size: 30px; }
+    .tk-flow-step .k { font: 700 11px/1 var(--hav-mono); letter-spacing: .06em; color: var(--hav-muted); margin: 10px 0 6px; }
+    .tk-flow-step .v { font-family: var(--hav-serif); font-size: clamp(17px, 2.4vw, 22px); line-height: 1.2; }
+    .tk-flow-step.core .v { color: var(--hav-accent); }
+    .tk-flow-step .note { display: block; margin-top: 8px; font-size: 12.5px; color: var(--hav-muted); }
+    .tk-flow-arrow { display: grid; place-items: center; font-size: 24px; color: var(--hav-accent); }
+
+    /* ─── TWO EYES (人性 / 数据) ─── */
+    .tk-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 8px 0; }
+    .tk-cmp-card { padding: 24px; border-radius: 16px; border: 1px solid var(--hav-border); background: var(--hav-panel); }
+    .tk-cmp-card.human { border-top: 3px solid var(--hav-accent); }
+    .tk-cmp-card.data { border-top: 3px solid var(--hav-sky); }
+    .tk-cmp-card .ico { font-size: 28px; }
+    .tk-cmp-card h3 { margin: 10px 0 8px; font-family: var(--hav-serif); font-size: 20px; }
+    .tk-cmp-card p { margin: 0 0 10px; font-size: 14.5px; line-height: 1.65; color: var(--hav-muted); }
+    .tk-cmp-card .eg { margin: 0; padding: 10px 14px; background: var(--hav-surface); border-radius: 10px; font-size: 13px; color: var(--hav-text); }
+    .tk-cmp-card.human .eg b { color: var(--hav-accent); }
+    .tk-cmp-card.data .eg b { color: var(--hav-sky); }
+
+    /* ─── POINTS ─── */
+    .tk-points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 8px 0; }
+    .tk-point { padding: 22px 20px; background: var(--hav-panel); border: 1px solid var(--hav-border); border-radius: 16px; border-top: 3px solid var(--hav-olive); }
+    .tk-point .no { font: 700 12px/1 var(--hav-mono); color: var(--hav-olive); letter-spacing: .08em; }
+    .tk-point .nm { font-weight: 700; margin: 10px 0 6px; font-size: 16px; }
+    .tk-point .ds { font-size: 13.5px; color: var(--hav-muted); line-height: 1.6; }
+
+    /* ─── NOTE (结构化提炼标注) ─── */
+    .tk-note { margin: 18px 0 0; padding: 13px 16px; background: color-mix(in srgb, var(--hav-sky) 8%, var(--hav-surface)); border: 1px solid color-mix(in srgb, var(--hav-sky) 22%, var(--hav-border)); border-radius: 12px; font-size: 13px; color: var(--hav-muted); line-height: 1.6; }
+
+    /* ─── FINAL ─── */
+    .tk-final { padding: 32px; background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-panel)); border: 1px solid color-mix(in srgb, var(--hav-accent) 30%, var(--hav-border)); border-radius: var(--hav-radius); box-shadow: var(--hav-shadow); }
+    .tk-final .hav-pill { display: inline-block; padding: 5px 13px; border-radius: 99px; background: var(--hav-accent); color: #fff; font: 700 11px/1 var(--hav-mono); letter-spacing: .1em; }
+    .tk-final h2 { margin: 16px 0 14px; font-family: var(--hav-serif); font-size: clamp(24px, 3.4vw, 34px); line-height: 1.2; }
+    .tk-final p { font-size: 15.5px; line-height: 1.75; color: var(--hav-muted); margin: 0 0 12px; max-width: 720px; }
+    .tk-final p strong { color: var(--hav-text); }
+    .tk-quote.bare { margin: 16px 0 0; }
+    .tk-src { margin-top: 22px; font: 12px/1.5 var(--hav-mono); color: var(--hav-muted); }
+
+    /* ─── FOOTER ─── */
+    .tk-footer { padding: 28px 0 48px; border-top: 1px solid var(--hav-border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--hav-muted); font: 13px/1.5 var(--hav-mono); }
+    .tk-footer a { color: var(--hav-accent); text-decoration: none; }
+    .tk-top { position: fixed; right: 18px; bottom: 18px; z-index: 40; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--hav-border); border-radius: 12px; background: var(--hav-panel); color: var(--hav-text); cursor: pointer; box-shadow: var(--hav-shadow); font-size: 16px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 760px) {
+      .tk-flow, .tk-cmp, .tk-points { grid-template-columns: 1fr; }
+      .tk-flow-arrow { height: 28px; transform: rotate(90deg); }
+    }
+  </style>
+</head>
+
+<body class="hav-page">
+
+  <article>
+    <!-- HERO -->
+    <header class="hav-hero">
+      <div class="hav-shell">
+        <div class="hav-kicker">商业知识 · 思维模型 · 风险之眼</div>
+        <h1 class="hav-title">买卖的本质，<br>是洞察与管控<em>风险</em></h1>
+        <p class="hav-subtitle">所谓「风险之眼」，就是在做买卖时能看清和把握风险。拥有这双眼睛，你就能在买卖中多赚少赔。</p>
+        <div class="tk-meta">
+          <span class="tk-tag">👁️ 概念 · 风险之眼</span>
+          <span class="tk-tag">⏱ 约 3 分钟</span>
+          <span class="tk-tag">📈 风险洞察 · 风险管控</span>
+        </div>
+
+        <div class="tk-thesis">
+          <span class="lbl">一句话核心</span>
+          <p>买卖的对象，其实就是风险本身。你越能看透人性与数据，对风险的把控就越强。</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- TOC -->
+    <nav class="tk-toc">
+      <div class="hav-shell tk-toc-row">
+        <a href="#s1">① 什么是风险之眼</a>
+        <a href="#s2">② 一个例子：炒股的风险机制</a>
+        <a href="#s3">③ 买卖的对象就是风险</a>
+        <a href="#s4">④ 两种风险洞察力</a>
+        <a href="#s5">⑤ 它为何是商业底层逻辑</a>
+      </div>
+    </nav>
+
+    <main class="hav-shell">
+
+      <!-- 一 -->
+      <section class="tk-section" id="s1">
+        <span class="tk-eyebrow"><span class="num">1</span>定义 · 什么是风险之眼</span>
+        <h2 class="tk-h2">一双能看透风险的眼睛</h2>
+        <p class="tk-lead">今天学到一个概念，叫「风险之眼」。买卖的本质，其实是对风险的洞察与管控。<strong>所谓「风险之眼」，就是在做买卖时，能够看清和把握风险。</strong></p>
+        <p class="tk-p">如果你拥有一双能够看透风险的眼睛，那么在买卖中就能<strong>多赚少赔</strong>。商业世界里风险无处不在——也正因如此，「买卖风险」才成为推动商业良性运转的重要底层逻辑。</p>
+      </section>
+
+      <!-- 二 -->
+      <section class="tk-section" id="s2">
+        <span class="tk-eyebrow"><span class="num">2</span>例子 · 炒股的风险机制</span>
+        <h2 class="tk-h2">不靠预测，靠一套规则</h2>
+        <p class="tk-lead">就像炒股票，什么时候买入、什么时候卖出，都需要对风险进行把控。你可以给自己设定<strong>一套风险管理机制</strong>，让买卖动作由规则触发，而不是由情绪决定。</p>
+
+        <figure class="tk-figure">
+          <svg viewBox="0 0 800 380" role="img" aria-label="炒股分批止盈止损机制：涨到一定幅度分批卖出止盈，跌到一定幅度分批卖出止损">
+            <!-- 止盈区背景 -->
+            <rect x="40" y="40" width="720" height="120" rx="12" fill="#eef3e9"/>
+            <!-- 止损区背景 -->
+            <rect x="40" y="240" width="720" height="120" rx="12" fill="#f8eeee"/>
+            <text x="58" y="62" font-size="12" font-weight="700" fill="#5b6b45" font-family="monospace">▲ 止盈 · 涨了分批落袋</text>
+            <text x="58" y="358" font-size="12" font-weight="700" fill="#9b3f3a" font-family="monospace">▼ 止损 · 跌了分批离场</text>
+
+            <!-- +20% -->
+            <circle cx="120" cy="92" r="7" fill="#788c5d"/>
+            <text x="140" y="89" font-size="14" font-weight="700" fill="#4f5e3a" font-family="Georgia, serif">涨 20%</text>
+            <text x="140" y="107" font-size="12.5" fill="#637349" font-family="sans-serif">→ 再卖出一部分</text>
+            <!-- +10% -->
+            <circle cx="120" cy="140" r="7" fill="#9bae7e"/>
+            <text x="140" y="137" font-size="14" font-weight="700" fill="#4f5e3a" font-family="Georgia, serif">涨 10%</text>
+            <text x="140" y="155" font-size="12.5" fill="#637349" font-family="sans-serif">→ 卖出一部分</text>
+
+            <!-- 买入价中线 -->
+            <line x1="40" y1="200" x2="760" y2="200" stroke="#d97757" stroke-width="3"/>
+            <rect x="320" y="184" width="160" height="32" rx="8" fill="#d97757"/>
+            <text x="400" y="205" text-anchor="middle" font-size="13" font-weight="700" fill="#fff" font-family="sans-serif">买入价 · 参考点</text>
+
+            <!-- -5% -->
+            <circle cx="120" cy="262" r="7" fill="#cf8a84"/>
+            <text x="140" y="259" font-size="14" font-weight="700" fill="#9b3f3a" font-family="Georgia, serif">跌 5%</text>
+            <text x="140" y="277" font-size="12.5" fill="#a8534d" font-family="sans-serif">→ 卖出一部分</text>
+            <!-- -10% -->
+            <circle cx="120" cy="310" r="7" fill="#b9524c"/>
+            <text x="140" y="307" font-size="14" font-weight="700" fill="#9b3f3a" font-family="Georgia, serif">跌 10%</text>
+            <text x="140" y="325" font-size="12.5" fill="#a8534d" font-family="sans-serif">→ 再卖出一部分</text>
+
+            <!-- 右侧说明 -->
+            <text x="700" y="200" text-anchor="end" font-size="13" font-weight="700" fill="#8a837a" font-family="sans-serif">价格围绕买入价上下波动</text>
+            <text x="700" y="222" text-anchor="end" font-size="12" fill="#8a837a" font-family="sans-serif">每一档都对应一个预设动作</text>
+          </svg>
+          <figcaption>这就是在「管理和买卖风险」：把每一档涨跌都预先绑定一个动作，让规则替你抵御情绪。（涨跌幅与分批比例为原文示例，可按自己的风险偏好调整）</figcaption>
+        </figure>
+      </section>
+
+      <!-- 三 -->
+      <section class="tk-section" id="s3">
+        <span class="tk-eyebrow"><span class="num">3</span>本质 · 你在买卖什么</span>
+        <h2 class="tk-h2">买卖的对象，其实就是风险本身</h2>
+        <p class="tk-lead">表面上你在买卖一只股票、一件商品、一份合约。但往下看一层，<strong>你真正在交易的，是它背后的风险。</strong></p>
+
+        <div class="tk-flow">
+          <div class="tk-flow-step">
+            <div class="ic">🛒</div>
+            <div class="k">表面</div>
+            <div class="v">买卖商品 / 股票</div>
+            <span class="note">看得见的标的</span>
+          </div>
+          <div class="tk-flow-arrow">→</div>
+          <div class="tk-flow-step core">
+            <div class="ic">🎯</div>
+            <div class="k">本质</div>
+            <div class="v">买卖风险</div>
+            <span class="note">看不见的对象</span>
+          </div>
+        </div>
+
+        <blockquote class="tk-quote">如果你具备看透人性或数据的能力，那么你对风险的把控就会非常强大——这就是「风险之眼」的意义。</blockquote>
+      </section>
+
+      <!-- 四 -->
+      <section class="tk-section" id="s4">
+        <span class="tk-eyebrow"><span class="num">4</span>能力 · 两种风险洞察力</span>
+        <h2 class="tk-h2">看透人性，或看透数据</h2>
+        <p class="tk-lead">风险之眼的「视力」，来自两个方向。任意一个练到足够强，都能让你对风险的把控变得强大。</p>
+
+        <div class="tk-cmp">
+          <div class="tk-cmp-card human">
+            <div class="ico">🧠</div>
+            <h3>看透人性</h3>
+            <p>读懂贪婪与恐惧、读懂对手与人群在压力下会怎么反应，从而预判风险的走向。</p>
+            <p class="eg">买卖里，<b>多数风险来自人的情绪</b>，而非标的本身。</p>
+          </div>
+          <div class="tk-cmp-card data">
+            <div class="ico">📊</div>
+            <h3>看透数据</h3>
+            <p>从数字、趋势、概率里识别风险的位置与大小，用客观信号代替主观猜测。</p>
+            <p class="eg">规则与数据，<b>能在情绪上头时替你做决定</b>。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 五 -->
+      <section class="tk-section" id="s5">
+        <span class="tk-eyebrow"><span class="num">5</span>底层 · 为何重要</span>
+        <h2 class="tk-h2">它是商业世界的底层逻辑</h2>
+        <p class="tk-lead">在商业世界里，风险无处不在。正因如此，<strong>买卖风险成为推动商业良性运转的重要底层逻辑</strong>。学会辨识风险、锻炼出风险之眼，才能最大程度地降低买卖中的风险。</p>
+
+        <div class="tk-points">
+          <div class="tk-point">
+            <div class="no">STEP 01</div>
+            <div class="nm">辨识风险</div>
+            <div class="ds">先看清风险在哪、有多大——这是「风险之眼」的第一层视力。</div>
+          </div>
+          <div class="tk-point">
+            <div class="no">STEP 02</div>
+            <div class="nm">管控风险</div>
+            <div class="ds">用一套预设规则把每种情形绑定动作，让买卖不被情绪左右。</div>
+          </div>
+          <div class="tk-point">
+            <div class="no">STEP 03</div>
+            <div class="nm">多赚少赔</div>
+            <div class="ds">看得越透、管得越稳，长期下来自然多赚少赔。</div>
+          </div>
+        </div>
+
+        <div class="tk-final" style="margin-top:32px">
+          <span class="hav-pill">一句话收束</span>
+          <h2>风险无处不在，<br>所以「看清风险」本身就是一种能力</h2>
+          <p>买卖的对象是风险，定价的依据是风险，赚钱的关键也是风险。把这双「风险之眼」练出来，你看到的就不再是涨跌和成交，而是<strong>风险的流动与定价</strong>。</p>
+          <blockquote class="tk-quote bare">能看透风险的人，才能在买卖中多赚少赔。</blockquote>
+          <p class="tk-src">本文为基于原文的结构化重构与可视化整理 · 概念出处：「风险之眼」学习笔记 · 炒股机制为原文示例。</p>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="tk-footer">
+        <span>Bin哥的知识地图 · 运营 / 商业思维</span>
+        <span>来源：<a href="https://app.notion.com/p/23aacc097f078080a501c93284a89a19">Notion 原文</a></span>
+      </footer>
+    </main>
+  </article>
+
+  <button class="tk-top" data-back-top aria-label="返回顶部">↑</button>
+  <script>
+    document.querySelector('[data-back-top]')?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+<script src="/nav.js" defer></script>
+</body>
+
+</html>

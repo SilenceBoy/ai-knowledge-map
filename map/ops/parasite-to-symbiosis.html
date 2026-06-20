@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="穷人翻身最快的方式不是从零开始，而是先嵌入一个更强的系统借力成长。用心理学（幸存者偏差、损失厌恶、聚光灯效应、信号错配）拆解：让你一直穷的，往往是太想体面。3:4 小红书图文卡片，支持翻页。">
+  <title>让你一直穷的，从来不是没钱 · 心理学劝醒（图文）</title>
+  <style>
+    :root {
+      --pg: #ece5d8;
+      --pg2: #e4dac8;
+      --paper: #f6efe0;
+      --paper-deep: #ecdfc6;
+      --edge: #ddd0b6;
+      --ink: #3d2817;
+      --ink-soft: #5f4632;
+      --accent: #c0622e;
+      --accent-dark: #9c4a1f;
+      --ui: #8a7c66;
+      --serif: "Songti SC", "Noto Serif SC", Georgia, "Times New Roman", serif;
+      --sans: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --pg: #16161a;
+        --pg2: #1d1d22;
+        --edge: #2f2a22;
+        --ui: #9a8f7c;
+      }
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--pg);
+      color: var(--ink);
+      font-family: var(--sans);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100svh;
+      padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .topbar {
+      width: var(--card-w);
+      max-width: 92vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      color: var(--ui);
+      letter-spacing: .02em;
+    }
+    .topbar .brand { display: flex; align-items: center; gap: 7px; font-weight: 600; }
+    .topbar .brand i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+    .topbar .counter b { color: var(--accent); font-weight: 700; }
+
+    .stage {
+      --card-w: min(460px, 94vw, 53vh);
+      width: var(--card-w);
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border-radius: 22px;
+      position: relative;
+      box-shadow: 0 22px 60px rgba(40, 28, 14, .22);
+      background: var(--paper);
+      cursor: pointer;
+    }
+
+    .track {
+      display: flex;
+      height: 100%;
+      transition: transform .46s cubic-bezier(.45, .02, .2, 1);
+      will-change: transform;
+    }
+
+    .slide { flex: 0 0 100%; height: 100%; }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      container-type: size;
+      background: var(--paper);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8.5cqw 8cqw;
+      overflow: hidden;
+    }
+    .card.deep { background: var(--paper-deep); }
+    .card.cover { justify-content: center; }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 3cqw;
+      border: 1px solid var(--edge);
+      border-radius: 12px;
+      pointer-events: none;
+      opacity: .5;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-self: flex-start;
+      align-items: center;
+      gap: 8px;
+      font-size: 4.1cqw;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--accent);
+      margin-bottom: 4.5cqw;
+    }
+    .kicker::before {
+      content: "";
+      width: 7cqw;
+      height: 2.5px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    .ctitle {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 800;
+      font-size: 9.6cqw;
+      line-height: 1.32;
+      color: var(--ink);
+      letter-spacing: .005em;
+    }
+    .cover .ctitle { font-size: 13.5cqw; line-height: 1.26; }
+
+    .csub {
+      margin-top: 6cqw;
+      font-family: var(--serif);
+      font-size: 6.4cqw;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+    .cover .csub::before {
+      content: "";
+      display: block;
+      width: 14cqw;
+      height: 3px;
+      background: var(--accent);
+      margin-bottom: 6cqw;
+    }
+    .cover .ctag {
+      margin-top: 9cqw;
+      font-size: 4cqw;
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: var(--accent);
+    }
+
+    .cbody {
+      margin: 5.5cqw 0 0;
+      font-family: var(--serif);
+      font-size: 5.5cqw;
+      line-height: 1.82;
+      color: var(--ink-soft);
+    }
+    .cbody em {
+      font-style: normal;
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+
+    .csum {
+      margin-top: 6cqw;
+      padding-top: 5cqw;
+      border-top: 1.5px solid var(--edge);
+      font-family: var(--serif);
+      font-size: 5.9cqw;
+      font-weight: 800;
+      line-height: 1.5;
+      color: var(--ink);
+    }
+
+    .cnote {
+      margin-top: 4cqw;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 4.1cqw;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.45;
+    }
+
+    .pageno {
+      position: absolute;
+      right: 6.5cqw;
+      bottom: 5.5cqw;
+      font-size: 3.1cqw;
+      letter-spacing: .12em;
+      color: var(--ui);
+      opacity: .65;
+      font-family: var(--serif);
+    }
+    .badge {
+      position: absolute;
+      right: 6.5cqw;
+      top: 6cqw;
+      font-size: 3.2cqw;
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--accent);
+      opacity: .8;
+    }
+
+    .controls {
+      width: var(--card-w);
+      max-width: 92vw;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .navbtn {
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--edge);
+      background: var(--pg2);
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .15s, opacity .2s, background .2s;
+    }
+    .navbtn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .navbtn:active { transform: scale(.92); }
+    .navbtn:disabled { opacity: .3; cursor: default; background: var(--pg2); color: var(--ink); border-color: var(--edge); }
+
+    .dots {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--edge);
+      cursor: pointer;
+      transition: width .25s, background .25s;
+    }
+    .dot.on { width: 20px; border-radius: 4px; background: var(--accent); }
+
+    .hint {
+      margin: 11px 0 0;
+      font-size: 11.5px;
+      color: var(--ui);
+      letter-spacing: .02em;
+    }
+    @media (hover: none) { .hint .kbd { display: none; } }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <span class="brand"><i></i>穷人翻身 · 心理学篇</span>
+    <span class="counter"><b id="cur">01</b> / 12</span>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="track" id="track"></div>
+  </div>
+
+  <nav class="controls">
+    <button class="navbtn" id="prev" aria-label="上一页">‹</button>
+    <div class="dots" id="dots"></div>
+    <button class="navbtn" id="next" aria-label="下一页">›</button>
+  </nav>
+
+  <p class="hint"><span class="kbd">← → 键翻页 ·</span> 点击卡片左右两侧 / 滑动翻页</p>
+
+  <script>
+    const cards = [
+      {
+        type: 'cover', tone: 'deep', badge: '心理学篇',
+        title: '让你一直穷的<br>从来不是没钱',
+        sub: '而是太想「体面」',
+        ctag: '12 页 · 有点扎心'
+      },
+      {
+        tag: '认知陷阱',
+        title: '成年人最大的幻觉<br>是「从零开始」',
+        body: '攒钱开店、学门手艺单干、憋个大招白手起家——这个叙事很热血，却忽略了一个冰冷的事实：从零开始，意味着你要<em>独自扛下所有试错成本</em>。',
+        sum: '而穷人，恰恰最扛不起试错。'
+      },
+      {
+        tag: '幸存者偏差',
+        title: '你听过的每个逆袭<br>都是活下来的人讲的',
+        body: '攒三年积蓄、开店三个月就亏光的人，没机会站上台分享。你看到的每个「白手起家」，都是从无数失败者里<em>幸存的极少数</em>。',
+        sum: '你以为在复制成功，其实在参加死亡率最高的游戏。'
+      },
+      {
+        tag: '损失厌恶',
+        title: '你怕的明明是输<br>却选了最容易输光的玩法',
+        body: '心理学说，失去 100 块的痛，是赚到 100 块的快乐的两倍。越穷越输不起，可「从零开始」偏偏把你最稀缺的<em>时间和本金</em>，全压上牌桌。',
+        sum: '对富人，试错是学费；对穷人，是生死。'
+      },
+      {
+        tag: '另一条路',
+        title: '有一条更聪明的路<br>却几乎没人愿意走',
+        body: '别急着自己盖楼。找一个比你强得多的成熟系统，钻进去，借它的客户、供应链和资源，长出你自己的根；根扎稳了，再带着本事走。',
+        sum: '这不是「给人打工」，这叫「嵌入」。'
+      },
+      {
+        tag: '聚光灯效应',
+        title: '你拉不下的那张脸<br>根本没人在看',
+        body: '不愿走这条路，多半是觉得「名片上印的不是 CEO，太没面子」。但聚光灯效应早说透了：你以为所有人都盯着你，<em>其实每个人都只顾看自己</em>。',
+        sum: '你死撑的体面，是演给一群不记得你的人看的。'
+      },
+      {
+        tag: '社会认同陷阱', tone: 'deep',
+        title: '你用三年人生<br>买一个 15 秒的点赞',
+        body: '为了那句「我当老板了」的朋友圈，你借钱开了一家注定会亏的店。三年后店没了、钱没了，只剩当初动态下的<em>几十个赞</em>。',
+        sum: '你把翻身的本钱，全花在了表演上。'
+      },
+      {
+        tag: '信号错配',
+        title: '「看起来成功」和「正在成功」<br>常常是反的',
+        body: '真正在积蓄能量的人是沉默的，蹲在没人看见的角落里扎根。迫不及待要亮相的人往往最脆弱——他们还没有根，只有一顶华丽的帽子。',
+        sum: '一阵风来，帽子就飞了。'
+      },
+      {
+        tag: '价值交换',
+        title: '依附 ≠ 白嫖<br>区别只有一个',
+        body: '你嵌进一个系统，若只消耗它的资源，那不是寄生，是<em>蛀虫</em>，迟早被清除。你得带来它没有的东西——你的能力、执行力、它看不见的那块市场。',
+        sum: '你创造价值，它才会容忍你长大，甚至送你离开。'
+      },
+      {
+        tag: '路径依赖',
+        title: '寄生五年还不能独立<br>那不叫寄生，叫上瘾',
+        body: '住进去的每一天都要清醒：你是来偷师的，不是来养老的。要吸收的不只是养分，更是「<em>离开它也能活</em>」的能力。一旦贪图安稳，根就不再往外长。',
+        sum: '寄生上了瘾，就永远走不出去了。'
+      },
+      {
+        tag: '寄生 → 共生',
+        title: '你不需要<br>成为最大的那棵树',
+        body: '从依附开始，在依附中成长，最终成为这片森林里谁也离不开的一环。你提供的价值反过来喂养整个系统，依附就变成了共生。',
+        sum: '寄生的终点，不是吸血，是共生。'
+      },
+      {
+        tag: '写在最后', tone: 'deep',
+        title: '没有一棵大树<br>是从天上掉下来的',
+        body: '它们都先在土壤里，悄悄扎了很久很久的根，吸够水分和养分，才慢慢长出地面。你现在的公司、平台、行业，就是你的土壤。',
+        sum: '别问何时出头，先问：你的根扎得够深吗？',
+        note: '评论区聊聊你的「宿主」是谁'
+      }
+    ];
+
+    const track = document.getElementById('track');
+    const dots = document.getElementById('dots');
+    const curEl = document.getElementById('cur');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const total = cards.length;
+
+    cards.forEach((c, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'slide';
+      const cls = 'card' + (c.tone === 'deep' ? ' deep' : '') + (c.type === 'cover' ? ' cover' : '');
+      let h = '';
+      if (c.badge) h += `<div class="badge">${c.badge}</div>`;
+      if (c.tag) h += `<div class="kicker">${c.tag}</div>`;
+      h += `<h2 class="ctitle">${c.title}</h2>`;
+      if (c.sub) h += `<div class="csub">${c.sub}</div>`;
+      if (c.ctag) h += `<div class="ctag">${c.ctag}</div>`;
+      if (c.body) h += `<p class="cbody">${c.body}</p>`;
+      if (c.sum) h += `<div class="csum">${c.sum}</div>`;
+      if (c.note) h += `<div class="cnote">▸ ${c.note}</div>`;
+      h += `<div class="pageno">${String(i + 1).padStart(2, '0')} / ${total}</div>`;
+      slide.innerHTML = `<div class="${cls}">${h}</div>`;
+      track.appendChild(slide);
+
+      const d = document.createElement('span');
+      d.className = 'dot' + (i === 0 ? ' on' : '');
+      d.addEventListener('click', (e) => { e.stopPropagation(); go(i); });
+      dots.appendChild(d);
+    });
+
+    let cur = 0;
+    const dotEls = [...dots.children];
+
+    function go(i) {
+      cur = Math.max(0, Math.min(total - 1, i));
+      track.style.transform = `translateX(${-cur * 100}%)`;
+      curEl.textContent = String(cur + 1).padStart(2, '0');
+      prev.disabled = cur === 0;
+      next.disabled = cur === total - 1;
+      dotEls.forEach((d, j) => d.classList.toggle('on', j === cur));
+    }
+
+    prev.addEventListener('click', () => go(cur - 1));
+    next.addEventListener('click', () => go(cur + 1));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') go(cur - 1);
+      if (e.key === 'ArrowRight') go(cur + 1);
+    });
+
+    const stage = document.getElementById('stage');
+    stage.addEventListener('click', (e) => {
+      const r = stage.getBoundingClientRect();
+      if ((e.clientX - r.left) < r.width / 2) go(cur - 1); else go(cur + 1);
+    });
+
+    let sx = 0, sy = 0, swiping = false;
+    stage.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; swiping = true; }, { passive: true });
+    stage.addEventListener('touchend', (e) => {
+      if (!swiping) return; swiping = false;
+      const dx = e.changedTouches[0].clientX - sx;
+      const dy = e.changedTouches[0].clientY - sy;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { e.preventDefault(); go(dx < 0 ? cur + 1 : cur - 1); }
+    }, { passive: false });
+
+    go(0);
+  </script>
+</body>
+
+</html>

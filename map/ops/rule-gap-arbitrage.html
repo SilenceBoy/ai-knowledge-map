@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="规则之缝与套利者的生存逻辑：再精巧的商业规则，背后都可能有漏洞。黄牛靠规则漏洞获利；套利一旦自动化，成本骤降、收益放大，吸引更多人研究规则。凡有正向商业价值处，必有套利的反作用力。">
+  <title>规则之缝：套利者的生存逻辑</title>
+  <style>
+    :root {
+      --hav-bg: #faf8f5;
+      --hav-surface: #f0ede8;
+      --hav-panel: #fffdfa;
+      --hav-border: #d4cfc7;
+      --hav-text: #2c2825;
+      --hav-muted: #8a837a;
+      --hav-soft: #e3dacc;
+      --hav-accent: #d97757;
+      --hav-accent-dark: #b8602a;
+      --hav-olive: #788c5d;
+      --hav-sky: #6a8caf;
+      --hav-slate: #141413;
+      --hav-danger: #b9524c;
+      --hav-shadow: 0 18px 50px rgba(44, 40, 37, .10);
+      --hav-radius: 18px;
+      --hav-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --hav-serif: Georgia, "Times New Roman", serif;
+      --hav-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --hav-bg: #17191c;
+        --hav-surface: #202226;
+        --hav-panel: #111214;
+        --hav-border: #3d3d39;
+        --hav-text: #eee9df;
+        --hav-muted: #aaa49a;
+        --hav-soft: #2e2d2a;
+        --hav-shadow: 0 18px 50px rgba(0, 0, 0, .35);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body.hav-page { margin: 0; background: var(--hav-bg); color: var(--hav-text); font-family: var(--hav-sans); line-height: 1.55; }
+    .hav-shell { width: min(1080px, calc(100vw - 32px)); margin: 0 auto; }
+
+    /* ─── HERO ─── */
+    .hav-hero { padding: 60px 0 36px; border-bottom: 1px solid var(--hav-border); }
+    .hav-kicker { color: var(--hav-accent); font: 700 12px/1 var(--hav-mono); letter-spacing: .16em; text-transform: uppercase; }
+    .hav-title { margin: 16px 0 14px; max-width: 940px; font-family: var(--hav-serif); font-size: clamp(36px, 6vw, 70px); line-height: 1.04; }
+    .hav-title em { font-style: normal; color: var(--hav-accent); }
+    .hav-subtitle { max-width: 720px; color: var(--hav-muted); font-size: clamp(17px, 2.2vw, 22px); line-height: 1.5; }
+    .tk-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .tk-tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; background: var(--hav-surface); border: 1px solid var(--hav-border); border-radius: 99px; font: 600 12px/1 var(--hav-mono); color: var(--hav-muted); }
+
+    /* ─── THESIS ─── */
+    .tk-thesis { margin: 32px 0 8px; padding: 26px 28px; background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-panel)); border: 1px solid color-mix(in srgb, var(--hav-accent) 32%, var(--hav-border)); border-left: 4px solid var(--hav-accent); border-radius: var(--hav-radius); box-shadow: var(--hav-shadow); }
+    .tk-thesis .lbl { font: 700 11px/1 var(--hav-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--hav-accent); }
+    .tk-thesis p { margin: 12px 0 0; font-size: clamp(19px, 2.6vw, 26px); font-family: var(--hav-serif); line-height: 1.4; }
+
+    /* ─── TOC ─── */
+    .tk-toc { position: sticky; top: 0; z-index: 20; margin: 0 -2px; padding: 12px 0; background: color-mix(in srgb, var(--hav-bg) 88%, transparent); backdrop-filter: blur(16px); border-bottom: 1px solid var(--hav-border); }
+    .tk-toc-row { display: flex; gap: 8px; overflow-x: auto; padding: 0 2px 4px; -webkit-overflow-scrolling: touch; }
+    .tk-toc-row a { flex: 0 0 auto; padding: 6px 13px; background: var(--hav-surface); border: 1px solid var(--hav-border); border-radius: 99px; color: var(--hav-text); text-decoration: none; font: 500 13px/1 var(--hav-sans); transition: all .15s; }
+    .tk-toc-row a:hover { border-color: var(--hav-accent); color: var(--hav-accent); }
+
+    /* ─── SECTION ─── */
+    .tk-section { padding: 52px 0; border-top: 1px solid var(--hav-border); }
+    .tk-section:first-of-type { border-top: 0; }
+    .tk-eyebrow { display: inline-flex; align-items: center; gap: 8px; font: 700 12px/1 var(--hav-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--hav-accent); margin-bottom: 14px; }
+    .tk-eyebrow .num { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 8px; background: color-mix(in srgb, var(--hav-accent) 16%, transparent); color: var(--hav-accent); font-size: 12px; }
+    .tk-h2 { margin: 0 0 16px; font-family: var(--hav-serif); font-size: clamp(26px, 4vw, 40px); line-height: 1.08; }
+    .tk-lead { color: var(--hav-muted); font-size: 17px; line-height: 1.65; max-width: 760px; margin: 0 0 26px; }
+    .tk-lead strong, .tk-p strong { color: var(--hav-text); background: color-mix(in srgb, var(--hav-accent) 18%, transparent); padding: 1px 5px; border-radius: 4px; }
+    .tk-p { font-size: 16px; line-height: 1.75; max-width: 760px; margin: 0 0 18px; }
+
+    /* ─── FIGURE ─── */
+    .tk-figure { margin: 8px 0 24px; background: var(--hav-panel); border: 1px solid var(--hav-border); border-radius: var(--hav-radius); overflow: hidden; box-shadow: var(--hav-shadow); }
+    .tk-figure svg { display: block; width: 100%; height: auto; }
+    .tk-figure figcaption { padding: 12px 18px; border-top: 1px solid var(--hav-border); font: 12px/1.5 var(--hav-mono); color: var(--hav-muted); }
+
+    /* ─── QUOTE ─── */
+    .tk-quote { margin: 20px 0; padding: 18px 22px; border-left: 4px solid var(--hav-accent); background: color-mix(in srgb, var(--hav-accent) 6%, transparent); border-radius: 0 12px 12px 0; font-family: var(--hav-serif); font-size: clamp(18px, 2.6vw, 24px); line-height: 1.4; }
+
+    /* ─── EXAMPLE CALLOUT (黄牛) ─── */
+    .tk-callout { display: grid; grid-template-columns: auto 1fr; gap: 16px; align-items: start; margin: 8px 0 22px; padding: 22px 24px; background: var(--hav-panel); border: 1px solid var(--hav-border); border-left: 4px solid var(--hav-sky); border-radius: 16px; }
+    .tk-callout .ic { font-size: 28px; }
+    .tk-callout h3 { margin: 0 0 6px; font-size: 17px; }
+    .tk-callout p { margin: 0; font-size: 15px; line-height: 1.7; color: var(--hav-muted); }
+    .tk-callout p strong { color: var(--hav-text); }
+
+    /* ─── ACTION & REACTION (双栏) ─── */
+    .tk-cmp { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 14px; margin: 8px 0; }
+    .tk-cmp-card { padding: 24px; border-radius: 16px; border: 1px solid var(--hav-border); background: var(--hav-panel); }
+    .tk-cmp-card.value { background: color-mix(in srgb, var(--hav-olive) 9%, var(--hav-panel)); border-color: color-mix(in srgb, var(--hav-olive) 30%, var(--hav-border)); }
+    .tk-cmp-card.arb { background: color-mix(in srgb, var(--hav-danger) 6%, var(--hav-panel)); border-color: color-mix(in srgb, var(--hav-danger) 26%, var(--hav-border)); }
+    .tk-cmp-card .ico { font-size: 26px; }
+    .tk-cmp-card h3 { margin: 8px 0 8px; font-family: var(--hav-serif); font-size: 19px; }
+    .tk-cmp-card.value h3 { color: var(--hav-olive); }
+    .tk-cmp-card.arb h3 { color: var(--hav-danger); }
+    .tk-cmp-card p { margin: 0; font-size: 14px; line-height: 1.6; color: var(--hav-muted); }
+    .tk-cmp-mid { display: grid; place-items: center; font-family: var(--hav-serif); font-size: 30px; color: var(--hav-accent); }
+
+    /* ─── POINTS ─── */
+    .tk-points { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 8px 0; }
+    .tk-point { padding: 22px 20px; background: var(--hav-panel); border: 1px solid var(--hav-border); border-radius: 16px; border-top: 3px solid var(--hav-olive); }
+    .tk-point .no { font: 700 12px/1 var(--hav-mono); color: var(--hav-olive); letter-spacing: .08em; }
+    .tk-point .nm { font-weight: 700; margin: 10px 0 6px; font-size: 16px; }
+    .tk-point .ds { font-size: 13.5px; color: var(--hav-muted); line-height: 1.6; }
+
+    /* ─── FINAL ─── */
+    .tk-final { padding: 32px; background: color-mix(in srgb, var(--hav-accent) 8%, var(--hav-panel)); border: 1px solid color-mix(in srgb, var(--hav-accent) 30%, var(--hav-border)); border-radius: var(--hav-radius); box-shadow: var(--hav-shadow); }
+    .tk-final .hav-pill { display: inline-block; padding: 5px 13px; border-radius: 99px; background: var(--hav-accent); color: #fff; font: 700 11px/1 var(--hav-mono); letter-spacing: .1em; }
+    .tk-final h2 { margin: 16px 0 14px; font-family: var(--hav-serif); font-size: clamp(24px, 3.4vw, 34px); line-height: 1.2; }
+    .tk-final p { font-size: 15.5px; line-height: 1.75; color: var(--hav-muted); margin: 0 0 12px; max-width: 720px; }
+    .tk-final p strong { color: var(--hav-text); }
+    .tk-quote.bare { margin: 16px 0 0; }
+    .tk-src { margin-top: 22px; font: 12px/1.5 var(--hav-mono); color: var(--hav-muted); }
+
+    /* ─── FOOTER ─── */
+    .tk-footer { padding: 28px 0 48px; border-top: 1px solid var(--hav-border); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--hav-muted); font: 13px/1.5 var(--hav-mono); }
+    .tk-footer a { color: var(--hav-accent); text-decoration: none; }
+    .tk-top { position: fixed; right: 18px; bottom: 18px; z-index: 40; display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--hav-border); border-radius: 12px; background: var(--hav-panel); color: var(--hav-text); cursor: pointer; box-shadow: var(--hav-shadow); font-size: 16px; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 760px) {
+      .tk-points { grid-template-columns: 1fr; }
+      .tk-cmp { grid-template-columns: 1fr; }
+      .tk-cmp-mid { transform: rotate(90deg); height: 30px; }
+    }
+  </style>
+</head>
+
+<body class="hav-page">
+
+  <article>
+    <!-- HERO -->
+    <header class="hav-hero">
+      <div class="hav-shell">
+        <div class="hav-kicker">商业知识 · 思维模型 · 规则之缝</div>
+        <h1 class="hav-title">规则之缝：<br>套利者的<em>生存逻辑</em></h1>
+        <p class="hav-subtitle">无论商业模式设计得多精巧，所有规则背后都可能存在漏洞或缝隙。理解这些缝隙，与靠它们获利的套利者，你才能更完整地看懂商业世界。</p>
+        <div class="tk-meta">
+          <span class="tk-tag">🧩 概念 · 规则之缝</span>
+          <span class="tk-tag">⏱ 约 3 分钟</span>
+          <span class="tk-tag">⚖️ 套利 · 反作用力</span>
+        </div>
+
+        <div class="tk-thesis">
+          <span class="lbl">一句话核心</span>
+          <p>凡是有利益的地方，就一定有反作用力；凡是有正向商业价值的地方，就会有相应的套利行为。</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- TOC -->
+    <nav class="tk-toc">
+      <div class="hav-shell tk-toc-row">
+        <a href="#s1">① 什么是规则之缝</a>
+        <a href="#s2">② 套利不是小儿科</a>
+        <a href="#s3">③ 有利益就有反作用力</a>
+        <a href="#s4">④ 为什么要理解它</a>
+      </div>
+    </nav>
+
+    <main class="hav-shell">
+
+      <!-- 一 -->
+      <section class="tk-section" id="s1">
+        <span class="tk-eyebrow"><span class="num">1</span>定义 · 规则之缝</span>
+        <h2 class="tk-h2">再精巧的规则，背后都有缝</h2>
+        <p class="tk-lead">今天想聊聊「规则之缝」与套利者的生存逻辑。<strong>无论商业模式设计得多么精巧，所有商业规则背后都可能存在漏洞或缝隙。</strong></p>
+
+        <figure class="tk-figure">
+          <svg viewBox="0 0 800 300" role="img" aria-label="商业规则之墙存在裂缝，套利者从缝隙中获利">
+            <text x="400" y="34" text-anchor="middle" font-size="14" font-weight="700" fill="#2c2825" font-family="sans-serif">商业规则（再精巧，也有缝）</text>
+
+            <!-- 墙体 -->
+            <rect x="60" y="56" width="680" height="150" rx="6" fill="#e8e0d2" stroke="#cdb9a6" stroke-width="1.5"/>
+            <!-- 砖缝 横线 -->
+            <line x1="60" y1="93" x2="740" y2="93" stroke="#cdb9a6" stroke-width="1"/>
+            <line x1="60" y1="131" x2="740" y2="131" stroke="#cdb9a6" stroke-width="1"/>
+            <line x1="60" y1="169" x2="740" y2="169" stroke="#cdb9a6" stroke-width="1"/>
+            <!-- 砖缝 竖线（错缝） -->
+            <line x1="150" y1="56" x2="150" y2="93" stroke="#cdb9a6" stroke-width="1"/>
+            <line x1="240" y1="93" x2="240" y2="131" stroke="#cdb9a6" stroke-width="1"/>
+            <line x1="150" y1="131" x2="150" y2="169" stroke="#cdb9a6" stroke-width="1"/>
+            <line x1="240" y1="169" x2="240" y2="206" stroke="#cdb9a6" stroke-width="1"/>
+            <line x1="640" y1="56" x2="640" y2="93" stroke="#cdb9a6" stroke-width="1"/>
+            <line x1="690" y1="131" x2="690" y2="169" stroke="#cdb9a6" stroke-width="1"/>
+
+            <!-- 裂缝 1 -->
+            <path d="M340 56 L330 100 L348 140 L334 180 L344 206" fill="none" stroke="#b9524c" stroke-width="3.5" stroke-linejoin="round"/>
+            <!-- 裂缝 2 -->
+            <path d="M520 56 L532 96 L514 138 L528 178 L518 206" fill="none" stroke="#b9524c" stroke-width="3.5" stroke-linejoin="round"/>
+
+            <!-- 缝隙标注 -->
+            <text x="337" y="50" text-anchor="middle" font-size="11.5" fill="#b9524c" font-family="monospace">缝隙</text>
+            <text x="523" y="50" text-anchor="middle" font-size="11.5" fill="#b9524c" font-family="monospace">漏洞</text>
+
+            <!-- 漏出的价值 + 套利者 -->
+            <text x="337" y="238" text-anchor="middle" font-size="20">💰</text>
+            <text x="523" y="238" text-anchor="middle" font-size="20">💰</text>
+            <text x="430" y="270" text-anchor="middle" font-size="13" font-weight="700" fill="#9b3f3a" font-family="sans-serif">套利者从缝里获利</text>
+            <text x="430" y="290" text-anchor="middle" font-size="11.5" fill="#8a837a" font-family="sans-serif">例：黄牛，就是靠规则漏洞获利的人</text>
+          </svg>
+          <figcaption>黄牛就是我们最熟悉的套利者——依靠规则漏洞获利。缝隙不是规则没设计好，而是任何复杂系统都难以完全堵死。</figcaption>
+        </figure>
+      </section>
+
+      <!-- 二 -->
+      <section class="tk-section" id="s2">
+        <span class="tk-eyebrow"><span class="num">2</span>放大 · 套利不是小儿科</span>
+        <h2 class="tk-h2">一旦自动化，套利就会被放大</h2>
+        <p class="tk-lead">很多人以为套利者只是在不被注意的角落玩「小儿科」的游戏。但实际上，<strong>在金融圈，这种套利方式非常普遍</strong>，许多人都擅长利用套利模式。为什么？</p>
+
+        <figure class="tk-figure">
+          <svg viewBox="0 0 800 340" role="img" aria-label="套利自动化飞轮：自动化降低成本提高收益，吸引更多人研究规则，发现更多缝隙">
+            <!-- 中心 -->
+            <circle cx="400" cy="170" r="62" fill="color-mix(in srgb,#d97757 10%,#fffdfa)" stroke="#d97757" stroke-width="1.5"/>
+            <text x="400" y="164" text-anchor="middle" font-size="15" font-weight="700" fill="#b8602a" font-family="Georgia, serif">套利飞轮</text>
+            <text x="400" y="186" text-anchor="middle" font-size="12" fill="#8a837a" font-family="sans-serif">越转越大</text>
+
+            <!-- 四节点 -->
+            <!-- 上 -->
+            <rect x="300" y="20" width="200" height="48" rx="10" fill="#fffdfa" stroke="#d4cfc7" stroke-width="1.5"/>
+            <text x="400" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#2c2825" font-family="sans-serif">① 套利方法自动化</text>
+            <text x="400" y="58" text-anchor="middle" font-size="11.5" fill="#8a837a" font-family="sans-serif">用程序代替人工执行</text>
+            <!-- 右 -->
+            <rect x="560" y="146" width="210" height="48" rx="10" fill="#eef3e9" stroke="#788c5d" stroke-width="1.5"/>
+            <text x="665" y="166" text-anchor="middle" font-size="13" font-weight="700" fill="#4f5e3a" font-family="sans-serif">② 成本↓ 收益↑</text>
+            <text x="665" y="184" text-anchor="middle" font-size="11.5" fill="#637349" font-family="sans-serif">套利变得极其划算</text>
+            <!-- 下 -->
+            <rect x="300" y="272" width="200" height="48" rx="10" fill="#fffdfa" stroke="#d4cfc7" stroke-width="1.5"/>
+            <text x="400" y="292" text-anchor="middle" font-size="13" font-weight="700" fill="#2c2825" font-family="sans-serif">③ 更多人研究规则</text>
+            <text x="400" y="310" text-anchor="middle" font-size="11.5" fill="#8a837a" font-family="sans-serif">利益吸引研究者涌入</text>
+            <!-- 左 -->
+            <rect x="30" y="146" width="210" height="48" rx="10" fill="#f7ecec" stroke="#b9524c" stroke-width="1.5"/>
+            <text x="135" y="166" text-anchor="middle" font-size="13" font-weight="700" fill="#9b3f3a" font-family="sans-serif">④ 发现更多缝隙</text>
+            <text x="135" y="184" text-anchor="middle" font-size="11.5" fill="#a8534d" font-family="sans-serif">更多套利机会被挖出</text>
+
+            <!-- 环形箭头 -->
+            <g fill="none" stroke="#d97757" stroke-width="2.5">
+              <path d="M500 52 Q610 80 660 140" marker-end="url(#ah)"/>
+              <path d="M650 196 Q560 270 504 292" marker-end="url(#ah)"/>
+              <path d="M300 292 Q190 268 142 198" marker-end="url(#ah)"/>
+              <path d="M150 144 Q210 78 300 54" marker-end="url(#ah)"/>
+            </g>
+            <defs>
+              <marker id="ah" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="#d97757"/>
+              </marker>
+            </defs>
+          </svg>
+          <figcaption>自动化让套利成本骤降、收益显著增加，于是吸引更多人去研究规则、寻找漏洞——机会越挖越多，飞轮越转越大。</figcaption>
+        </figure>
+      </section>
+
+      <!-- 三 -->
+      <section class="tk-section" id="s3">
+        <span class="tk-eyebrow"><span class="num">3</span>规律 · 反作用力</span>
+        <h2 class="tk-h2">有利益的地方，就一定有反作用力</h2>
+        <p class="tk-lead">这是套利现象背后那条更普适的规律——它几乎像物理里的作用力与反作用力一样成对出现。</p>
+
+        <div class="tk-cmp">
+          <div class="tk-cmp-card value">
+            <div class="ico">📈</div>
+            <h3>正向商业价值</h3>
+            <p>一处有利可图的设计、一个赚钱的模式、一道有价差的规则。</p>
+          </div>
+          <div class="tk-cmp-mid">⇄</div>
+          <div class="tk-cmp-card arb">
+            <div class="ico">🎣</div>
+            <h3>套利反作用力</h3>
+            <p>必然有人盯上它的缝隙，用套利行为去分一杯羹。</p>
+          </div>
+        </div>
+
+        <blockquote class="tk-quote">凡是有利益的地方，就一定会有反作用力。凡是有正向商业价值的地方，就会有相应的套利行为。</blockquote>
+
+        <div class="tk-callout">
+          <div class="ic">🎟️</div>
+          <div>
+            <h3>最熟悉的例子：黄牛</h3>
+            <p>票务系统想让票公平、低价地到达观众手里——这是正向价值。但只要存在价差和规则缝隙，<strong>黄牛就会作为反作用力出现</strong>，把缝隙变成自己的利润。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 四 -->
+      <section class="tk-section" id="s4">
+        <span class="tk-eyebrow"><span class="num">4</span>意义 · 为什么要理解它</span>
+        <h2 class="tk-h2">看懂套利，才看得懂完整的商业</h2>
+        <p class="tk-lead">理解规则缝隙的存在和套利者的生存逻辑，我们才能更完整、更深入地理解复杂的商业世界。把它拆成三层认知：</p>
+
+        <div class="tk-points">
+          <div class="tk-point">
+            <div class="no">LAYER 01</div>
+            <div class="nm">承认缝隙必然存在</div>
+            <div class="ds">别幻想规则完美无缝——任何复杂系统都留有缝隙，这是常态而非意外。</div>
+          </div>
+          <div class="tk-point">
+            <div class="no">LAYER 02</div>
+            <div class="nm">预判反作用力</div>
+            <div class="ds">设计任何有价值的模式时，先想：它会引来什么样的套利者？</div>
+          </div>
+          <div class="tk-point">
+            <div class="no">LAYER 03</div>
+            <div class="nm">把套利纳入视野</div>
+            <div class="ds">只有把「反作用力」一并算进来，你对商业世界的理解才是完整的。</div>
+          </div>
+        </div>
+
+        <div class="tk-final" style="margin-top:32px">
+          <span class="hav-pill">一句话收束</span>
+          <h2>有光的地方就有影，<br>有价值的地方就有套利</h2>
+          <p>套利者不是商业世界的「bug」，而是它的一部分。看懂规则之缝与套利者的生存逻辑，你看到的就不再只是规则本身，<strong>还有规则之外那股始终存在的反作用力</strong>。</p>
+          <blockquote class="tk-quote bare">理解了缝隙与套利，才算真正理解了完整的商业世界。</blockquote>
+          <p class="tk-src">本文为基于原文的结构化重构与可视化整理 · 概念出处：「规则之缝与套利者的生存逻辑」学习笔记。</p>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="tk-footer">
+        <span>Bin哥的知识地图 · 运营 / 商业思维</span>
+        <span>来源：<a href="https://app.notion.com/p/23aacc097f0780ecb277f921d3ed8398">Notion 原文</a></span>
+      </footer>
+    </main>
+  </article>
+
+  <button class="tk-top" data-back-top aria-label="返回顶部">↑</button>
+  <script>
+    document.querySelector('[data-back-top]')?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  </script>
+<script src="/nav.js" defer></script>
+</body>
+
+</html>
