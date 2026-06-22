@@ -67,6 +67,7 @@
 
     .stage {
       --card-w: min(460px, 94vw, 53vh);
+      --u: calc(var(--card-w) / 100);
       width: var(--card-w);
       aspect-ratio: 3 / 4;
       overflow: hidden;
@@ -89,21 +90,30 @@
     .card {
       width: 100%;
       height: 100%;
-      container-type: size;
       background: var(--paper);
       position: relative;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 8.5cqw 8cqw;
+      padding: calc(var(--u) * 6.5) calc(var(--u) * 7);
       overflow: hidden;
     }
     .card.deep { background: var(--paper-deep); }
-    .card.cover { justify-content: center; }
+    .card.cover {
+      justify-content: flex-start;
+      padding-top: calc(var(--u) * 12);
+      background-color: #f3ead6;
+      background-image:
+        linear-gradient(to bottom, rgba(243, 234, 214, .94) 0%, rgba(243, 234, 214, .6) 36%, rgba(243, 234, 214, 0) 60%),
+        url("assets/parasite-to-symbiosis-cover.png");
+      background-size: cover, cover;
+      background-position: center, center bottom;
+      background-repeat: no-repeat, no-repeat;
+    }
     .card::after {
       content: "";
       position: absolute;
-      inset: 3cqw;
+      inset: calc(var(--u) * 3);
       border: 1px solid var(--edge);
       border-radius: 12px;
       pointer-events: none;
@@ -115,15 +125,15 @@
       align-self: flex-start;
       align-items: center;
       gap: 8px;
-      font-size: 4.1cqw;
+      font-size: calc(var(--u) * 4.3);
       font-weight: 700;
       letter-spacing: .04em;
       color: var(--accent);
-      margin-bottom: 4.5cqw;
+      margin-bottom: calc(var(--u) * 3.2);
     }
     .kicker::before {
       content: "";
-      width: 7cqw;
+      width: calc(var(--u) * 7);
       height: 2.5px;
       background: var(--accent);
       display: inline-block;
@@ -133,41 +143,41 @@
       margin: 0;
       font-family: var(--serif);
       font-weight: 800;
-      font-size: 9.6cqw;
-      line-height: 1.32;
+      font-size: calc(var(--u) * 9.4);
+      line-height: 1.26;
       color: var(--ink);
       letter-spacing: .005em;
     }
-    .cover .ctitle { font-size: 13.5cqw; line-height: 1.26; }
+    .cover .ctitle { font-size: calc(var(--u) * 13.5); line-height: 1.26; }
 
     .csub {
-      margin-top: 6cqw;
+      margin-top: calc(var(--u) * 4.5);
       font-family: var(--serif);
-      font-size: 6.4cqw;
+      font-size: calc(var(--u) * 6.6);
       color: var(--ink-soft);
       line-height: 1.4;
     }
     .cover .csub::before {
       content: "";
       display: block;
-      width: 14cqw;
+      width: calc(var(--u) * 14);
       height: 3px;
       background: var(--accent);
-      margin-bottom: 6cqw;
+      margin-bottom: calc(var(--u) * 6);
     }
     .cover .ctag {
-      margin-top: 9cqw;
-      font-size: 4cqw;
+      margin-top: calc(var(--u) * 9);
+      font-size: calc(var(--u) * 4.2);
       font-weight: 700;
       letter-spacing: .12em;
       color: var(--accent);
     }
 
     .cbody {
-      margin: 5.5cqw 0 0;
+      margin: calc(var(--u) * 4) 0 0;
       font-family: var(--serif);
-      font-size: 5.5cqw;
-      line-height: 1.82;
+      font-size: calc(var(--u) * 5.3);
+      line-height: 1.66;
       color: var(--ink-soft);
     }
     .cbody em {
@@ -177,22 +187,22 @@
     }
 
     .csum {
-      margin-top: 6cqw;
-      padding-top: 5cqw;
+      margin-top: calc(var(--u) * 4);
+      padding-top: calc(var(--u) * 4);
       border-top: 1.5px solid var(--edge);
       font-family: var(--serif);
-      font-size: 5.9cqw;
+      font-size: calc(var(--u) * 5.8);
       font-weight: 800;
-      line-height: 1.5;
+      line-height: 1.42;
       color: var(--ink);
     }
 
     .cnote {
-      margin-top: 4cqw;
+      margin-top: calc(var(--u) * 4);
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      font-size: 4.1cqw;
+      font-size: calc(var(--u) * 4.3);
       font-weight: 700;
       color: var(--accent);
       line-height: 1.45;
@@ -200,9 +210,9 @@
 
     .pageno {
       position: absolute;
-      right: 6.5cqw;
-      bottom: 5.5cqw;
-      font-size: 3.1cqw;
+      right: calc(var(--u) * 6.5);
+      bottom: calc(var(--u) * 5.5);
+      font-size: calc(var(--u) * 3.1);
       letter-spacing: .12em;
       color: var(--ui);
       opacity: .65;
@@ -210,9 +220,9 @@
     }
     .badge {
       position: absolute;
-      right: 6.5cqw;
-      top: 6cqw;
-      font-size: 3.2cqw;
+      right: calc(var(--u) * 6.5);
+      top: calc(var(--u) * 6);
+      font-size: calc(var(--u) * 3.3);
       font-weight: 700;
       letter-spacing: .04em;
       color: var(--accent);
@@ -377,6 +387,7 @@
     const curEl = document.getElementById('cur');
     const prev = document.getElementById('prev');
     const next = document.getElementById('next');
+    const stage = document.getElementById('stage');
     const total = cards.length;
 
     cards.forEach((c, i) => {
@@ -421,7 +432,6 @@
       if (e.key === 'ArrowRight') go(cur + 1);
     });
 
-    const stage = document.getElementById('stage');
     stage.addEventListener('click', (e) => {
       const r = stage.getBoundingClientRect();
       if ((e.clientX - r.left) < r.width / 2) go(cur - 1); else go(cur + 1);
