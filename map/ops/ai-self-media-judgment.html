@@ -1,0 +1,479 @@
+<!doctype html>
+<!--
+  小红书 3:4 翻页图文卡片模板（article-to-xhs-cards skill）
+  使用方法：
+    1. 把本文件复制到输出位置（如 项目/map/ops/<slug>.html）
+    2. 替换三处内容：<title>、.topbar 的 brand 文本、<script> 里的 cards 数组
+    3. 配色想微调：改 :root 里的 CSS 变量
+    4. 想给封面配图：见下方 .card.cover 处的注释，或 SKILL.md「封面配图」
+  关键：字号用 --u = var(--card-w)/100 派生，切勿改回 cqw（会在部分浏览器缩字）。
+-->
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="做 AI 自媒体，真正难的不是提示词或工具，而是选题、审美、工作流背后的判断力。AI 降低了制作门槛，没降低判断门槛——拆给做内容的人。">
+  <title>做 AI 自媒体，最难的不是提示词 · 图文</title>
+  <style>
+    :root {
+      --pg: #ece5d8;
+      --pg2: #e4dac8;
+      --paper: #f8f4ea;
+      --paper-deep: #f8f4ea;
+      --edge: #ddd0b6;
+      --ink: #3d2817;
+      --ink-soft: #5f4632;
+      --accent: #c0622e;
+      --accent-dark: #9c4a1f;
+      --ui: #8a7c66;
+      --serif: "Songti SC", "Noto Serif SC", Georgia, "Times New Roman", serif;
+      --sans: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --pg: #16161a;
+        --pg2: #1d1d22;
+        --edge: #2f2a22;
+        --ui: #9a8f7c;
+      }
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--pg);
+      color: var(--ink);
+      font-family: var(--sans);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100svh;
+      padding: 12px 0 calc(12px + env(safe-area-inset-bottom));
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .topbar {
+      width: var(--card-w);
+      max-width: 92vw;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      font-size: 12.5px;
+      color: var(--ui);
+      letter-spacing: .02em;
+    }
+    .topbar .brand { display: flex; align-items: center; gap: 7px; font-weight: 600; }
+    .topbar .brand i { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); display: inline-block; }
+    .topbar .counter b { color: var(--accent); font-weight: 700; }
+
+    .stage {
+      --card-w: min(460px, 94vw, 53vh);
+      --u: calc(var(--card-w) / 100);
+      width: var(--card-w);
+      aspect-ratio: 3 / 4;
+      overflow: hidden;
+      border-radius: 22px;
+      position: relative;
+      box-shadow: 0 22px 60px rgba(40, 28, 14, .22);
+      background: var(--paper);
+      cursor: pointer;
+    }
+
+    .track {
+      display: flex;
+      height: 100%;
+      transition: transform .46s cubic-bezier(.45, .02, .2, 1);
+      will-change: transform;
+    }
+
+    .slide { flex: 0 0 100%; height: 100%; }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      background: var(--paper);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: calc(var(--u) * 6.5) calc(var(--u) * 7);
+      overflow: hidden;
+    }
+    .card.deep { background: var(--paper-deep); }
+
+    /* 封面图文版（已启用配图）*/
+    .card.cover {
+      justify-content: flex-start;
+      padding-top: calc(var(--u) * 9);
+      background-color: #f8f4ea;
+      background-image:
+        linear-gradient(to bottom, rgba(248,244,234,.96) 0%, rgba(248,244,234,.84) 44%, rgba(248,244,234,0) 60%),
+        url("assets/ai-self-media-judgment-cover.png");
+      background-size: cover, 150%;
+      background-position: center, center top;
+      background-repeat: no-repeat, no-repeat;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: calc(var(--u) * 3);
+      border: 1px solid var(--edge);
+      border-radius: 12px;
+      pointer-events: none;
+      opacity: .5;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-self: flex-start;
+      align-items: center;
+      gap: 8px;
+      font-size: calc(var(--u) * 4.1);
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--accent);
+      margin-bottom: calc(var(--u) * 3.2);
+    }
+    .kicker::before {
+      content: "";
+      width: calc(var(--u) * 7);
+      height: 2.5px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    .ctitle {
+      margin: 0;
+      font-family: var(--serif);
+      font-weight: 800;
+      font-size: calc(var(--u) * 9.4);
+      line-height: 1.26;
+      color: var(--ink);
+      letter-spacing: .005em;
+    }
+    .cover .ctitle { font-size: calc(var(--u) * 13.5); line-height: 1.26; }
+
+    .csub {
+      margin-top: calc(var(--u) * 3);
+      font-family: var(--serif);
+      font-size: calc(var(--u) * 6.6);
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+    .cover .csub::before {
+      content: "";
+      display: block;
+      width: calc(var(--u) * 14);
+      height: 3px;
+      background: var(--accent);
+      margin-bottom: calc(var(--u) * 6);
+    }
+    .cover .ctag {
+      margin-top: calc(var(--u) * 4);
+      font-size: calc(var(--u) * 4.2);
+      font-weight: 700;
+      letter-spacing: .12em;
+      color: var(--accent);
+    }
+
+    .cbody {
+      margin: calc(var(--u) * 4) 0 0;
+      font-family: var(--serif);
+      font-size: calc(var(--u) * 5.3);
+      line-height: 1.66;
+      color: var(--ink-soft);
+    }
+    .cbody em {
+      font-style: normal;
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+
+    .csum {
+      margin-top: calc(var(--u) * 4);
+      padding-top: calc(var(--u) * 4);
+      border-top: 1.5px solid var(--edge);
+      font-family: var(--serif);
+      font-size: calc(var(--u) * 5.8);
+      font-weight: 800;
+      line-height: 1.42;
+      color: var(--ink);
+    }
+
+    .cnote {
+      margin-top: calc(var(--u) * 4);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: calc(var(--u) * 4.1);
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1.45;
+    }
+
+    .pageno {
+      position: absolute;
+      right: calc(var(--u) * 6.5);
+      bottom: calc(var(--u) * 5.5);
+      font-size: calc(var(--u) * 3.1);
+      letter-spacing: .12em;
+      color: var(--ui);
+      opacity: .65;
+      font-family: var(--serif);
+    }
+    .badge {
+      position: absolute;
+      right: calc(var(--u) * 6.5);
+      top: calc(var(--u) * 6);
+      font-size: calc(var(--u) * 3.3);
+      font-weight: 700;
+      letter-spacing: .04em;
+      color: var(--accent);
+      opacity: .8;
+    }
+
+    .controls {
+      width: var(--card-w);
+      max-width: 92vw;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .navbtn {
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid var(--edge);
+      background: var(--pg2);
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform .15s, opacity .2s, background .2s;
+    }
+    .navbtn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .navbtn:active { transform: scale(.92); }
+    .navbtn:disabled { opacity: .3; cursor: default; background: var(--pg2); color: var(--ink); border-color: var(--edge); }
+
+    .dots {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--edge);
+      cursor: pointer;
+      transition: width .25s, background .25s;
+    }
+    .dot.on { width: 20px; border-radius: 4px; background: var(--accent); }
+
+    .hint {
+      margin: 11px 0 0;
+      font-size: 11.5px;
+      color: var(--ui);
+      letter-spacing: .02em;
+    }
+    @media (hover: none) { .hint .kbd { display: none; } }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <span class="brand"><i></i>AI 自媒体 · 认知篇</span>
+    <span class="counter"><b id="cur">01</b> / <span id="totalEl">12</span></span>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="track" id="track"></div>
+  </div>
+
+  <nav class="controls">
+    <button class="navbtn" id="prev" aria-label="上一页">‹</button>
+    <div class="dots" id="dots"></div>
+    <button class="navbtn" id="next" aria-label="下一页">›</button>
+  </nav>
+
+  <p class="hint"><span class="kbd">← → 键翻页 ·</span> 点击卡片左右两侧 / 滑动翻页</p>
+
+  <script>
+    /* ===== 替换区：把下面的 cards 换成目标文章的卡片数据 =====
+       字段说明：
+         type:'cover'  封面页（用 title + sub + ctag，可选 badge；不要 body/sum）
+         tag           概念标签（内页左上小标题，如「损失厌恶」）
+         title         大标题，用 <br> 手动断行控制每行字数（建议每行 6–9 字）
+         tone:'deep'   稍深的纸张底色，用于封面/情绪炸点/收尾页做节奏区分
+         body          正文论述，可用 <em>关键词</em> 高亮（每页 3–4 句，约 50–65 字）
+         sum           金句小结（一句重锤收尾）
+         note          仅末页用：评论引导钩子
+       排版已防溢出：标题 2 行 + 正文 ≤5 行 + 金句 1 行可稳定容纳，勿超。
+    */
+    const cards = [
+      {
+        type: 'cover', tone: 'deep', badge: '认知篇',
+        title: '做 AI 自媒体<br>不拼提示词',
+        sub: '拼的是判断力',
+        ctag: '12 页 · 给做内容的人'
+      },
+      {
+        tag: '工具幻觉',
+        title: '你以为差的是工具<br>其实差的是判断',
+        body: '今天一个生图神器，明天一个写文案工具，一开始确实很爽。可内容多了数据没起来，更新勤了变现没发生——<em>难的从来不是「能不能做出来」</em>。',
+        sum: '而是：该做什么、什么是好、能否坚持。'
+      },
+      {
+        tag: '真正的门槛',
+        title: 'AI 时代<br>真正难的只有三件事',
+        body: '你知不知道<em>该做什么</em>（选题）？分不分得清<em>什么是好东西</em>（审美）？能不能<em>持续做下去</em>（工作流）？工具一个都解决不了。',
+        sum: '这三件事，AI 一个都替不了。'
+      },
+      {
+        tag: '选题 · 找矛盾',
+        title: '选题不是追热点<br>是在热点里找矛盾',
+        body: '热点你看得到，别人也看得到；你能让 AI 总结，别人也能。只换个说法发出去，<em>本质还是搬运</em>，只不过从手搬变成了 AI 搬。',
+        sum: '你讲清了他说不清的，他才会记住你。'
+      },
+      {
+        tag: '从信息到判断',
+        title: '把「信息」<br>改写成「问题」',
+        body: '「某模型发布了」只是信息；「为什么模型越强，普通人越焦虑」才有问题意识。别停在「我也知道」，要走到「这跟你有什么关系」。',
+        sum: '信息谁都有，判断才稀缺。'
+      },
+      {
+        tag: '审美 · 知道哪里停', tone: 'deep',
+        title: '不是做得不够好<br>是太想证明自己好',
+        body: '皮肤太完美像塑料，背景全是满的，画面反而没了呼吸。<em>真实感不是高清堆出来的</em>，是那些「不那么完美」的地方撑起来的。',
+        sum: '好审美，是知道哪里该停下。'
+      },
+      {
+        tag: '留白思维',
+        title: 'AI 文案一眼能认出<br>因为它太「满」了',
+        body: '太完整、太顺、太像标准答案——没有犹豫，没有停顿，没有「我也是做了一阵才发现」的过程。人写东西，不会每句都那么满。',
+        sum: 'AI 擅长补满，你要学会留白。'
+      },
+      {
+        tag: '工作流 · 持续复盘',
+        title: '工作流不是批量生产<br>是持续复盘',
+        body: '方向错了，批量只会让你<em>更快地跑偏</em>。真正有用的工作流，不是一天发 100 条，而是每发一条，都知道下一条该怎么改。',
+        sum: '不复盘，你每天都在重新开始。'
+      },
+      {
+        tag: '把感觉变成判断',
+        title: '每发一条<br>都逼自己回答一句',
+        body: '这条为什么没人点？是标题没抓住问题，还是选题太虚、表达太绕、讲得不够具体？把这些记下来，判断力才会<em>一次次变准</em>。',
+        sum: '看起来很努力，不等于在积累。'
+      },
+      {
+        tag: '门槛的真相', tone: 'deep',
+        title: '制作门槛被打到零<br>判断门槛没动过',
+        body: '它能帮你写文章，却不能判断该不该写；能帮你生图，却不能判断有没有高级感；能帮你日更，却不能判断<em>能不能长成一个 IP</em>。',
+        sum: '工具只是把所有人送到了起跑线。'
+      },
+      {
+        tag: '慢变量',
+        title: '当所有人都能生产<br>拼的就不是生产了',
+        body: '工具越来越便宜，教程越来越多，提示词越来越不神秘。最后能留下的，是那些慢一点的东西——你对行业的理解、对用户的体感、对质感的要求。',
+        sum: '表面拼工具，深处拼认知和耐心。'
+      },
+      {
+        tag: '写在最后', tone: 'deep',
+        title: 'AI 能让你跑得更快<br>但方向得自己选',
+        body: '它把制作的成本降到很低，却没有替你判断。你愿不愿意把一件事反复打磨下去的耐心，才是别人<em>抄不走的东西</em>。',
+        sum: '慢，是这个时代最稀缺的快。',
+        note: '你卡在选题、审美还是工作流？评论区聊聊'
+      }
+    ];
+    /* ===== 替换区结束 ===== */
+
+    const track = document.getElementById('track');
+    const dots = document.getElementById('dots');
+    const curEl = document.getElementById('cur');
+    const totalEl = document.getElementById('totalEl');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const stage = document.getElementById('stage');
+    const total = cards.length;
+    if (totalEl) totalEl.textContent = total;
+
+    cards.forEach((c, i) => {
+      const slide = document.createElement('div');
+      slide.className = 'slide';
+      const cls = 'card' + (c.tone === 'deep' ? ' deep' : '') + (c.type === 'cover' ? ' cover' : '');
+      let h = '';
+      if (c.badge) h += `<div class="badge">${c.badge}</div>`;
+      if (c.tag) h += `<div class="kicker">${c.tag}</div>`;
+      h += `<h2 class="ctitle">${c.title}</h2>`;
+      if (c.sub) h += `<div class="csub">${c.sub}</div>`;
+      if (c.ctag) h += `<div class="ctag">${c.ctag}</div>`;
+      if (c.body) h += `<p class="cbody">${c.body}</p>`;
+      if (c.sum) h += `<div class="csum">${c.sum}</div>`;
+      if (c.note) h += `<div class="cnote">▸ ${c.note}</div>`;
+      h += `<div class="pageno">${String(i + 1).padStart(2, '0')} / ${total}</div>`;
+      slide.innerHTML = `<div class="${cls}">${h}</div>`;
+      track.appendChild(slide);
+
+      const d = document.createElement('span');
+      d.className = 'dot' + (i === 0 ? ' on' : '');
+      d.addEventListener('click', (e) => { e.stopPropagation(); go(i); });
+      dots.appendChild(d);
+    });
+
+    let cur = 0;
+    const dotEls = [...dots.children];
+
+    function go(i) {
+      cur = Math.max(0, Math.min(total - 1, i));
+      track.style.transform = `translateX(${-cur * 100}%)`;
+      curEl.textContent = String(cur + 1).padStart(2, '0');
+      prev.disabled = cur === 0;
+      next.disabled = cur === total - 1;
+      dotEls.forEach((d, j) => d.classList.toggle('on', j === cur));
+    }
+
+    prev.addEventListener('click', () => go(cur - 1));
+    next.addEventListener('click', () => go(cur + 1));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') go(cur - 1);
+      if (e.key === 'ArrowRight') go(cur + 1);
+    });
+
+    stage.addEventListener('click', (e) => {
+      const r = stage.getBoundingClientRect();
+      if ((e.clientX - r.left) < r.width / 2) go(cur - 1); else go(cur + 1);
+    });
+
+    let sx = 0, sy = 0, swiping = false;
+    stage.addEventListener('touchstart', (e) => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; swiping = true; }, { passive: true });
+    stage.addEventListener('touchend', (e) => {
+      if (!swiping) return; swiping = false;
+      const dx = e.changedTouches[0].clientX - sx;
+      const dy = e.changedTouches[0].clientY - sy;
+      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { e.preventDefault(); go(dx < 0 ? cur + 1 : cur - 1); }
+    }, { passive: false });
+
+    go(0);
+  </script>
+</body>
+
+</html>
