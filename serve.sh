@@ -5,6 +5,7 @@
 set -euo pipefail
 
 PORT="${1:-8765}"
+LOG_FILE="${TMPDIR:-/tmp}/ai-knowledge-map-serve-${PORT}.log"
 
 # 检查端口是否被占用
 PID=$(lsof -ti tcp:"$PORT" 2>/dev/null || true)
@@ -17,8 +18,16 @@ if [[ -n "$PID" ]]; then
   echo "✅  已释放端口 $PORT"
 fi
 
-echo "🚀  启动静态服务器 → http://localhost:$PORT"
-echo "     按 Ctrl+C 停止服务"
-echo ""
+echo "🚀  正在后台启动静态服务器 → http://localhost:$PORT"
 
-python3 -m http.server "$PORT"
+nohup python3 -m http.server "$PORT" >"$LOG_FILE" 2>&1 < /dev/null &
+SERVER_PID=$!
+
+sleep 0.5
+if ! kill -0 "$SERVER_PID" 2>/dev/null; then
+  echo "❌  启动失败，请查看日志：$LOG_FILE" >&2
+  exit 1
+fi
+
+echo "✅  已在后台运行 (PID: $SERVER_PID)"
+echo "📄  日志：$LOG_FILE"
