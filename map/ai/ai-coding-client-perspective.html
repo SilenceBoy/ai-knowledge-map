@@ -40,6 +40,9 @@ h1,h2,h3,p{margin:0} h1{font:800 clamp(42px,6vw,82px)/1.04 var(--display);letter
 @media(max-width:800px){body{overflow:auto}.slide{position:relative;min-height:100vh;padding:68px 20px 94px}.problem-grid,.gate-board,.demand-grid,.case-grid,.prompt-layout,.archive,.deploy-grid,.term-grid,.clock-grid,.close-grid,.profile-grid,.works-grid,.path-grid,.plan-flow,.deploy-flow,.delivery-layout,.step-gallery.two,.boundary-grid,.redline-grid{grid-template-columns:1fr}.path-or{min-height:48px}.gate-board{gap:8px}.gate{min-height:106px}.rail{max-width:92vw;overflow:auto}.hint,.zone{display:none}.tools{right:12px}.navs{right:12px}.evidence img{height:150px}.profile-shot>img{height:260px}.profile-qr{right:10px;bottom:10px;grid-template-columns:96px auto;padding:8px 11px 8px 8px}.profile-qr img{width:96px;height:96px}.profile-qr b{font-size:16px}.work-card img{height:190px}.shot-card img,.step-gallery.single .shot-card img{height:210px}.lightbox{padding:14px}.lightbox-panel{width:96vw;height:94vh}.boundary-thesis,.redline-mantra{grid-template-columns:1fr}.redline-card{min-height:0}}
 @media print{body{overflow:visible}.slide{display:flex!important;position:relative;min-height:100vh;page-break-after:always;opacity:1;transform:none}.topbar,.tools,.navs,.hint,.rail,.zone{display:none}.speaker{display:block}}
 </style>
+<style>
+.work-image-trigger{all:unset;display:block;position:relative;width:100%;cursor:zoom-in}.work-image-trigger:after{content:"⌕";position:absolute;right:10px;bottom:10px;width:31px;height:31px;display:grid;place-items:center;border-radius:9px;background:rgba(24,24,23,.78);color:#fff;font:800 18px var(--body);box-shadow:0 8px 18px rgba(0,0,0,.24);transition:.2s ease}.work-image-trigger:hover:after,.work-image-trigger:focus-visible:after{transform:scale(1.08);background:var(--coral)}.work-image-trigger:focus-visible{outline:3px solid var(--coral);outline-offset:-3px}
+</style>
 </head>
 <body>
 <div class="topbar"><div class="progress" id="progress"></div></div>
@@ -75,10 +78,10 @@ h1,h2,h3,p{margin:0} h1{font:800 clamp(42px,6vw,82px)/1.04 var(--display);letter
       <div class="eyebrow">真实作品，不是概念图 <span class="time">约 02′</span></div>
       <h2>这些项目，都是沿着<span class="accent">“先验收，再放行”</span>做出来的</h2>
       <div class="works-grid">
-        <article class="work-card"><img src="./ai-coding-client-perspective-assets/parallelme.png" alt="Parallel Me 首页真实截图"><div><h3>Parallel Me</h3><p>把人生遗憾转成一段平行世界叙事，验证情绪价值与交互体验。</p><span class="work-status">线上作品展示</span></div></article>
-        <article class="work-card"><img src="./ai-coding-client-perspective-assets/ai-photo.png" alt="AI 写真生成器真实截图"><div><h3>AI 写真生成器</h3><p>从风格浏览、收藏到生成链路，把多模态能力做成可用产品。</p><span class="work-status">线上作品展示</span></div></article>
-        <article class="work-card"><img src="./ai-coding-client-perspective-assets/ai-map.png" alt="Bin哥知识地图真实截图"><div><h3>知识地图</h3><p>把实践文章整理为可检索、可复盘、可持续更新的个人知识库。</p><span class="work-status">线上作品展示</span></div></article>
-        <article class="work-card"><img src="./ai-coding-client-perspective-assets/math-adventure.png" alt="小学数学冒险课程真实截图"><div><h3>小数点点大冒险</h3><p>把五年级数学做成有宠物、关卡和即时反馈的本地互动课程。</p><span class="work-status">本地交互课程 · 已运行</span></div></article>
+        <article class="work-card"><button type="button" class="work-image-trigger" data-lightbox="./ai-coding-client-perspective-assets/parallelme.png" data-caption="Parallel Me · 首页真实截图"><img src="./ai-coding-client-perspective-assets/parallelme.png" alt="Parallel Me 首页真实截图"></button><div><h3>Parallel Me</h3><p>把人生遗憾转成一段平行世界叙事，验证情绪价值与交互体验。</p><span class="work-status">线上作品展示</span></div></article>
+        <article class="work-card"><button type="button" class="work-image-trigger" data-lightbox="./ai-coding-client-perspective-assets/ai-photo.png" data-caption="AI 写真生成器 · 首页真实截图"><img src="./ai-coding-client-perspective-assets/ai-photo.png" alt="AI 写真生成器真实截图"></button><div><h3>AI 写真生成器</h3><p>从风格浏览、收藏到生成链路，把多模态能力做成可用产品。</p><span class="work-status">线上作品展示</span></div></article>
+        <article class="work-card"><button type="button" class="work-image-trigger" data-lightbox="./ai-coding-client-perspective-assets/ai-map.png" data-caption="知识地图 · 首页真实截图"><img src="./ai-coding-client-perspective-assets/ai-map.png" alt="Bin哥知识地图真实截图"></button><div><h3>知识地图</h3><p>把实践文章整理为可检索、可复盘、可持续更新的个人知识库。</p><span class="work-status">线上作品展示</span></div></article>
+        <article class="work-card"><button type="button" class="work-image-trigger" data-lightbox="./ai-coding-client-perspective-assets/math-adventure.png" data-caption="小数点点大冒险 · 课程真实截图"><img src="./ai-coding-client-perspective-assets/math-adventure.png" alt="小学数学冒险课程真实截图"></button><div><h3>小数点点大冒险</h3><p>把五年级数学做成有宠物、关卡和即时反馈的本地互动课程。</p><span class="work-status">本地交互课程 · 已运行</span></div></article>
       </div>
       <aside class="speaker">每个项目只讲一句。重点不是炫作品数量，而是让听众相信：AI Coding 能做出真实产品，但能做出来，不代表一句话就能做对。自然接到下一页的三个失控现场。</aside>
     </div>

@@ -16,8 +16,12 @@ def main() -> int:
         raise SystemExit("第 2 页仍包含二维码组件")
     if "href=" in third_slide:
         raise SystemExit("第 3 页仍包含链接")
+    if third_slide.count('class="work-image-trigger"') != 4:
+        raise SystemExit("第 3 页未为全部 4 张案例图片配置放大按钮")
+    if third_slide.count("data-lightbox=") != 4:
+        raise SystemExit("第 3 页案例图片未全部接入灯箱预览")
 
-    print("PASS: 第 2 页无二维码，第 3 页无链接")
+    print("PASS: 第 2 页无二维码，第 3 页无链接且案例图片可放大")
     return 0
 
 
