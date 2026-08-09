@@ -1,6 +1,6 @@
 # 《像甲方一样做 AI Coding》30 分钟口播稿
 
-对应课件：`课件-像甲方一样做AICoding-口播优化版.html`
+对应页面：`ai-coding-client-perspective.html`
 
 ## 使用方式
 

@@ -13,8 +13,7 @@ EXPECTED_TAGS = {
         "map/ai/ai-fullstack-dev-talk.html",
         "map/ai/ai-requirement-to-launch-talk-ppt.html",
         "map/ai/ai_eight_use_scenarios_offline/index.html",
-        "map/ai/codex-mvp-workshop-ppt.html",
-        "map/ai/课件-像甲方一样做AICoding-口播优化版.html",
+        "map/ai/ai-coding-client-perspective.html",
         "map/growth/ai-era-super-individual-capabilities-deck.html",
     },
     "image-text": {

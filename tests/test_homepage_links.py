@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
-"""确保首页只展示顶层文章和专题入口。"""
+"""确保首页展示所有可见的顶层文章和专题入口。"""
 
 from __future__ import annotations
 
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit
+
+
+HIDDEN_FROM_HOMEPAGE = {
+    "map/ai/codex-mvp-workshop-ppt.html",
+}
 
 
 class AnchorParser(HTMLParser):
@@ -38,7 +43,7 @@ def main() -> int:
         path.as_posix()
         for path in Path("map").rglob("*.html")
         if len(path.parts) == 3 or path.name == "index.html"
-    }
+    } - HIDDEN_FROM_HOMEPAGE
     missing = sorted(expected_cards - homepage_cards)
     unexpected = sorted(homepage_cards - expected_cards)
 

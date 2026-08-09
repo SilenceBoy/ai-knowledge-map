@@ -29,16 +29,15 @@ try {
     .locator('.card:not([data-hidden])')
     .evaluateAll(cards => cards.map(card => card.getAttribute('href')).sort());
 
-  assert.equal((await visibleHrefs()).length, 21, '默认应展示全部 21 张卡片');
+  assert.equal((await visibleHrefs()).length, 20, '默认应展示全部 20 张卡片');
 
   await page.getByRole('button', { name: /课件PPT/ }).click();
   assert.deepEqual(await visibleHrefs(), [
+    'map/ai/ai-coding-client-perspective.html',
     'map/ai/ai-fullstack-dev-talk.html',
     'map/ai/ai-requirement-to-launch-talk-ppt.html',
     'map/ai/ai_eight_use_scenarios_offline/index.html',
-    'map/ai/codex-mvp-workshop-ppt.html',
     'map/ai/single-point-replication-deck.html',
-    'map/ai/课件-像甲方一样做AICoding-口播优化版.html',
     'map/growth/ai-era-super-individual-capabilities-deck.html',
   ]);
 
