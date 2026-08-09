@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="对外宣讲 PPT：我如何把一个 AI 需求做成可上线系统——面向 AI 新手小白的 30 分钟真实案例分享，从找需求、拆 MVP、指挥 AI 落地，到上线与变现思考。">
+<title>我如何把一个 AI 需求做成可上线系统 · 30 分钟对外分享</title>
+<style>
+:root{
+  color-scheme: light dark;
+  --bg:#faf8f5; --surface:#f0ede8; --surface-2:#fffdf9; --surface-3:#f6f2ec;
+  --text:#2c2825; --muted:#746d64; --border:#d4cfc7;
+  --clay:#d97757; --olive:#788c5d; --sky:#6a8caf; --violet:#8a6faf; --rose:#c66060; --gold:#c9a24a;
+  --ink:#141413;
+  --shadow:0 18px 60px rgba(44,40,37,.10);
+  --shadow-sm:0 6px 22px rgba(44,40,37,.08);
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#171615; --surface:#23211f; --surface-2:#2c2926; --surface-3:#201e1c;
+  --text:#f4efe8; --muted:#b8afa4; --border:#3a3733;
+  --shadow:0 18px 60px rgba(0,0,0,.45); --shadow-sm:0 6px 22px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--sans); background:var(--bg); color:var(--text); overflow:hidden; -webkit-font-smoothing:antialiased;}
+.deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.slide{position:absolute; inset:0; display:none; flex-direction:column; justify-content:center;
+  padding:clamp(24px,4.6vw,80px); opacity:0; transform:translateY(14px); transition:opacity .4s ease,transform .4s ease;}
+.slide.active{display:flex;opacity:1;transform:none}
+.slide-inner{width:100%;max-width:1100px;margin:0 auto}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:clamp(12px,1.3vw,15px);font-weight:600;
+  letter-spacing:.06em;color:var(--clay);text-transform:uppercase;margin-bottom:16px;}
+.kicker::before{content:"";width:26px;height:2px;background:var(--clay);border-radius:2px}
+h1{font-size:clamp(30px,5.4vw,68px);line-height:1.1;font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(23px,3.4vw,42px);line-height:1.15;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.lead{font-size:clamp(15px,1.6vw,20px);color:var(--muted);line-height:1.6;margin-top:16px;max-width:52ch}
+.em{color:var(--clay);font-weight:700}
+.em-olive{color:var(--olive);font-weight:700}
+.em-sky{color:var(--sky);font-weight:700}
+.em-rose{color:var(--rose);font-weight:700}
+/* cover */
+.cover h1{font-size:clamp(34px,6.4vw,80px)}
+.cover .sub{margin-top:22px;font-size:clamp(16px,2vw,26px);color:var(--text);font-weight:600}
+.cover .tag{margin-top:13px;font-size:clamp(13px,1.5vw,18px);color:var(--muted)}
+.cover .badge{display:inline-block;margin-bottom:24px;padding:7px 16px;border-radius:999px;background:var(--surface);
+  border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:600;letter-spacing:.04em;}
+.cover .pill-row{margin-top:36px;display:flex;flex-wrap:wrap;gap:12px}
+.pill{padding:9px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:clamp(13px,1.4vw,16px);font-weight:600;}
+.pill b{color:var(--clay)}
+/* flow */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin-top:30px}
+.flow .step{flex:1 1 0;min-width:110px;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:14px;padding:16px 14px;text-align:center;position:relative;box-shadow:var(--shadow-sm);}
+.flow .step .s-n{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.flow .step .s-t{font-weight:700;font-size:clamp(13px,1.4vw,16px);margin-top:6px;line-height:1.3}
+.flow .step.hot{background:var(--clay);border-color:var(--clay);color:#fff}
+.flow .step.hot .s-n,.flow .step.hot .s-t{color:#fff}
+.flow .arrow{display:flex;align-items:center;color:var(--border);font-size:20px}
+/* cards */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.cards2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:22px}
+.card{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.card h3{font-size:clamp(16px,1.9vw,21px);font-weight:800;margin:0 0 8px;display:flex;align-items:center;gap:10px}
+.card p,.card li{font-size:clamp(13px,1.4vw,16px);color:var(--muted);line-height:1.55}
+.card .tagline{margin-top:10px;font-size:clamp(12px,1.3vw,14px);color:var(--text);font-weight:600}
+.card .tagline b{color:var(--clay)}
+.card ul{list-style:none;display:grid;gap:6px;margin-top:4px}
+.card li::before{content:"▸ ";color:var(--clay);font-weight:700}
+.tint-clay{border-top:3px solid var(--clay)} .tint-olive{border-top:3px solid var(--olive)}
+.tint-sky{border-top:3px solid var(--sky)} .tint-violet{border-top:3px solid var(--violet)}
+.tint-gold{border-top:3px solid var(--gold)} .tint-rose{border-top:3px solid var(--rose)}
+.card.full{grid-column:1 / -1}
+/* numbered */
+.numbered{display:grid;gap:13px;margin-top:22px}
+.numbered.cols2{grid-template-columns:1fr 1fr;gap:13px 26px}
+.row{display:flex;gap:15px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:14px;padding:15px 19px;box-shadow:var(--shadow-sm)}
+.row .num{flex:none;width:36px;height:36px;border-radius:10px;background:var(--clay);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-family:var(--mono);}
+.row .num.rose{background:var(--rose)} .row .num.olive{background:var(--olive)} .row .num.sky{background:var(--sky)}
+.row .body .t{font-weight:700;font-size:clamp(15px,1.6vw,19px)}
+.row .body .d{color:var(--muted);font-size:clamp(13px,1.35vw,15px);margin-top:3px;line-height:1.5}
+/* code / copy box */
+.code-wrap{margin-top:22px;position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.code-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+.code-bar .label{font-size:12.5px;font-weight:600;color:var(--muted);font-family:var(--mono)}
+.copy-btn{font-family:var(--sans);font-size:12px;font-weight:600;padding:5px 12px;border-radius:8px;
+  border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;transition:.15s;white-space:nowrap}
+.copy-btn:hover{background:var(--clay);color:#fff;border-color:var(--clay)}
+pre{background:var(--ink);color:#e8e2d8;padding:18px 20px;overflow:auto;max-height:60vh;
+  font-family:var(--mono);font-size:clamp(11.5px,1.25vw,14.5px);line-height:1.6;white-space:pre-wrap}
+[data-theme="dark"] pre{background:#0d0c0b}
+pre.say{font-family:var(--sans);font-size:clamp(17px,2.4vw,28px);font-weight:700;line-height:1.6;padding:22px 24px}
+/* slogan */
+.slogan{margin-top:26px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;
+  padding:clamp(20px,3.5vw,36px);text-align:center;font-weight:800;font-size:clamp(20px,3.2vw,36px);box-shadow:var(--shadow-sm);letter-spacing:-.01em}
+/* timeline */
+.timeline{display:flex;flex-direction:column;gap:0;margin-top:20px}
+.tl-item{display:flex;gap:16px;align-items:stretch}
+.tl-left{flex:none;width:40px;text-align:right;padding-top:2px}
+.tl-left .min{font-family:var(--mono);font-weight:800;font-size:clamp(14px,1.7vw,19px);color:var(--clay)}
+.tl-mid{flex:none;display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:14px;height:14px;border-radius:50%;background:var(--clay);border:3px solid var(--bg);box-shadow:0 0 0 2px var(--clay);margin-top:5px}
+.tl-line{flex:1;width:2px;background:var(--border)}
+.tl-body{padding:0 0 16px;flex:1}
+.tl-body .t{font-weight:700;font-size:clamp(15px,1.6vw,19px)}
+.tl-body .d{color:var(--muted);font-size:clamp(12.5px,1.35vw,15px);margin-top:2px;line-height:1.45}
+.tl-item:last-child .tl-line{display:none}
+/* closing */
+.closing{text-align:center}
+.closing .quote{font-size:clamp(24px,4.2vw,52px);font-weight:800;line-height:1.35;letter-spacing:-.01em;max-width:22ch;margin:0 auto}
+.closing .sig{margin-top:30px;color:var(--muted);font-size:clamp(14px,1.6vw,19px);font-weight:600}
+.closing .roles{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.closing .roles span{padding:8px 16px;border-radius:999px;background:var(--surface);border:1px solid var(--border);font-size:14px;font-weight:600}
+/* fragments (step reveal) */
+.frag{opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+.frag.on{opacity:1;transform:none}
+/* tabs */
+.tabs{margin-top:22px}
+.tab-bar{display:flex;gap:8px;flex-wrap:wrap}
+.tab-btn{padding:8px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--text);font-family:var(--sans);font-weight:600;cursor:pointer;font-size:14px;transition:.15s;box-shadow:var(--shadow-sm)}
+.tab-btn.active{background:var(--clay);color:#fff;border-color:var(--clay)}
+.tab-pane{display:none;margin-top:16px}
+.tab-pane.active{display:block}
+/* charts */
+.chart-wrap{margin-top:24px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;
+  padding:18px 20px;box-shadow:var(--shadow-sm)}
+.chart-wrap .c-title{font-size:14px;font-weight:700;margin-bottom:10px}
+.chart-wrap .c-src{font-size:11.5px;color:var(--muted);margin-top:8px;font-family:var(--mono)}
+.chart svg{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-size:12px;font-family:var(--mono)}
+.chart text.val{fill:var(--text);font-weight:700}
+.chart line.axis{stroke:var(--border);stroke-width:1}
+.chart .bar{fill:var(--clay);transition:opacity .15s}
+.chart .bar.b-olive{fill:var(--olive)} .chart .bar.b-sky{fill:var(--sky)}
+.chart .bar.b-rose{fill:var(--rose)} .chart .bar.b-gold{fill:var(--gold)} .chart .bar.b-violet{fill:var(--violet)}
+.chart .bar:hover{opacity:.75}
+.chart .ln{fill:none;stroke:var(--clay);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.chart .ln.l-sky{stroke:var(--sky)} .chart .ln.l-olive{stroke:var(--olive)}
+.chart .dot{fill:var(--clay);stroke:var(--bg);stroke-width:2}
+.chart .dot.d-sky{fill:var(--sky)} .chart .dot.d-olive{fill:var(--olive)}
+.chart .ring-bg{fill:none;stroke:var(--surface);stroke-width:22}
+.chart .ring{fill:none;stroke:var(--clay);stroke-width:22;stroke-linecap:round;transform:rotate(-90deg);transform-origin:center}
+.chart .ring.r-olive{stroke:var(--olive)} .chart .ring.r-sky{stroke:var(--sky)} .chart .ring.r-gold{stroke:var(--gold)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.legend .k-clay{background:var(--clay)} .legend .k-olive{background:var(--olive)} .legend .k-sky{background:var(--sky)}
+.legend .k-rose{background:var(--rose)} .legend .k-gold{background:var(--gold)} .legend .k-violet{background:var(--violet)}
+/* speaker notes */
+.note{display:none;margin-top:24px;border:1.5px dashed var(--border);border-radius:14px;background:var(--surface-3);
+  padding:14px 18px;font-size:clamp(12.5px,1.3vw,15px);line-height:1.7;color:var(--text);max-width:72ch}
+.note .nlabel{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--clay);letter-spacing:.08em;display:block;margin-bottom:6px}
+.note .dir{color:var(--rose)}
+body.show-notes .note{display:block}
+/* chrome */
+.topbar{position:fixed;top:0;left:0;right:0;height:4px;background:var(--surface);z-index:40}
+.progress{height:100%;width:0;background:var(--clay);transition:width .35s ease}
+.hud{position:fixed;z-index:50;display:flex;align-items:center;gap:10px}
+.hud.br{right:22px;bottom:20px} .hud.tr{right:22px;top:18px}
+.nav-btn{width:42px;height:42px;border-radius:11px;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--text);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);transition:.15s}
+.nav-btn:hover{background:var(--clay);color:#fff;border-color:var(--clay)}
+.counter{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--muted);background:var(--surface-2);
+  border:1px solid var(--border);border-radius:11px;padding:9px 13px;box-shadow:var(--shadow-sm)}
+.counter b{color:var(--clay)}
+.icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--text);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);transition:.15s}
+.icon-btn:hover{background:var(--surface)}
+.icon-btn.on{background:var(--clay);color:#fff;border-color:var(--clay)}
+.dots{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:50;display:flex;gap:7px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:9px 13px;box-shadow:var(--shadow-sm);max-width:90vw;flex-wrap:wrap;justify-content:center}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--border);cursor:pointer;transition:.2s;border:none;padding:0}
+.dot.active{background:var(--clay);width:24px;border-radius:5px}
+.hint{position:fixed;left:22px;bottom:22px;z-index:50;color:var(--muted);font-size:12.5px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:7px 12px;box-shadow:var(--shadow-sm);opacity:.9}
+.hint kbd{font-family:var(--mono);background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:11px}
+.zone{position:fixed;top:0;bottom:0;width:16%;z-index:20;cursor:pointer}
+.zone.left{left:0}.zone.right{right:0}
+@media (max-width:760px){
+  .cards3,.cards2,.numbered.cols2{grid-template-columns:1fr}
+  .flow .arrow{transform:rotate(90deg)}
+  .zone,.hint{display:none}
+}
+@media print{
+  .hud,.dots,.hint,.zone,.topbar{display:none}
+  .slide{display:flex!important;opacity:1;position:relative;page-break-after:always;min-height:100vh}
+  .frag{opacity:1!important;transform:none!important}
+  .tab-pane{display:block!important}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="progress" id="progress"></div></div>
+
+<div class="deck" id="deck">
+
+<!-- SLIDES:START -->
+
+  <!-- 1 封面 -->
+  <section class="slide active cover">
+    <div class="slide-inner">
+      <span class="badge">对外公开分享 · 主讲 Bin</span>
+      <h1>我如何把一个 AI 需求<br>做成「<span class="em">可上线系统</span>」</h1>
+      <div class="sub">不教写代码 —— 讲我如何指挥 AI，把一个想法从需求一路做到上线</div>
+      <div class="tag">找需求 → 拆需求 → 指挥 AI → 测试上线 → 变现思考</div>
+      <div class="pill-row">
+        <span class="pill">⏱ 时长 <b>30 分钟</b></span>
+        <span class="pill">🎯 真实案例 <b>AI 选题变现评估器</b></span>
+        <span class="pill">🧑‍🎓 面向 <b>零代码基础的你</b></span>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 01</span>大家好，我是 Bin。今天用 30 分钟讲一个真实的故事：我怎么把一个普通的想法，做成一个真的能打开、能用、能上线的系统。全程我没有手写一行代码。<span class="dir">【停顿，环视听众】</span>如果你完全不懂编程，那你就是我今天最想讲给的人。</div>
+    </div>
+  </section>
+
+  <!-- 2 我是谁 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">开场 · 2 分钟</span>
+      <h2>我是谁，为什么讲这个</h2>
+      <div class="cards3">
+        <div class="card tint-sky">
+          <h3>👋 我是 Bin</h3>
+          <p>AI 应用顾问 / AI 产品化教练。长期研究一件事：<span class="em-sky">普通人怎么用 AI 干成实事</span>。</p>
+        </div>
+        <div class="card tint-clay">
+          <h3>🛠 我做了什么</h3>
+          <p>最近我把一个「帮创作者评估选题」的想法，用 AI 编程助手做成了上线系统 —— 今天就拆给你看。</p>
+        </div>
+        <div class="card tint-gold">
+          <h3>🎁 你今天能带走</h3>
+          <p>一条「需求 → 上线」的完整路径，和一套我真实用过、可以照抄的 AI 指令。</p>
+        </div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 02</span>先花一分钟自我介绍。我不是科班程序员出身讲编程课的，我讲的是「不当程序员，怎么把产品做出来」。今天不灌概念，就讲我自己踩过的完整流程，最后给你一套可以直接抄走的指令。<span class="dir">【个人经历一句话带过，快速进入正题】</span></div>
+    </div>
+  </section>
+
+  <!-- 3 破除迷思 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">破题 · 2 分钟</span>
+      <h2>做一个能上线的系统，到底需要什么？</h2>
+      <div class="cards2">
+        <div class="card tint-rose">
+          <h3>❌ 我以前以为需要</h3>
+          <ul><li>会写代码，最好是全栈</li><li>组一个开发团队</li><li>投入几个月时间</li></ul>
+        </div>
+        <div class="card tint-olive">
+          <h3>✅ 这次我实际用到的</h3>
+          <ul><li>一个想清楚的小需求</li><li>一个 AI 编程助手</li><li>几个晚上的下班时间</li></ul>
+        </div>
+        <div class="card tint-clay full">
+          <h3>📌 结论</h3>
+          <p style="color:var(--text);font-weight:600">门槛已经变了：从「会不会写代码」，变成「<span class="em">能不能把需求讲清楚</span>」。</p>
+        </div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 03</span>先破一个迷思。左边这三条，是我以前以为做产品的门槛，估计也是在座很多人现在的想法。右边是我这次实际用到的东西。<span class="dir">【指右侧卡片】</span>差别为什么这么大？因为 AI 把「写代码」这件事接走了，留给我们的是「想清楚、说清楚」。这句话是今天整场的题眼。</div>
+    </div>
+  </section>
+
+  <!-- 4 三个词 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">概念 · 2 分钟</span>
+      <h2>只需要先认识 3 个词</h2>
+      <p class="lead">今天全场就这 3 个「行话」，现在用大白话讲完，后面你就全程无障碍。</p>
+      <div class="numbered">
+        <div class="row"><div class="num sky">1</div><div class="body"><div class="t">AI 编程助手（我用的是 Codex）</div><div class="d">一个听得懂人话的「AI 程序员」：会自己读文件、写代码、运行调试。你给它任务说明书，它交活。</div></div></div>
+        <div class="row"><div class="num sky">2</div><div class="body"><div class="t">MVP（最小可用版本）</div><div class="d">不做大而全，先做出能演示核心价值的那一小块 —— 能跑、能看、能给人用。</div></div></div>
+        <div class="row"><div class="num sky">3</div><div class="body"><div class="t">PRD（需求文档）</div><div class="d">一页大白话：给谁用、解决什么问题、输入什么、输出什么。它就是给 AI 的任务说明书。</div></div></div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 04</span>怕大家被术语劝退，先把今天仅有的三个词讲明白。AI 编程助手，我用的叫 Codex，你可以把它理解成一个 24 小时在线、不抱怨的 AI 程序员。MVP 就是最小可用版本，先做核心那一小块。PRD 就是需求文档，说白了就是写给 AI 的任务说明书。<span class="dir">【逐条点过去，不展开】</span></div>
+    </div>
+  </section>
+
+  <!-- 5 六步地图 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">全局地图 · 2 分钟</span>
+      <h2>我走过的 6 步，也是今天的目录</h2>
+      <p class="lead">从想法到上线，我走了这 6 步。AI 在第 ③ 步集中登场，但真正决定成败的，是前两步<span class="em">找对需求、想清楚范围</span>。</p>
+      <div class="flow">
+        <div class="step"><div class="s-n">①</div><div class="s-t">找需求</div></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="s-n">②</div><div class="s-t">拆 MVP</div></div>
+        <div class="arrow">→</div>
+        <div class="step hot"><div class="s-n">③</div><div class="s-t">AI 落地</div></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="s-n">④</div><div class="s-t">测试调试</div></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="s-n">⑤</div><div class="s-t">复盘上线</div></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="s-n">⑥</div><div class="s-t">变现思考</div></div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 05</span>这是今天的路线图，也是我当时真实走过的顺序。注意橘色那格，AI 是在第三步才登场的。很多人以为用 AI 做产品，第一件事是打开工具 —— 其实第一件事是离开工具，先把需求找对。接下来我就按这个顺序讲。<span class="dir">【这页停留短一些，建立预期即可】</span></div>
+    </div>
+  </section>
+
+  <!-- 6 找需求 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">第 ① 步 · 找需求 · 3 分钟</span>
+      <h2>需求是「找」出来的，不是「想」出来的</h2>
+      <p class="lead">真需求长在别人<span class="em">已经在搜、在抱怨、在付费</span>的地方。我常去这 4 个地方：</p>
+      <div class="cards2">
+        <div class="card tint-violet">
+          <h3>🐙 GitHub</h3>
+          <p>看全球开发者在做什么、抱怨什么，issues 里全是「求一个能…的工具」。</p>
+          <div class="tagline">擅长挖 <b>技术型 / 工具型</b> 需求</div>
+        </div>
+        <div class="card tint-sky">
+          <h3>📰 自己的 RSS 订阅</h3>
+          <p>把长期关注的信息流喂给 AI 分析，找反复出现的高频痛点。</p>
+          <div class="tagline">擅长挖 <b>你最熟领域</b> 的需求</div>
+        </div>
+        <div class="card tint-clay">
+          <h3>🪙 生财有术</h3>
+          <p>国内变现项目库，看别人已经在赚钱的项目和打法。</p>
+          <div class="tagline">擅长找 <b>已验证能变现</b> 的需求</div>
+        </div>
+        <div class="card tint-olive">
+          <h3>🚀 ProductHunt</h3>
+          <p>全球新产品每日首发，看什么被疯狂点赞、什么在起势。</p>
+          <div class="tagline">擅长找 <b>趋势型 / 出海型</b> 需求</div>
+        </div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 06</span>新手最大的坑，是坐在房间里凭空想一个「我觉得有人需要」的功能。我的做法是去别人已经在抱怨、已经在付费的地方捡需求。这四个地方各有分工：GitHub 挖工具需求，自己的 RSS 挖熟悉领域，生财有术看已验证的变现，ProductHunt 看趋势。<span class="dir">【举一个自己在其中某个渠道看到的真实例子，30 秒】</span></div>
+    </div>
+  </section>
+
+  <!-- 7 案例登场 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">我的案例 · 2 分钟</span>
+      <h2>我选定的需求：AI 选题变现评估器</h2>
+      <p class="lead">用户输入一个内容选题，系统输出一份「选题评估报告」—— 值不值得做、怎么优化、怎么变现。</p>
+      <div class="cards3">
+        <div class="card tint-sky"><h3>👤 给谁用</h3><p>做公众号、小红书、短视频的内容创作者 —— 选题很多，不知道该做哪个。</p></div>
+        <div class="card tint-clay"><h3>🎯 解决什么</h3><p>哪个选题更容易涨粉、更容易转化？标题和钩子怎么改更有传播力？</p></div>
+        <div class="card tint-olive"><h3>🧩 产品长什么样</h3><p>左边填人群 / 标题 / 大纲，右边一键生成评估报告。简单，但完整。</p></div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 07</span>我最后选定的需求是这个：帮内容创作者评估选题。为什么选它？第一，痛点真实 —— 我身边做自媒体的朋友天天在纠结选哪个题；第二，输入输出清楚，特别适合做成一个小系统。记住它的样子，后面所有操作都围绕它展开。<span class="dir">【如有产品截图可现场展示】</span></div>
+    </div>
+  </section>
+
+  <!-- 8 拆 MVP 五问 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">第 ② 步 · 拆 MVP · 3 分钟</span>
+      <h2>动手前，我先逼自己回答 5 个问题</h2>
+      <div class="numbered cols2">
+        <div class="row"><div class="num">1</div><div class="body"><div class="t">给谁用？</div><div class="d">做自媒体但不会判断选题价值的人。</div></div></div>
+        <div class="row"><div class="num">2</div><div class="body"><div class="t">解决什么痛点？</div><div class="d">不知道选题值不值得写、标题怎么改。</div></div></div>
+        <div class="row"><div class="num">3</div><div class="body"><div class="t">输入是什么？</div><div class="d">目标人群、选题标题、内容大纲、变现方向。</div></div></div>
+        <div class="row"><div class="num">4</div><div class="body"><div class="t">输出是什么？</div><div class="d">评分、标题建议、内容结构、变现路径、行动清单。</div></div></div>
+        <div class="row" style="grid-column:1 / -1"><div class="num">5</div><div class="body"><div class="t">以后怎么收钱？</div><div class="d">先免费给人用 → 有价值了再谈收费。想在前面，但不困在前面。</div></div></div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 08</span>需求选定之后，我没有立刻打开 AI 工具，而是先逼自己回答这五个问题。这五问的答案，就是需求文档 PRD 的全部内容。给谁用、什么痛点、输入、输出、怎么收钱 —— 答不上来任何一问，说明还没想清楚，动手就是浪费时间。这一步是纸面工作，零技术含量，但价值最高。<span class="dir">【建议听众拍下这页】</span></div>
+    </div>
+  </section>
+
+  <!-- 9 心法：把话说清楚 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">心法 · 2 分钟</span>
+      <h2>指挥 AI 的唯一秘诀：把话说清楚</h2>
+      <div class="cards2">
+        <div class="card tint-rose">
+          <h3>❌ 不会有结果的说法</h3>
+          <ul><li>「帮我做个能赚钱的产品」</li><li>「做个牛逼的网站」</li><li>「随便整一个工具」</li></ul>
+          <p style="margin-top:12px">太模糊，AI 只能瞎猜。</p>
+        </div>
+        <div class="card tint-olive">
+          <h3>✅ 能落地的说法</h3>
+          <ul><li>讲清楚目标用户 / 痛点</li><li>讲清楚输入 / 输出</li><li>给出文档、约束、流程要求</li></ul>
+          <p style="margin-top:12px">像写一份任务说明书。</p>
+        </div>
+      </div>
+      <div class="slogan">把 AI 当<span class="em">新来的聪明同事</span>：交代越清楚，交活越漂亮。</div>
+      <div class="note"><span class="nlabel">口播稿 · 09</span>进入实操之前，先给大家一句心法。AI 编程助手不是许愿池，你说「帮我做个能赚钱的产品」，它只能瞎猜。正确的姿势是把它当一个新来的聪明同事：目标用户、痛点、输入输出、约束条件，一次性交代清楚。前面那五问答完，这份任务说明书其实就有了。<span class="dir">【指屏幕下方口号，放慢语速念一遍】</span></div>
+    </div>
+  </section>
+
+  <!-- 10 六阶段 timeline -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">第 ③~⑤ 步 · AI 落地 · 2 分钟</span>
+      <h2>我和 AI 协作的 6 个阶段</h2>
+      <div class="timeline">
+        <div class="tl-item"><div class="tl-left"><div class="min">1</div></div><div class="tl-mid"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-body"><div class="t">立项</div><div class="d">把想法丢给 AI → 生成需求文档 PRD → 建好项目底子。</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="min">2</div></div><div class="tl-mid"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-body"><div class="t">设计</div><div class="d">按 PRD 先出一个能在浏览器打开的界面原型，看着满意再继续。</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="min">3</div></div><div class="tl-mid"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-body"><div class="t">开发</div><div class="d">让 AI 先列开发计划，我确认后它才动手，进度用任务清单跟踪。</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="min">4</div></div><div class="tl-mid"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-body"><div class="t">测试调试</div><div class="d">加日志、加启停脚本；发现 bug 和新想法，都记成文档。</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="min">5</div></div><div class="tl-mid"><div class="tl-dot"></div><div class="tl-line"></div></div><div class="tl-body"><div class="t">复盘</div><div class="d">定版 v1.0，复盘 bug 与经验，沉淀成下次可复用的模板。</div></div></div>
+        <div class="tl-item"><div class="tl-left"><div class="min">6</div></div><div class="tl-mid"><div class="tl-dot"></div></div><div class="tl-body"><div class="t">上线</div><div class="d">代码推上 GitHub，配好带截图的中英文说明，别人能访问、能看懂。</div></div></div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 10</span>具体我是怎么跟 AI 协作的？六个阶段：立项、设计、开发、测试、复盘、上线 —— 和一个正规软件团队的流程一模一样，只不过「团队」是一个 AI。两个关键动作请记住：第一，先看原型再开发，不满意就在图纸阶段改；第二，先看计划再执行，AI 列计划、我确认、它干活。我全程只做两件事：交代任务、做决策。<span class="dir">【语速可稍快，下一页看真实指令】</span></div>
+    </div>
+  </section>
+
+  <!-- 11 真实指令 tabs -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">实操 · 3 分钟</span>
+      <h2>我当时敲给 AI 的原话（可拍照）</h2>
+      <div class="tabs">
+        <div class="tab-bar">
+          <button class="tab-btn active" data-tab="tabInit">① 立项</button>
+          <button class="tab-btn" data-tab="tabDev">② 开发</button>
+          <button class="tab-btn" data-tab="tabTest">③ 测试</button>
+          <button class="tab-btn" data-tab="tabShip">④ 上线</button>
+        </div>
+        <div class="tab-pane active" id="tabInit">
+          <div class="code-wrap">
+            <div class="code-bar"><span class="label">给 AI 的第一句话</span><button class="copy-btn" data-copy="#pm1">复制</button></div>
+            <pre id="pm1">我有一个想法，如图。
+帮我分析这个需求，然后生成一份 PRD 文档，
+统一放在 doc 文件夹下。
+以后文档都放这个文件夹，帮我做个约束，
+顺便做一下 git 初始化。</pre>
+          </div>
+        </div>
+        <div class="tab-pane" id="tabDev">
+          <div class="code-wrap">
+            <div class="code-bar"><span class="label">原型确认后进入开发</span><button class="copy-btn" data-copy="#pm2">复制</button></div>
+            <pre id="pm2">原型看起来很不错，按这个原型进行后面的开发，
+利用任务拆分和 TDD 原则。
+其中如果遇到需要我人工设置的内容，提醒我如何设置。
+记得把计划存储到 doc 中，设置 todo list，
+根据任务完成来更新状态。</pre>
+          </div>
+        </div>
+        <div class="tab-pane" id="tabTest">
+          <div class="code-wrap">
+            <div class="code-bar"><span class="label">测试阶段的要求</span><button class="copy-btn" data-copy="#pm3">复制</button></div>
+            <pre id="pm3">接下来做测试：
+1. 创建启动/停止脚本，启动时检查端口占用。
+2. 设 logs 文件夹按日期存日志，关键点都打日志。
+3. 提示词单独提取为配置文件，打上注释，方便我修改。
+另外从现在起：临时需求写入补充 PRD，
+查到的 bug 在 doc 下建文档记录。</pre>
+          </div>
+        </div>
+        <div class="tab-pane" id="tabShip">
+          <div class="code-wrap">
+            <div class="code-bar"><span class="label">复盘与上线</span><button class="copy-btn" data-copy="#pm4">复制</button></div>
+            <pre id="pm4">项目开发完成：
+1. 本次需求统一命名 v1.0，创建复盘文件，
+   总结所有 bug 和经验。
+2. 在 GitHub 创建仓库，关联项目并推送。
+3. 推送前先写一份 README 介绍项目，
+   附上软件使用截图，采用中英双语。</pre>
+          </div>
+        </div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 11</span>这一页是干货，我当时敲给 AI 的原话，一个字没改。<span class="dir">【逐个点开四个标签页】</span>大家注意一个共同点：每句话都在「交代任务」，不是「许愿」。立项时我要求文档统一放 doc 文件夹；开发时我要求先列计划、用任务清单跟踪；测试时我要求打日志、把提示词做成配置；上线时我要求写好中英文说明再推送。这些要求本身，就是产品经理的基本功 —— 而这是可以学的。这页可以拍照，课件里也能一键复制。</div>
+    </div>
+  </section>
+
+  <!-- 12 上线成果 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">成果 · 2 分钟</span>
+      <h2>最后我得到了什么</h2>
+      <div class="cards3">
+        <div class="card tint-clay">
+          <h3>📦 一个能用的系统</h3>
+          <p>输入选题，输出评估报告 —— 打开浏览器就能演示，不是 PPT 里的概念图。</p>
+        </div>
+        <div class="card tint-sky">
+          <h3>🐙 一个 GitHub 仓库</h3>
+          <p>代码、需求文档、bug 记录、复盘全在里面 —— 项目「资产化」了。</p>
+        </div>
+        <div class="card tint-olive">
+          <h3>🔁 一套可复用流程</h3>
+          <p>下一个需求照着走就行，第二次比第一次快得多。</p>
+        </div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 12</span>最后我拿到手的是三样东西。第一，一个真的能打开、能演示的系统；第二，一个 GitHub 仓库，代码和所有文档都在里面，这个项目变成了我的资产；第三，也是最值钱的 —— 一套流程。第一个项目我花了几个晚上，按这套流程做第二个，速度快了一大截。<span class="dir">【如现场有网络，可直接打开系统演示 1 分钟】</span></div>
+    </div>
+  </section>
+
+  <!-- 13 变现思考 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">第 ⑥ 步 · 变现思考 · 2 分钟</span>
+      <h2>上线不是终点：收费思路是设计出来的</h2>
+      <p class="lead">我不急着收钱，但从第一天就想清楚了<span class="em">收费的台阶</span>怎么搭 —— 每一级服务更深、价值更大。</p>
+      <div class="flow">
+        <div class="step"><div class="s-n">①</div><div class="s-t">免费用起来<br><span style="font-weight:400;font-size:.85em">单次评估，先引流</span></div></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="s-n">②</div><div class="s-t">个人订阅<br><span style="font-weight:400;font-size:.85em">批量评分＋标题优化</span></div></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="s-n">③</div><div class="s-t">专业服务<br><span style="font-weight:400;font-size:.85em">帮个人 IP 建选题库</span></div></div>
+        <div class="arrow">→</div>
+        <div class="step"><div class="s-n">④</div><div class="s-t">企业定制<br><span style="font-weight:400;font-size:.85em">机构内容获客工作台</span></div></div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 13</span>很多人问：这东西能赚钱吗？我的答案是：变现不是等产品火了再想的事，而是第一天就设计好的台阶。免费版引流，个人订阅收轻量的钱，专业服务收深度的钱，企业定制收最大的钱。今天不谈具体定价，重点是这个思路：每上一个台阶，服务更深、对象更付得起钱。这个台阶模型，套在大多数工具型产品上都成立。</div>
+    </div>
+  </section>
+
+  <!-- 14 你的第一步 -->
+  <section class="slide">
+    <div class="slide-inner">
+      <span class="kicker">给你的行动 · 2 分钟</span>
+      <h2>今晚回去，你可以做的 3 件事</h2>
+      <div class="numbered">
+        <div class="row"><div class="num olive">1</div><div class="body"><div class="t">装一个 AI 编程助手</div><div class="d">Codex、Claude Code、Cursor 任选其一，跑通「让它写个小页面」就算成功。</div></div></div>
+        <div class="row"><div class="num olive">2</div><div class="body"><div class="t">从自己的日常里挑一个小痛点</div><div class="d">不用宏大：一个你每周重复做、觉得烦的小事，就是最好的第一个需求。</div></div></div>
+        <div class="row"><div class="num olive">3</div><div class="body"><div class="t">用今天的「5 问」拆一遍它</div><div class="d">给谁用、什么痛点、输入、输出、怎么收钱 —— 写在纸上，再交给 AI。</div></div></div>
+      </div>
+      <div class="note"><span class="nlabel">口播稿 · 14</span>听完就忘是宣讲的宿命，所以我把第一步压到最小。今晚三件事：装一个工具，挑一个自己的小痛点，用五问拆一遍。不要求你今晚做出产品，只要求你把第一个需求写在纸上。能写清楚这张纸的人，就已经超过了大多数「想做 AI 产品」的人。<span class="dir">【放慢，这是行动号召页】</span></div>
+    </div>
+  </section>
+
+  <!-- 15 收尾 -->
+  <section class="slide closing">
+    <div class="slide-inner">
+      <span class="kicker" style="justify-content:center;display:inline-flex">收尾</span>
+      <div class="quote">找对需求，说清任务，<br>剩下的交给 <span class="em">AI</span>。</div>
+      <div class="sig">我能走完这条路，你也可以 —— 从今晚的第一个小需求开始。</div>
+      <div class="roles">
+        <span>📲 加微信交流：待补充</span>
+        <span>公众号：待补充</span>
+        <span>现场答疑 · 欢迎提问</span>
+      </div>
+      <div class="note" style="margin:24px auto 0;text-align:left"><span class="nlabel">口播稿 · 15</span>最后一页，就一句话：找对需求，说清任务，剩下的交给 AI。写代码的门槛没有了，想清楚的价值更高了。我的联系方式在屏幕上<span class="dir">【二维码／微信号待补充，讲前替换】</span>，欢迎会后来聊你想做的那个需求。剩下几分钟，我们现场答疑。谢谢大家！</div>
+    </div>
+  </section>
+
+<!-- SLIDES:END -->
+
+</div>
+
+<div class="zone left" id="zoneL"></div>
+<div class="zone right" id="zoneR"></div>
+
+<div class="hud tr">
+  <button class="icon-btn" id="noteBtn" title="口播稿 N">✎</button>
+  <button class="icon-btn" id="themeBtn" title="切换深浅色 D">◐</button>
+  <button class="icon-btn" id="fsBtn" title="全屏 F">⛶</button>
+</div>
+
+<div class="hud br">
+  <button class="nav-btn" id="prevBtn" title="上一页 ←">‹</button>
+  <span class="counter"><b id="cur">1</b> / <span id="total">1</span></span>
+  <button class="nav-btn" id="nextBtn" title="下一页 →">›</button>
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · <kbd>N</kbd> 口播稿 · <kbd>F</kbd> 全屏 · <kbd>D</kbd> 深色</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var idx = 0;
+  var curEl = document.getElementById('cur');
+  var progress = document.getElementById('progress');
+  var dotsWrap = document.getElementById('dots');
+  document.getElementById('total').textContent = total;
+
+  slides.forEach(function(_,i){
+    var b = document.createElement('button');
+    b.className = 'dot' + (i===0?' active':'');
+    b.setAttribute('aria-label','第 '+(i+1)+' 页');
+    b.addEventListener('click', function(){ go(i); });
+    dotsWrap.appendChild(b);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+
+  function go(n){
+    idx = Math.max(0, Math.min(total-1, n));
+    slides.forEach(function(s,i){ s.classList.toggle('active', i===idx); });
+    dots.forEach(function(d,i){ d.classList.toggle('active', i===idx); });
+    curEl.textContent = idx+1;
+    progress.style.width = ((idx+1)/total*100) + '%';
+    if(location.hash !== '#'+(idx+1)) history.replaceState(null,'','#'+(idx+1));
+  }
+  function next(){
+    var frags = slides[idx].querySelectorAll('.frag:not(.on)');
+    if(frags.length){ frags[0].classList.add('on'); return; }
+    go(idx+1);
+  }
+  function prev(){
+    var on = slides[idx].querySelectorAll('.frag.on');
+    if(on.length){ on[on.length-1].classList.remove('on'); return; }
+    go(idx-1);
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', next);
+  document.getElementById('prevBtn').addEventListener('click', prev);
+  document.getElementById('zoneR').addEventListener('click', next);
+  document.getElementById('zoneL').addEventListener('click', prev);
+
+  document.addEventListener('keydown', function(e){
+    if(e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='Home'){ go(0); }
+    else if(e.key==='End'){ go(total-1); }
+    else if(e.key==='f'||e.key==='F'){ toggleFs(); }
+    else if(e.key==='d'||e.key==='D'){ toggleTheme(); }
+    else if(e.key==='n'||e.key==='N'){ toggleNotes(); }
+  });
+
+  var x0=null;
+  document.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx) > 45){ dx<0 ? next() : prev(); }
+    x0 = null;
+  }, {passive:true});
+
+  function toggleTheme(){
+    var root = document.documentElement;
+    root.setAttribute('data-theme', root.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+  }
+  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+
+  function toggleFs(){
+    if(!document.fullscreenElement){ document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }
+    else { document.exitFullscreen && document.exitFullscreen(); }
+  }
+  document.getElementById('fsBtn').addEventListener('click', toggleFs);
+
+  function toggleNotes(){
+    document.body.classList.toggle('show-notes');
+    document.getElementById('noteBtn').classList.toggle('on', document.body.classList.contains('show-notes'));
+  }
+  document.getElementById('noteBtn').addEventListener('click', toggleNotes);
+
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.tab-btn');
+    if(!btn) return;
+    var tabs = btn.closest('.tabs');
+    var target = btn.getAttribute('data-tab');
+    tabs.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b===btn); });
+    tabs.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.toggle('active', p.id===target); });
+  });
+
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var el = document.querySelector(btn.getAttribute('data-copy'));
+      if(!el) return;
+      var text = el.innerText;
+      navigator.clipboard && navigator.clipboard.writeText(text).then(function(){
+        var old = btn.textContent; btn.textContent = '已复制 ✓';
+        setTimeout(function(){ btn.textContent = old; }, 1400);
+      });
+    });
+  });
+
+  var h = parseInt((location.hash||'').replace('#',''),10);
+  go(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>

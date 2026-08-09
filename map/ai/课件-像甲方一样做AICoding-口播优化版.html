@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="像甲方一样做 AI Coding 口播优化版：30 分钟从需求到轻量上线，每一步都有验收点">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 64 64%22><rect width=%2264%22 height=%2264%22 rx=%2214%22 fill=%22%23de7656%22/><text x=%2232%22 y=%2242%22 text-anchor=%22middle%22 font-size=%2234%22>验</text></svg>">
+<title>像甲方一样做 AI Coding｜口播优化版</title>
+<style>
+:root{
+  --paper:#f6f2eb; --paper-2:#fffdfa; --ink:#20201e; --muted:#716d65; --line:#d9d2c7;
+  --coral:#de7656; --coral-deep:#be543c; --blue:#5c85a9; --olive:#75875f; --gold:#bd9b4a;
+  --code:#1e2222; --code-ink:#f2eee7; --shadow:0 18px 55px rgba(42,35,29,.12);
+  --display:"Songti SC","STSong","Noto Serif CJK SC",serif;
+  --body:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",monospace;
+}
+[data-theme="dark"]{--paper:#171716;--paper-2:#22211e;--ink:#f5f1ea;--muted:#beb7ad;--line:#3d3a34;--code:#0e1010;--code-ink:#f1ede6;--shadow:0 22px 60px rgba(0,0,0,.42)}
+*{box-sizing:border-box} html,body{height:100%;margin:0} body{overflow:hidden;background:var(--paper);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+.deck{position:fixed;inset:0}.slide{display:none;position:absolute;inset:0;padding:clamp(32px,5.5vh,74px) clamp(32px,8.5vw,136px) 80px;align-items:center;justify-content:center;opacity:0;transform:translateY(12px);transition:.35s ease}.slide.active{display:flex;opacity:1;transform:none}.inner{width:min(1120px,100%)}
+.eyebrow{display:flex;align-items:center;gap:10px;color:var(--coral-deep);font-size:13px;font-weight:800;letter-spacing:.09em;text-transform:uppercase}.eyebrow:before{content:"";width:29px;height:2px;background:currentColor}.eyebrow .time{font:700 11px var(--mono);letter-spacing:0;color:var(--muted);margin-left:auto;text-transform:none}
+h1,h2,h3,p{margin:0} h1{font:800 clamp(42px,6vw,82px)/1.04 var(--display);letter-spacing:-.055em}h2{font:800 clamp(31px,4.2vw,58px)/1.12 var(--display);letter-spacing:-.04em;margin:17px 0 14px}h3{font-size:17px;line-height:1.25}.accent{color:var(--coral)}.sub{font-size:clamp(16px,1.8vw,23px);line-height:1.58;color:var(--muted);max-width:44em}.display{font-family:var(--display)}
+.cover{background:radial-gradient(circle at 83% 20%,rgba(222,118,86,.18),transparent 25%),radial-gradient(circle at 17% 88%,rgba(92,133,169,.13),transparent 27%),var(--paper)}.cover .inner{position:relative}.edition{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:8px 14px;color:var(--muted);font:700 12px var(--mono);letter-spacing:.04em}.cover h1{max-width:830px;margin:25px 0 18px}.cover .sub{max-width:650px;color:var(--ink);font-weight:650}.cover-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:18px;margin-top:36px}.promise,.boundary,.meta-card,.card,.evidence,.prompt-card,.term-card{background:var(--paper-2);border:1px solid var(--line);box-shadow:var(--shadow)}.promise,.boundary{padding:18px 20px;border-radius:14px}.promise{border-top:4px solid var(--olive)}.boundary{border-top:4px solid var(--coral)}.promise b,.boundary b{display:block;font-size:15px;margin-bottom:6px}.promise span,.boundary span{color:var(--muted);font-size:14px;line-height:1.5}.mode-line{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.mode-chip{border-radius:999px;border:1px solid var(--line);padding:7px 11px;font-size:13px;background:var(--paper-2)}.mode-chip b{color:var(--coral-deep)}
+.problem-grid,.demand-grid,.case-grid,.term-grid{display:grid;gap:15px}.problem-grid{grid-template-columns:repeat(3,1fr);margin-top:28px}.card{border-radius:15px;padding:21px;min-height:175px;transition:transform .2s,border-color .2s,background .2s}.card:hover,.card.active{transform:translateY(-4px);border-color:var(--coral);background:color-mix(in srgb,var(--paper-2) 88%,var(--coral) 12%)}.card button{all:unset;display:block;width:100%;height:100%;cursor:pointer}.card .mark{font:700 34px/1 var(--display);color:var(--coral)}.card p{margin-top:12px;color:var(--muted);font-size:15px;line-height:1.55}.answer-strip{margin-top:17px;padding:13px 17px;border-left:4px solid var(--coral);background:color-mix(in srgb,var(--paper-2) 86%,var(--coral) 14%);border-radius:0 12px 12px 0;font-weight:700;min-height:48px}.answer-strip span{color:var(--coral-deep)}
+.gate-board{display:grid;grid-template-columns:repeat(6,1fr);gap:9px;margin-top:28px}.gate{position:relative;min-height:164px;padding:15px 12px;border:1px solid var(--line);border-radius:14px;background:var(--paper-2);box-shadow:var(--shadow);text-align:left;cursor:pointer}.gate:hover{border-color:var(--coral);transform:translateY(-3px)}.gate .num{font:700 12px var(--mono);color:var(--coral-deep)}.gate strong{display:block;font-family:var(--display);font-size:21px;margin-top:17px}.gate small{display:block;color:var(--muted);line-height:1.4;margin-top:8px}.gate .map{position:absolute;bottom:13px;color:var(--olive);font:700 11px var(--mono)}.rail{position:fixed;z-index:30;left:50%;transform:translateX(-50%);bottom:18px;display:flex;gap:5px;padding:7px;border:1px solid var(--line);border-radius:999px;background:color-mix(in srgb,var(--paper-2) 92%,transparent);box-shadow:var(--shadow)}.rail button{border:0;border-radius:999px;background:transparent;color:var(--muted);padding:7px 10px;font:700 11px var(--body);cursor:pointer}.rail button.on{background:var(--coral);color:white}.rail button:hover{color:var(--coral-deep)}
+.demand-grid{grid-template-columns:1fr 1fr;margin-top:23px}.demand-grid .card{min-height:0}.demand-grid .card:nth-child(1){border-top:4px solid var(--coral)}.demand-grid .card:nth-child(2){border-top:4px solid var(--blue)}.demand-grid .card:nth-child(3){border-top:4px solid var(--olive)}.demand-grid .card:nth-child(4){border-top:4px solid var(--gold)}.channel{display:inline-block;margin-top:10px;padding:4px 8px;border-radius:6px;background:var(--paper);font:700 12px var(--mono);color:var(--muted)}
+.case-grid{grid-template-columns:1fr .95fr;margin-top:20px}.case-panel{padding:23px;border-radius:16px;border:1px solid var(--line);background:var(--paper-2);box-shadow:var(--shadow)}.case-panel h3{font-family:var(--display);font-size:25px}.question-list{display:grid;gap:9px;margin-top:14px}.question{display:grid;grid-template-columns:29px 1fr;gap:10px;align-items:start}.question b{width:29px;height:29px;display:grid;place-items:center;border-radius:8px;background:var(--coral);color:#fff;font:800 13px var(--mono)}.question span{font-size:14px;line-height:1.42}.question small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.case-output{margin-top:14px;padding:14px;border-radius:10px;background:var(--code);color:var(--code-ink);font:13px/1.55 var(--mono)}
+.prompt-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(280px,.75fr);gap:19px;margin-top:21px;align-items:start}.prompt-layout.solo{grid-template-columns:1fr}.prompt-layout.solo .prompt{min-height:210px}.prompt-card{border-radius:16px;overflow:hidden}.prompt-head{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 14px;border-bottom:1px solid var(--line);font:700 12px var(--mono);color:var(--muted)}.prompt-head b{color:var(--coral-deep)}.copy{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--paper-2);font:700 12px var(--body);color:var(--ink);cursor:pointer}.copy:hover{background:var(--coral);border-color:var(--coral);color:#fff}.prompt{margin:0;padding:18px 20px;background:var(--code);color:var(--code-ink);font:clamp(12px,1.33vw,15px)/1.62 var(--mono);white-space:pre-wrap;word-break:break-word;min-height:158px;max-height:310px;overflow:auto}.source-note{font-size:12px;color:var(--muted);padding:10px 14px;background:var(--paper)}.source-note b{color:var(--olive)}.side-stack{display:grid;gap:14px}.evidence{border-radius:16px;overflow:hidden}.evidence .label{padding:10px 13px;background:var(--paper);font:700 11px var(--mono);color:var(--olive)}.evidence img{display:block;width:100%;height:170px;object-fit:cover;object-position:center top;background:var(--code)}.evidence .caption{padding:12px 14px;font-size:13px;line-height:1.5;color:var(--muted)}.term-card{border-radius:14px;padding:16px}.term-card h3{font-family:var(--display);font-size:20px}.term-card p{margin-top:7px;color:var(--muted);font-size:14px;line-height:1.52}.term-card .term{color:var(--coral-deep);font:800 12px var(--mono);letter-spacing:.06em}.go-card{border-radius:14px;padding:17px;background:var(--coral);color:#fff}.go-card small{display:block;opacity:.82;font:700 11px var(--mono);letter-spacing:.08em}.go-card strong{display:block;font-family:var(--display);font-size:25px;margin:5px 0}.go-card p{font-size:13px;line-height:1.5;margin:0}.dual-prompts{display:grid;gap:11px}.dual-prompts .prompt{min-height:84px;max-height:170px;padding:13px 16px}.dual-prompts .prompt-head{padding:8px 11px}
+.archive{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:20px}.archive .prompt{min-height:166px}.warning{margin-top:14px;border-radius:12px;padding:14px 16px;background:color-mix(in srgb,var(--coral) 13%,var(--paper-2));border:1px solid color-mix(in srgb,var(--coral) 48%,var(--line));font-size:14px;line-height:1.5}.warning b{color:var(--coral-deep)}
+.deploy-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:18px;margin-top:25px}.versus{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:15px;overflow:hidden;box-shadow:var(--shadow)}.versus div{padding:21px}.versus div:first-child{background:var(--paper-2);border-right:1px solid var(--line)}.versus h3{font-family:var(--display);font-size:23px}.versus p{margin-top:10px;color:var(--muted);font-size:14px;line-height:1.55}.checklist{padding:22px;border-radius:15px;border:1px solid var(--line);background:var(--paper-2);box-shadow:var(--shadow)}.checklist li{list-style:none;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14px}.checklist li:last-child{border:0}.checklist li:before{content:"□";color:var(--coral);font-weight:800;margin-right:9px}
+.boundary-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:26px}.boundary-panel{position:relative;overflow:hidden;padding:25px 26px 22px;border:1px solid var(--line);border-radius:17px;background:var(--paper-2);box-shadow:var(--shadow)}.boundary-panel:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--olive)}.boundary-panel.limit:before{background:var(--coral)}.boundary-label{display:inline-flex;align-items:center;gap:8px;font:800 11px var(--mono);letter-spacing:.08em;color:var(--olive)}.boundary-panel.limit .boundary-label{color:var(--coral-deep)}.boundary-panel h3{margin-top:12px;font:800 26px var(--display)}.boundary-list{display:grid;gap:0;margin:13px 0 0;padding:0}.boundary-list li{position:relative;list-style:none;padding:10px 0 10px 29px;border-top:1px dashed var(--line);font-size:14px;line-height:1.45}.boundary-list li:before{position:absolute;left:2px;top:10px;font:900 15px var(--mono);color:var(--olive);content:"✓"}.limit .boundary-list li:before{content:"×";color:var(--coral-deep)}.boundary-thesis{display:flex;align-items:center;gap:16px;margin-top:18px;padding:16px 20px;border-radius:14px;background:var(--ink);color:var(--paper-2);box-shadow:var(--shadow)}.boundary-thesis b{flex:0 0 auto;color:#ffad88;font:800 11px var(--mono);letter-spacing:.08em}.boundary-thesis span{font:800 clamp(18px,2vw,27px)/1.3 var(--display)}
+.redline-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:23px}.redline-card{position:relative;min-height:151px;padding:19px 18px 17px 62px;border:1px solid var(--line);border-radius:15px;background:var(--paper-2);box-shadow:var(--shadow);transition:transform .2s,border-color .2s}.redline-card:hover{transform:translateY(-3px);border-color:var(--coral)}.redline-no{position:absolute;left:16px;top:18px;color:var(--coral);font:900 29px/1 var(--display)}.redline-card h3{font:800 18px var(--display)}.redline-card p{margin-top:8px;color:var(--muted);font-size:13px;line-height:1.5}.redline-mantra{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;margin-top:15px;padding:13px 18px;border-left:5px solid var(--coral);border-radius:0 13px 13px 0;background:color-mix(in srgb,var(--paper-2) 86%,var(--coral) 14%)}.redline-mantra b{font:900 22px var(--display);color:var(--coral-deep)}.redline-mantra span{font-size:13px;line-height:1.5;color:var(--muted)}
+.term-grid{grid-template-columns:repeat(4,1fr);margin-top:22px}.term-grid .term-card{min-height:136px}.term-grid h3{font-size:18px}.clock-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:23px}.clock{border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--paper-2);box-shadow:var(--shadow)}.clock h3{font:800 31px var(--display)}.clock h3 span{color:var(--coral)}.clock ol{margin:13px 0 0;padding-left:20px;color:var(--muted);font-size:14px;line-height:1.75}.clock li b{color:var(--ink)}.clock .total{display:inline-block;margin-top:16px;padding:6px 10px;border-radius:999px;background:var(--paper);font:700 12px var(--mono);color:var(--coral-deep)}
+.close-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:18px;margin-top:24px}.close-quote{padding:30px;border-radius:17px;background:var(--ink);color:var(--paper-2);box-shadow:var(--shadow)}.close-quote .big{font:800 clamp(32px,4vw,54px)/1.18 var(--display)}.close-quote .big span{color:#ffad88}.close-quote p{margin-top:16px;color:#d8d0c5;line-height:1.6}.action-card{padding:24px;border:1px solid var(--line);border-radius:17px;background:var(--paper-2);box-shadow:var(--shadow)}.action-card .action-kicker{font:800 11px var(--mono);letter-spacing:.09em;color:var(--coral-deep)}.action-card h3{margin-top:8px;font:800 27px var(--display)}.action-steps{display:grid;gap:8px;margin-top:15px}.action-step{display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:center;padding:9px 11px;border-radius:10px;background:var(--paper);font-size:13px}.action-step i{font-style:normal;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:var(--coral);color:white;font:800 11px var(--mono)}.action-card small{display:block;margin-top:13px;color:var(--muted);font-size:12px;line-height:1.5}
+.profile-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:22px;margin-top:23px;align-items:stretch}.profile-copy{padding:25px;border:1px solid var(--line);border-radius:18px;background:var(--paper-2);box-shadow:var(--shadow)}.profile-copy .role{font:800 12px var(--mono);letter-spacing:.08em;color:var(--coral-deep)}.profile-copy h3{font:800 31px var(--display);margin-top:12px}.profile-copy p{margin-top:13px;color:var(--muted);font-size:15px;line-height:1.65}.proof-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.proof-row span{padding:7px 10px;border-radius:999px;background:var(--paper);border:1px solid var(--line);font-size:12px}.profile-shot,.work-card{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:var(--paper-2);box-shadow:var(--shadow)}.profile-shot{position:relative;margin:0}.profile-shot>img{display:block;width:100%;height:355px;object-fit:cover;object-position:top}.profile-qr{position:absolute;right:16px;bottom:16px;display:grid;grid-template-columns:132px auto;gap:13px;align-items:center;padding:11px 15px 11px 11px;border:1px solid rgba(32,32,30,.14);border-radius:16px;background:#fff;color:#20201e;text-decoration:none;box-shadow:0 18px 42px rgba(24,22,20,.28)}.profile-qr img{display:block;width:132px;height:132px;object-fit:contain;image-rendering:pixelated}.profile-qr b{display:block;font:800 19px/1.25 var(--display)}.profile-qr small{display:block;margin-top:7px;color:#716d65;font:700 11px/1.35 var(--mono)}.profile-qr span:before{content:"SCAN TO VISIT";display:block;margin-bottom:7px;color:var(--coral-deep);font:800 9px var(--mono);letter-spacing:.08em}.profile-qr:hover{transform:translateY(-3px);border-color:var(--coral)}.works-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-top:22px}.work-card{position:relative;min-width:0}.work-card img{display:block;width:100%;height:170px;object-fit:cover;object-position:top}.work-card div{padding:13px 14px 15px}.work-card h3{font-family:var(--display);font-size:19px}.work-card p{margin-top:7px;color:var(--muted);font-size:12px;line-height:1.45}.work-card a{display:inline-block;margin-top:9px;color:var(--coral-deep);font:800 11px var(--mono);text-decoration:none}.path-grid{display:grid;grid-template-columns:1fr 86px 1fr;gap:14px;align-items:stretch;margin-top:23px}.path-card{padding:22px;border:1px solid var(--line);border-radius:17px;background:var(--paper-2);box-shadow:var(--shadow)}.path-card:first-child{border-top:4px solid var(--blue)}.path-card:last-child{border-top:4px solid var(--coral)}.path-card .path-no{font:800 11px var(--mono);color:var(--muted)}.path-card h3{font:800 27px var(--display);margin-top:10px}.path-card p{margin-top:9px;color:var(--muted);font-size:14px;line-height:1.55}.path-steps{display:grid;gap:7px;margin-top:14px}.path-steps span{padding:9px 11px;border-radius:9px;background:var(--paper);font-size:13px}.path-or{display:grid;place-items:center;color:var(--coral-deep);font:800 22px var(--display)}.plan-flow,.deploy-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:13px}.plan-flow span,.deploy-flow span{position:relative;padding:13px 11px;border:1px solid var(--line);border-radius:11px;background:var(--paper-2);text-align:center;font-size:13px;font-weight:750}.plan-flow span:not(:last-child):after,.deploy-flow span:not(:last-child):after{content:"→";position:absolute;right:-11px;top:50%;transform:translateY(-50%);z-index:2;color:var(--coral-deep)}.safety{margin-top:10px;padding:10px 12px;border-radius:9px;background:#fff0e8;color:#7c3828;font-size:12px;font-weight:700}.live-badge{display:inline-flex;align-items:center;gap:7px;padding:7px 11px;border-radius:999px;background:color-mix(in srgb,var(--olive) 18%,var(--paper-2));color:var(--olive);font:800 11px var(--mono)}.live-badge:before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.profile-qr{z-index:25;cursor:grab;touch-action:none;user-select:none;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}.profile-qr span:before{content:"拖动调整 · 扫码访问"}.profile-qr.dragging{cursor:grabbing;transform:scale(1.015);border-color:var(--coral);box-shadow:0 24px 58px rgba(24,22,20,.36)}.profile-qr:focus-visible{outline:3px solid var(--coral);outline-offset:3px}
+.step-gallery{display:grid;gap:12px}.step-gallery.two{grid-template-columns:repeat(2,minmax(0,1fr))}.shot-card{position:relative;min-width:0;border:1px solid var(--line);border-radius:15px;overflow:hidden;background:var(--paper-2);box-shadow:var(--shadow)}.shot-trigger{all:unset;display:block;width:100%;cursor:zoom-in}.shot-visual{position:relative;overflow:hidden;background:#ececea}.shot-visual:after{content:"⌕";position:absolute;right:10px;bottom:10px;width:31px;height:31px;display:grid;place-items:center;border-radius:9px;background:rgba(24,24,23,.78);color:#fff;font:800 18px var(--body);box-shadow:0 8px 18px rgba(0,0,0,.24);transition:.2s ease}.shot-trigger:hover .shot-visual:after,.shot-trigger:focus-visible .shot-visual:after{transform:scale(1.08);background:var(--coral)}.shot-card img{display:block;width:100%;height:158px;object-fit:cover;object-position:top}.step-gallery.single .shot-card img{height:280px}.shot-meta{padding:10px 12px 11px}.shot-meta b{display:block;color:var(--coral-deep);font:800 11px var(--mono);letter-spacing:.04em}.shot-meta span{display:block;margin-top:4px;color:var(--muted);font-size:12px;line-height:1.35}.delivery-layout{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;margin-top:16px;align-items:start}.delivery-layout .archive{grid-template-columns:1fr;margin-top:0;gap:10px}.delivery-layout .archive .prompt{min-height:88px;max-height:145px;padding:12px 15px}.delivery-layout .archive .prompt-head{padding:8px 11px}.delivery-layout .shot-card img{height:150px}.evidence-note{margin-top:8px;padding:8px 10px;border-radius:9px;background:color-mix(in srgb,var(--gold) 13%,var(--paper-2));color:var(--muted);font-size:11px;line-height:1.4}
+.lightbox{display:none;position:fixed;inset:0;z-index:100;background:rgba(15,15,14,.88);backdrop-filter:blur(14px);padding:34px;align-items:center;justify-content:center}.lightbox.open{display:flex;animation:lightboxIn .2s ease}.lightbox-panel{position:relative;display:grid;grid-template-rows:minmax(0,1fr) auto;width:min(1180px,94vw);height:min(92vh,900px);border:1px solid rgba(255,255,255,.18);border-radius:18px;overflow:hidden;background:#171716;box-shadow:0 30px 90px rgba(0,0,0,.48)}.lightbox-media{min-height:0;overflow:auto;background:#fff;overscroll-behavior:contain}.lightbox img{display:block;width:100%;height:auto;background:#fff}.lightbox-caption{padding:13px 58px 14px 18px;color:#eee8df;font-size:13px;line-height:1.4}.lightbox-close{position:absolute;z-index:2;right:13px;top:13px;width:39px;height:39px;border:1px solid rgba(255,255,255,.25);border-radius:11px;background:rgba(20,20,19,.8);color:#fff;font-size:24px;line-height:1;cursor:pointer}.lightbox-close:hover,.lightbox-close:focus-visible{background:var(--coral);border-color:var(--coral)}body.lightbox-open{overflow:hidden}@keyframes lightboxIn{from{opacity:0}to{opacity:1}}
+.topbar{position:fixed;z-index:40;top:0;left:0;right:0;height:4px;background:var(--line)}.progress{height:100%;width:0;background:var(--coral);transition:width .35s}.tools{position:fixed;z-index:42;right:20px;top:17px;display:flex;gap:8px}.tool,.nav{width:38px;height:38px;border:1px solid var(--line);border-radius:10px;background:var(--paper-2);color:var(--ink);cursor:pointer;box-shadow:var(--shadow)}.tool:hover,.nav:hover,.tool.on{background:var(--coral);border-color:var(--coral);color:#fff}.navs{position:fixed;z-index:42;right:20px;bottom:17px;display:flex;align-items:center;gap:8px}.counter{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--paper-2);font:700 13px var(--mono);box-shadow:var(--shadow)}.counter b{color:var(--coral-deep)}.hint{position:fixed;z-index:42;left:20px;bottom:18px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;background:var(--paper-2);color:var(--muted);font-size:12px;box-shadow:var(--shadow)}.hint kbd{font:700 10px var(--mono);border:1px solid var(--line);padding:2px 4px;border-radius:4px;background:var(--paper)}.speaker{display:none;margin-top:17px;padding:11px 14px;border:1px dashed var(--line);border-radius:10px;background:color-mix(in srgb,var(--paper-2) 88%,var(--gold) 12%);font-size:13px;line-height:1.55;color:var(--muted)}body.notes .speaker{display:block}.zone{position:fixed;top:0;bottom:0;width:13%;z-index:20;cursor:pointer}.zone.left{left:0}.zone.right{right:0}
+@media(max-width:800px){body{overflow:auto}.slide{position:relative;min-height:100vh;padding:68px 20px 94px}.problem-grid,.gate-board,.demand-grid,.case-grid,.prompt-layout,.archive,.deploy-grid,.term-grid,.clock-grid,.close-grid,.profile-grid,.works-grid,.path-grid,.plan-flow,.deploy-flow,.delivery-layout,.step-gallery.two,.boundary-grid,.redline-grid{grid-template-columns:1fr}.path-or{min-height:48px}.gate-board{gap:8px}.gate{min-height:106px}.rail{max-width:92vw;overflow:auto}.hint,.zone{display:none}.tools{right:12px}.navs{right:12px}.evidence img{height:150px}.profile-shot>img{height:260px}.profile-qr{right:10px;bottom:10px;grid-template-columns:96px auto;padding:8px 11px 8px 8px}.profile-qr img{width:96px;height:96px}.profile-qr b{font-size:16px}.work-card img{height:190px}.shot-card img,.step-gallery.single .shot-card img{height:210px}.lightbox{padding:14px}.lightbox-panel{width:96vw;height:94vh}.boundary-thesis,.redline-mantra{grid-template-columns:1fr}.redline-card{min-height:0}}
+@media print{body{overflow:visible}.slide{display:flex!important;position:relative;min-height:100vh;page-break-after:always;opacity:1;transform:none}.topbar,.tools,.navs,.hint,.rail,.zone{display:none}.speaker{display:block}}
+</style>
+</head>
+<body>
+<div class="topbar"><div class="progress" id="progress"></div></div>
+<main class="deck" id="deck">
+  <section class="slide cover active" data-gate="0">
+    <div class="inner">
+      <span class="edition">2026-08-09 · 30 MIN LIVE EDITION · 主讲 Bin哥</span>
+      <h1>像甲方一样<br>做 <span class="accent">AI Coding</span></h1>
+      <p class="sub">不写代码，不等于把方向盘交出去。每一次让 AI 动手前，先看见一个可验收的成果。</p>
+      <div class="cover-grid">
+        <div class="promise"><b>这 30 分钟你会带走</b><span>从找需求、看原型、审计划、验运行，到把项目轻量上线的一套“六次放行”。</span></div>
+        <div class="boundary"><b>今天的边界</b><span>会讲到上线，但不展开域名、服务器和密钥的复杂配置；先掌握可复用的主路径。</span></div>
+      </div>
+      <div class="mode-line"><span class="mode-chip"><b>适合新手</b> 不懂代码，也能判断项目对不对</span><span class="mode-chip"><b>适合实践者</b> 已经在用 Codex，也能减少返工与失控</span></div>
+      <aside class="speaker">开场约 1 分钟。先问：现场有多少人已经用过 Codex、Claude Code 或类似工具？再补一句：没用过也没关系，今天讲的不是代码语法，而是你怎么像甲方一样验收 AI 的工作。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">先认识一下 <span class="time">约 01′30″</span></div>
+      <h2>我是 Bin哥：把 AI 变成<span class="accent">可交付的结果</span></h2>
+      <div class="profile-grid">
+        <div class="profile-copy"><span class="role">AI APPLICATION PRACTITIONER</span><h3>AI 应用实践者<br>AI 全栈落地者</h3><p>我有后端开发和技术管理背景，持续围绕 AI 思维、AI 全栈开发、AI 自媒体运营与多模态创作做真实项目。今天分享的不是概念，而是我反复踩坑后留下的一套项目推进方法。</p><div class="proof-row"><span>6000+ 小时实践</span><span>方法论 × 项目 × 内容</span><span>从想法到上线</span></div><a class="live-badge" href="https://www.silencebin.com/" target="_blank" rel="noreferrer" style="margin-top:18px;text-decoration:none">silencebin.com</a></div>
+        <figure class="profile-shot"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/silencebin.png" alt="Bin哥个人网站首页真实截图"><a class="profile-qr" id="profileQr" href="https://www.silencebin.com/" target="_blank" rel="noreferrer" aria-label="可拖动的 Bin哥个人网站二维码；单击访问网站" title="拖动调整位置，单击访问网站" draggable="false"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/silencebin-qr.png" alt="Bin哥个人网站二维码" draggable="false"><span><b>扫码了解 Bin哥</b><small>silencebin.com</small></span></a></figure>
+      </div>
+      <aside class="speaker">这一页不要念履历。用一句话建立可信度：我既做过传统后端和技术管理，也在持续用 AI 把想法做成能运行、能被别人使用的产品。右侧就是我的个人站，可以停两秒邀请现场扫码；今天的方法来自这些真实项目。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">真实作品，不是概念图 <span class="time">约 02′</span></div>
+      <h2>这些项目，都是沿着<span class="accent">“先验收，再放行”</span>做出来的</h2>
+      <div class="works-grid">
+        <article class="work-card"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/parallelme.png" alt="Parallel Me 首页真实截图"><div><h3>Parallel Me</h3><p>把人生遗憾转成一段平行世界叙事，验证情绪价值与交互体验。</p><a href="https://parallelme.silencebin.com/" target="_blank" rel="noreferrer">打开线上作品 ↗</a></div></article>
+        <article class="work-card"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/ai-photo.png" alt="AI 写真生成器真实截图"><div><h3>AI 写真生成器</h3><p>从风格浏览、收藏到生成链路，把多模态能力做成可用产品。</p><a href="https://ai-photo.silencebin.com/" target="_blank" rel="noreferrer">打开线上作品 ↗</a></div></article>
+        <article class="work-card"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/ai-map.png" alt="Bin哥知识地图真实截图"><div><h3>知识地图</h3><p>把实践文章整理为可检索、可复盘、可持续更新的个人知识库。</p><a href="https://ai-map.silencebin.com/" target="_blank" rel="noreferrer">打开线上作品 ↗</a></div></article>
+        <article class="work-card"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/math-adventure.png" alt="小学数学冒险课程真实截图"><div><h3>小数点点大冒险</h3><p>把五年级数学做成有宠物、关卡和即时反馈的本地互动课程。</p><a href="#" aria-label="本地项目，无线上链接">本地交互课程 · 已运行</a></div></article>
+      </div>
+      <aside class="speaker">每个项目只讲一句。重点不是炫作品数量，而是让听众相信：AI Coding 能做出真实产品，但能做出来，不代表一句话就能做对。自然接到下一页的三个失控现场。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">反面示范 <span class="time">约 01′30″</span></div>
+      <h2>一句话让 AI 做完，<span class="accent">最容易丢掉什么？</span></h2>
+      <div class="problem-grid" id="problems">
+        <article class="card"><button data-answer="你需要的不是更多文件，而是先看到一份“做什么、怎么算做好”的文档。"><span class="mark">01</span><h3>不知道它做了什么</h3><p>文件突然很多，却说不清哪个功能在哪里。</p></button></article>
+        <article class="card"><button data-answer="先看原型，再谈开发；样子不对时，越早改越便宜。"><span class="mark">02</span><h3>改一个，坏一片</h3><p>想改一个按钮，AI 顺手改坏其他地方。</p></button></article>
+        <article class="card"><button data-answer="新需求不是口头加一句，而是必须落进 PRD 与 bug 记录。"><span class="mark">03</span><h3>做到一半散架</h3><p>需求想到哪说到哪，前面的约定无人记得。</p></button></article>
+      </div>
+      <div class="answer-strip" id="answer"><span>点一张卡：</span>看见问题，才能知道在哪一关拦住它。</div>
+      <aside class="speaker">让听众举手后点一张卡，不展开技术细节；用 20 秒把它接到下一页的“闸门”。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">全场母图 <span class="time">约 01′</span></div>
+      <h2>控制 AI，不是盯着代码，<br>而是每步<span class="accent">先看成果，再放行</span></h2>
+      <p class="sub">六个名字都用动作词：你只需要知道此刻该看什么、是否同意它继续。</p>
+      <div class="gate-board">
+        <button class="gate" data-jump="7"><span class="num">GATE 01</span><strong>写清楚</strong><small>PRD、约束、版本起点</small><span class="map">NOTION 1</span></button>
+        <button class="gate" data-jump="8"><span class="num">GATE 02</span><strong>看样子</strong><small>展示 UI、demo 成果</small><span class="map">NOTION 2–3</span></button>
+        <button class="gate" data-jump="9"><span class="num">GATE 03</span><strong>看计划</strong><small>拆分、确认、执行</small><span class="map">NOTION 4–5</span></button>
+        <button class="gate" data-jump="10"><span class="num">GATE 04</span><strong>看运行</strong><small>测试、日志、调试</small><span class="map">NOTION 6–7</span></button>
+        <button class="gate" data-jump="11"><span class="num">GATE 05</span><strong>记改动</strong><small>需求增补、bug 留痕</small><span class="map">NOTION 8</span></button>
+        <button class="gate" data-jump="12"><span class="num">GATE 06</span><strong>交成果</strong><small>复盘、索引、上线说明</small><span class="map">NOTION 9–10</span></button>
+      </div>
+      <aside class="speaker">这是整场唯一需要记住的图。点击任意闸门可跳到对应页；现场讲述时从左到右即可。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">找需求：先判断你在哪条路上 <span class="time">约 02′</span></div>
+      <h2>有想法和没想法，<span class="accent">起手式不一样</span></h2>
+      <div class="path-grid">
+        <article class="path-card"><span class="path-no">PATH A · 已有业务 / 已有想法</span><h3>让 AI 先问你</h3><p>不要急着让它开发。先用多轮反问，把脑中的模糊想法逼成一份能验收的需求清单。</p><div class="path-steps"><span>① 描述你的业务和目标</span><span>② 要求它最多连续追问 10 个关键问题</span><span>③ 最后输出需求清单与首版边界</span></div></article>
+        <div class="path-or">或</div>
+        <article class="path-card"><span class="path-no">PATH B · 还没有明确想法</span><h3>从证据里捞需求</h3><p>不要硬想“我该做什么产品”。去找已经发生的真实信号，再判断自己能否解决。</p><div class="path-steps"><span>有人抱怨：评论 / issue / 提问</span><span>有人付费：成熟产品 / 付费社群</span><span>你很熟悉：RSS / 日常工作流</span><span>趋势发生：Product Hunt / 新场景</span></div></article>
+      </div>
+      <aside class="speaker">这是口播里必须补齐的一页。强调两条路没有高低：已经有业务的人，用 AI 反问；还没想法的人，从抱怨、付费、熟悉和趋势四类证据找。两条路最后都要汇到同一个出口——一份需求清单。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">贯穿案例 <span class="time">约 03′</span></div>
+      <h2>先把“做什么”说成<span class="accent">可验收的输入和输出</span></h2>
+      <div class="case-grid">
+        <div class="case-panel"><h3>AI 选题变现评估器</h3><p class="sub" style="font-size:15px;margin-top:8px">给内容创作者：输入人群、标题、大纲和变现方式；输出一份值得不值得做、怎么优化、如何变现的评估报告。</p><div class="case-output">INPUT  →  人群 / 标题 / 大纲 / 变现方式<br>OUTPUT →  评分 / 痛点 / 标题建议 / 内容结构 / 行动清单</div></div>
+        <div class="case-panel"><h3>动手前，5 问答得出吗？</h3><div class="question-list"><div class="question"><b>1</b><span>给谁用？<small>不会判断选题价值的内容创作者</small></span></div><div class="question"><b>2</b><span>解决什么痛？<small>不知道值不值得写、怎么改、怎么变现</small></span></div><div class="question"><b>3</b><span>输入与输出？<small>输入信息，换来可执行的评估报告</small></span></div><div class="question"><b>4</b><span>怎么算做好？<small>建议是否清楚、能否转成下一步行动</small></span></div><div class="question"><b>5</b><span>第一版边界？<small>先做单次评估，不先承诺完整商业系统</small></span></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="1">
+    <div class="inner">
+      <div class="eyebrow">GATE 01 · 写清楚 <span class="time">NOTION 1 · 约 02′</span></div>
+      <h2>想法可以口语，<span class="accent">落成文档才算需求</span></h2>
+      <div class="prompt-layout"><div class="prompt-card"><div class="prompt-head"><span><b>原始提示词</b> · STEP 1</span><button class="copy" data-copy="p1">复制原文</button></div><pre class="prompt" id="p1">我有一个想法，如图，我希望你帮我分析下我的这个需求，然后生成一份PRD文档，统一放在doc文件夹下，以后文档都放在这个文件夹下面，帮我做个约束，顺便做一下git初始化</pre><div class="source-note"><b>验收再放行：</b>是否得到 PRD、文档放置规则与可回退的项目起点？</div></div><div class="step-gallery single"><article class="shot-card"><button class="shot-trigger" data-lightbox="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step1.png" data-caption="STEP 1 · PRD、文档约束与 Git 初始化成果"><span class="shot-visual"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step1.png" alt="Step 1 PRD、文档规则与 Git 初始化成果截图"></span><span class="shot-meta"><b>STEP 1 · 实际成果</b><span>PRD、doc 规则、AGENTS.md 与 Git 初始提交均可查。</span></span></button></article><div class="evidence-note">点击图片放大查看原始记录。PRD 是需求说明，Git 是项目的版本存档。</div></div></div>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="2">
+    <div class="inner">
+      <div class="eyebrow">GATE 02 · 看样子 <span class="time">NOTION 2–3 · 约 02′</span></div>
+      <h2>先看<span class="accent">能看的样子</span>，再开发</h2>
+      <div class="prompt-layout"><div class="prompt-card"><div class="prompt-head"><span><b>原始提示词</b> · STEP 2</span><button class="copy" data-copy="p2">复制原文</button></div><pre class="prompt" id="p2">根据PRD文档，设计一个页面展示，我是颜控，我需要美观、高大上的网页展示 [$product-design:index](/Users/silence_mini_pro/.codex/plugins/cache/openai-curated-remote/product-design/0.1.47/skills/index/SKILL.md)</pre><div class="source-note"><b>验收再放行：</b>它是不是你想给用户看的样子？如果不是，此刻改的成本最低。</div></div><div><div class="step-gallery two"><article class="shot-card"><button class="shot-trigger" data-lightbox="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step2.png" data-caption="STEP 2 · 三个视觉方向的设计探索"><span class="shot-visual"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step2.png" alt="Step 2 三个视觉方向设计截图"></span><span class="shot-meta"><b>STEP 2 · 设计方向</b><span>先比较三个方向，再决定原型风格。</span></span></button></article><article class="shot-card"><button class="shot-trigger" data-lightbox="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step3.png" data-caption="STEP 3 · demo 页面完成并通过构建与截图检查"><span class="shot-visual"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step3.png" alt="Step 3 demo 页面完成记录截图"></span><span class="shot-meta"><b>STEP 3 · demo 成果</b><span>页面、构建与端侧截图均已验证。</span></span></button></article></div><div class="evidence-note">demo 是先看的效果稿，不等于完整系统。点击任一图片可查看原图。</div></div></div>
+      <aside class="speaker">截图已经留在本页，不必依赖临场切 Notion。要现场打开成品时，再作为加分项，而非必要条件。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="3">
+    <div class="inner">
+      <div class="eyebrow">GATE 03 · 看计划 <span class="time">NOTION 4–5 · 约 02′</span></div>
+      <h2><span class="accent">先看计划</span>，再允许它执行</h2>
+      <div class="prompt-layout"><div class="dual-prompts"><div class="prompt-card"><div class="prompt-head"><span><b>原始提示词</b> · STEP 4</span><button class="copy" data-copy="p3">复制原文</button></div><pre class="prompt" id="p3">原型看起来很不错，按这个原型进行后面的开发，利用任务拆分和TDD原则，其中如果遇到需要我人工设置的内容，提醒我如何设置。</pre></div><div class="prompt-card"><div class="prompt-head"><span><b>原始提示词</b> · STEP 5</span><button class="copy" data-copy="p4">复制原文</button></div><pre class="prompt" id="p4">是的，执行此计划，记得把计划存储到doc中，设置todo list，然后根据任务完成来更新状态</pre></div><div class="plan-flow"><span>看 demo</span><span>进入计划模式</span><span>审任务与验收</span><span>确认后执行</span></div></div><div><div class="step-gallery two"><article class="shot-card"><button class="shot-trigger" data-lightbox="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step4.png" data-caption="STEP 4 · AI 选题变现评估器 MVP 分阶段开发计划"><span class="shot-visual"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step4.png" alt="Step 4 MVP 开发计划截图"></span><span class="shot-meta"><b>STEP 4 · 审计划</b><span>API、测试与分阶段实现先写清。</span></span></button></article><article class="shot-card"><button class="shot-trigger" data-lightbox="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step5.png" data-caption="STEP 5 · 按计划执行后的功能与测试成果"><span class="shot-visual"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step5.png" alt="Step 5 执行计划与测试成果截图"></span><span class="shot-meta"><b>STEP 5 · 执行成果</b><span>功能、TODO、测试和构建都有结果。</span></span></button></article></div><div class="evidence-note">TDD 的人话：先约定怎么检查，再开发。计划必须由你确认后执行。</div></div></div>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="4">
+    <div class="inner">
+      <div class="eyebrow">GATE 04 · 看运行 <span class="time">NOTION 6–7 · 约 02′30″</span></div>
+      <h2>出了问题，<span class="accent">看得到、查得到、重启得了</span></h2>
+      <div class="prompt-layout"><div class="prompt-card"><div class="prompt-head"><span><b>原始提示词</b> · STEP 6</span><button class="copy" data-copy="p5">复制原文</button></div><pre class="prompt" id="p5">DeepSeek配置文件我已经设置好，接下来我要做测试，有如下要求：
+1、我需要你帮我创建一个启动脚本和一个停止脚本，启动脚本要求每次启动的时候检查端口号是否占用，如果占用就kill掉重新启动。
+2、在本地设置一个logs文件夹，日期来进行日志保存，在关键点帮我打上日志，比如三方模型的输入输出，前后端交互的输入输出等
+3、提示词prompt单独提取为配置文件存储，记得打上注释，方便我修改</pre><div class="source-note"><b>验收再放行：</b>启动、停止、日志、配置都能让人看见；没有它们，出错只能靠猜。</div><div class="safety">安全补充：端口被占用时，先识别占用进程并确认是否属于本项目，再停止；不要把“发现占用”直接等同于强制杀进程。</div></div><div><div class="step-gallery two"><article class="shot-card"><button class="shot-trigger" data-lightbox="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step6.png" data-caption="STEP 6 · 启停脚本、日志目录与 Prompt 配置成果"><span class="shot-visual"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step6.png" alt="Step 6 启停脚本日志与配置成果截图"></span><span class="shot-meta"><b>STEP 6 · 可观察基础</b><span>脚本、日志、Prompt 配置均已落地。</span></span></button></article><article class="shot-card"><button class="shot-trigger" data-lightbox="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step7.png" data-caption="STEP 7 · 通过日志定位 DeepSeek 鉴权失败"><span class="shot-visual"><img src="./课件-像甲方一样做AICoding-口播优化版-assets/notion-step7.png" alt="Step 7 日志定位鉴权错误截图"></span><span class="shot-meta"><b>STEP 7 · 调试证据</b><span>日志证明问题在模型鉴权，不是前后端交互。</span></span></button></article></div><div class="evidence-note">日志是系统黑匣子：把“不能用”变成可定位、可复现的信息。</div></div></div>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="5">
+    <div class="inner">
+      <div class="eyebrow">GATE 05 · 记改动 <span class="time">NOTION 8 · 约 01′30″</span></div>
+      <h2>改需求不靠嘴，<span class="accent">靠文档留痕</span></h2>
+      <div class="prompt-layout solo"><div class="prompt-card"><div class="prompt-head"><span><b>原始提示词</b> · STEP 8</span><button class="copy" data-copy="p6">复制原文</button></div><pre class="prompt" id="p6">增加一些需求如下，从现在开始增加规则，临时添加的需求写入到新的PRD中作为补充需求，查询到的bug在doc下新建一个bug文档，进行记录：
+1、每个输入项都没有自定义让我设置，提供这个功能
+2、一些功能没有做，增加点击后提示“该功能暂开通，请耐心等待”</pre><div class="source-note"><b>验收再放行：</b>临时需求进入补充 PRD；已发现的问题进入独立 bug 文档。允许改需求，但不允许失忆。</div></div></div>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="6">
+    <div class="inner">
+      <div class="eyebrow">GATE 06 · 交成果 <span class="time">NOTION 9–10 · 约 02′30″</span></div>
+      <h2>干完一版，留下<span class="accent">能交接的资产</span></h2>
+      <div class="archive"><div class="prompt-card"><div class="prompt-head"><span><b>原始提示词</b> · STEP 9</span><button class="copy" data-copy="p7">复制原文</button></div><pre class="prompt" id="p7">项目开发完成，帮我整理doc中的文件，要求如下：
+1、这次的需求统一命名为v1.0版本，第一版PRD之后提出的需求，作为增补需求增加到PRD文档内容之后。
+2、创建复盘v1.0 复盘文件，复盘所有产生的bug和后续增加的需求，总结经验并给出后续需求建议。
+3、分析项目，提取可以复用的代码模板，创建文档来标注可用场景和使用方法
+4、文档都生成完成后，创建一个wiki，来标记索引v1.0的所有文档路径，方便日后查询</pre><div class="source-note"><b>交付资产：</b>版本 PRD、复盘、可复用模板与 wiki 索引。</div></div><div class="prompt-card"><div class="prompt-head"><span><b>讲师原始提示词</b> · STEP 10</span><button class="copy" data-copy="p8">复制原文</button></div><pre class="prompt" id="p8">我在github上创建一个仓库（git@github.com:SilenceBoy/ai_topic_evaluator.git），帮我把这个项目，关联到这个仓库中并推送，关联之前，帮我创建一份readme文件来介绍该项目，readme中附上软件使用截图，采用中英文双语</pre><div class="source-note"><b>交付出口：</b>确认目标仓库后，再提交 README、使用截图与项目代码。</div></div></div>
+      <div class="warning"><b>重要：</b>讲师仓库地址只用于保真展示，练习时必须换成自己的仓库。GitHub 是上线链路的一站，但不是终点。</div>
+      <aside class="speaker">这里是六个控制点的最后一关：复盘、模板、wiki、仓库、README 共同构成“交成果”，所以 STEP 9–10 不再游离在流程外。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="6">
+    <div class="inner">
+      <div class="eyebrow">轻量讲上线 <span class="time">约 02′</span></div>
+      <h2>“项目做完”的标准：<span class="accent">别人真的能打开</span></h2>
+      <p class="sub">先讲主路径，不把现场拖进服务器细节。你的目标是拿到一个可访问、可检查、可回退的网址。</p>
+      <div class="deploy-flow"><span>① GitHub<br><small>代码与 README 入库</small></span><span>② 托管平台<br><small>连接仓库并构建</small></span><span>③ 环境配置<br><small>密钥不进入代码仓库</small></span><span>④ 真实 URL<br><small>访问、日志、回退都验证</small></span></div>
+      <div class="deploy-grid"><div class="versus"><div><h3>今天讲到这里</h3><p>GitHub 连接托管平台，设置必要环境变量，拿到公网链接并做一次真实访问检查。</p></div><div><h3>后续再深入</h3><p>自定义域名、DNS、服务器运维、监控告警和更复杂的安全配置。</p></div></div><div class="checklist"><h3>甲方上线验收四问</h3><ul><li>陌生人能否打开真实 URL？</li><li>关键功能是否走通一次？</li><li>密钥是否只在环境变量中？</li><li>失败后能否看日志并回退？</li></ul></div></div>
+      <aside class="speaker">这页轻量讲，不现场配置。可以指向前面的作品：Parallel Me、AI 写真和知识地图都是“别人能打开”的状态。强调 GitHub 不是上线本身，但它通常是这条上线链路的起点。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">新手速查 <span class="time">现场回看约 01′</span></div>
+      <h2>遇到术语，先把它翻成<span class="accent">人话</span></h2>
+      <div class="term-grid"><div class="term-card"><span class="term">PRD</span><h3>需求说明</h3><p>写清做什么、给谁、怎么算好。</p></div><div class="term-card"><span class="term">git</span><h3>版本回退</h3><p>像游戏存档，改坏还能回来。</p></div><div class="term-card"><span class="term">demo</span><h3>先看效果</h3><p>验证样子和流程，不代表已上线。</p></div><div class="term-card"><span class="term">TDD</span><h3>先想检查</h3><p>先定义对错，再开始做。</p></div><div class="term-card"><span class="term">todo</span><h3>任务看板</h3><p>你随时知道做到哪一步。</p></div><div class="term-card"><span class="term">日志</span><h3>系统黑匣子</h3><p>用记录定位问题，不靠猜。</p></div><div class="term-card"><span class="term">配置</span><h3>可调开关</h3><p>不改代码也能改参数和提示词。</p></div><div class="term-card"><span class="term">README</span><h3>项目说明书</h3><p>后来的人知道它是什么、怎么用。</p></div></div>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">上线前补充 · 能力边界 <span class="time">约 01′15″</span></div>
+      <h2>这套流程降低失控概率，<span class="accent">但不替你承担判断</span></h2>
+      <div class="boundary-grid">
+        <article class="boundary-panel">
+          <span class="boundary-label">CAN IMPROVE · 能够提高</span>
+          <h3>过程更可控</h3>
+          <ul class="boundary-list">
+            <li>需求被误解时，能够更早发现</li>
+            <li>每个阶段都有人工放行点</li>
+            <li>修改过程有文档和版本记录</li>
+            <li>出现问题时更容易定位与回退</li>
+          </ul>
+        </article>
+        <article class="boundary-panel limit">
+          <span class="boundary-label">CANNOT PROMISE · 不能保证</span>
+          <h3>结果天然可靠</h3>
+          <ul class="boundary-list">
+            <li>需求一定正确、没有遗漏</li>
+            <li>测试覆盖所有真实问题</li>
+            <li>密钥和用户数据绝对安全</li>
+            <li>公网服务稳定、合规且不会超支</li>
+          </ul>
+        </article>
+      </div>
+      <div class="boundary-thesis"><b>验收底线</b><span>AI 的完成报告 ≠ 验收证据；代码能跑 ≠ 可以公开上线。</span></div>
+      <aside class="speaker">这套流程最大的价值，是降低失控概率，而不是消灭所有风险。AI 可以帮我们写代码、跑测试、整理报告，但最终判断需求对不对、数据能不能交给它、这个版本能不能公开，责任仍然在项目负责人。尤其提醒大家：要看到真实命令结果，并亲自走一遍关键用户路径。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">上线前补充 · 六条红线 <span class="time">约 01′30″</span></div>
+      <h2>真正上线之前，先守住<span class="accent">不失控的底线</span></h2>
+      <div class="redline-grid">
+        <article class="redline-card"><span class="redline-no">01</span><h3>高风险操作先确认</h3><p>删除、覆盖、kill、推送和部署，先展示目标与影响，再由人放行。</p></article>
+        <article class="redline-card"><span class="redline-no">02</span><h3>密钥隐私不裸奔</h3><p>不进入代码、截图、聊天和日志；日志默认脱敏，只留必要信息。</p></article>
+        <article class="redline-card"><span class="redline-no">03</span><h3>真实运行才算验收</h3><p>不只看 AI 汇报；看命令结果，并亲自走通关键用户路径。</p></article>
+        <article class="redline-card"><span class="redline-no">04</span><h3>公网接口限制滥用</h3><p>上线前考虑权限、输入校验、限流、超时和 API 费用上限。</p></article>
+        <article class="redline-card"><span class="redline-no">05</span><h3>依赖素材来源清楚</h3><p>检查包名、来源、维护状态与许可证，不盲装、不盲用。</p></article>
+        <article class="redline-card"><span class="redline-no">06</span><h3>数据变化能够恢复</h3><p>Git 只能回退代码；数据库和用户数据还需要备份及迁移回退方案。</p></article>
+      </div>
+      <div class="redline-mantra"><b>三不原则：不盲信 · 不裸奔 · 不失控</b><span>如果密钥已经泄露，先撤销或轮换；只删除文件或补一个提交，不代表旧密钥已经安全。</span></div>
+      <aside class="speaker">这一页不展开技术实现，只让大家记住六条红线。特别点名前面的两个例子：端口占用不能直接 kill；模型和前后端输入输出不能无条件完整写入日志。公开上线还要有权限、限流和成本上限。最后补一句：Git 可以回退代码，但恢复不了已经被错误修改的用户数据。</aside>
+    </div>
+  </section>
+
+  <section class="slide" data-gate="0">
+    <div class="inner">
+      <div class="eyebrow">最后一步 · 现在就开始 <span class="time">约 01′30″</span></div>
+      <div class="close-grid"><div class="close-quote"><div class="big">AI 负责写代码，<br>你负责<span>不失控</span>。</div><p>不必等学会所有技术再开始。先把目标说清楚，再一关一关放行。</p></div><div class="action-card"><span class="action-kicker">48 HOURS CHALLENGE</span><h3>走完第一个小闭环</h3><div class="action-steps"><div class="action-step"><i>01</i><span>选一个真实想解决的小问题</span></div><div class="action-step"><i>02</i><span>让 AI 反问，整理需求清单</span></div><div class="action-step"><i>03</i><span>先看原型，不满意就继续改</span></div><div class="action-step"><i>04</i><span>确认计划，再允许它开始开发</span></div></div><small>不要求一次做大，先完成一个可验证、可复盘的小版本。</small></div></div>
+      <aside class="speaker">最后不再展开新的技术主题，直接给出 48 小时行动。邀请大家选一个真实的小问题，先走完“AI 反问、需求清单、原型、计划确认”四步。重点不是第一版有多大，而是第一次真正掌握放行节奏。</aside>
+    </div>
+  </section>
+</main>
+
+<div class="zone left" id="zoneL" aria-label="上一页"></div><div class="zone right" id="zoneR" aria-label="下一页"></div>
+<div class="tools"><button class="tool" id="noteBtn" title="显示口播稿 (N)">✎</button><button class="tool" id="themeBtn" title="切换深浅色 (D)">◐</button><button class="tool" id="fullBtn" title="全屏 (F)">⛶</button></div>
+<div class="navs"><button class="nav" id="prevBtn" aria-label="上一页">‹</button><span class="counter"><b id="cur">1</b> / <span id="total">18</span></span><button class="nav" id="nextBtn" aria-label="下一页">›</button></div>
+<div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · <kbd>N</kbd> 口播 · <kbd>D</kbd> 深色 · <kbd>F</kbd> 全屏</div>
+<nav class="rail" id="rail" aria-label="六次放行导航"><button data-jump="7">写清</button><button data-jump="8">看样</button><button data-jump="9">看计划</button><button data-jump="10">看运行</button><button data-jump="11">记改动</button><button data-jump="12">交成果</button></nav>
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Notion 示例图放大预览"><div class="lightbox-panel"><button class="lightbox-close" id="lightboxClose" aria-label="关闭放大图片">×</button><div class="lightbox-media"><img id="lightboxImage" alt=""></div><div class="lightbox-caption" id="lightboxCaption"></div></div></div>
+
+<script>
+(() => {
+  const slides=[...document.querySelectorAll('.slide')], total=slides.length;
+  let index=0; const cur=document.querySelector('#cur'), totalEl=document.querySelector('#total'), progress=document.querySelector('#progress');
+  totalEl.textContent=total;
+  const go=(target)=>{index=Math.max(0,Math.min(total-1,target));slides.forEach((slide,i)=>slide.classList.toggle('active',i===index));cur.textContent=index+1;progress.style.width=((index+1)/total*100)+'%';history.replaceState(null,'','#'+(index+1));const gate=slides[index].dataset.gate;document.querySelectorAll('.rail button').forEach((b,i)=>b.classList.toggle('on',String(i+1)===gate));};
+  const next=()=>go(index+1),prev=()=>go(index-1);
+  document.querySelector('#nextBtn').onclick=next;document.querySelector('#prevBtn').onclick=prev;document.querySelector('#zoneR').onclick=next;document.querySelector('#zoneL').onclick=prev;
+  document.querySelectorAll('[data-jump]').forEach(button=>button.addEventListener('click',()=>go(Number(button.dataset.jump))));
+  document.querySelector('#noteBtn').onclick=()=>{document.body.classList.toggle('notes');document.querySelector('#noteBtn').classList.toggle('on',document.body.classList.contains('notes'));};
+  document.querySelector('#themeBtn').onclick=()=>{const root=document.documentElement;root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';};
+  document.querySelector('#fullBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen?.();
+  document.addEventListener('keydown',(e)=>{if(e.target.closest('button'))return; if(['ArrowRight',' ','PageDown'].includes(e.key)){e.preventDefault();next();}else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev();}else if(e.key==='Home')go(0);else if(e.key==='End')go(total-1);else if(e.key.toLowerCase()==='n')document.querySelector('#noteBtn').click();else if(e.key.toLowerCase()==='d')document.querySelector('#themeBtn').click();else if(e.key.toLowerCase()==='f')document.querySelector('#fullBtn').click();});
+  document.querySelectorAll('#problems button').forEach(button=>button.onclick=()=>{document.querySelectorAll('#problems .card').forEach(card=>card.classList.remove('active'));button.closest('.card').classList.add('active');document.querySelector('#answer').innerHTML='<span>这关怎么拦：</span>'+button.dataset.answer;});
+  document.querySelectorAll('.copy').forEach(button=>button.onclick=async()=>{const text=document.getElementById(button.dataset.copy).innerText;try{await navigator.clipboard.writeText(text);}catch{const t=document.createElement('textarea');t.value=text;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove();}const old=button.textContent;button.textContent='已复制 ✓';setTimeout(()=>button.textContent=old,1200);});
+  const lightbox=document.querySelector('#lightbox'), lightboxImage=document.querySelector('#lightboxImage'), lightboxCaption=document.querySelector('#lightboxCaption'), lightboxClose=document.querySelector('#lightboxClose');let lastZoomTrigger=null;
+  const openLightbox=(trigger)=>{lastZoomTrigger=trigger;lightboxImage.src=trigger.dataset.lightbox;lightboxImage.alt=trigger.querySelector('img')?.alt||'Notion 示例图';lightboxCaption.textContent=trigger.dataset.caption||lightboxImage.alt;lightbox.classList.add('open');lightbox.setAttribute('aria-hidden','false');document.body.classList.add('lightbox-open');lightboxClose.focus();};
+  const closeLightbox=()=>{lightbox.classList.remove('open');lightbox.setAttribute('aria-hidden','true');document.body.classList.remove('lightbox-open');lightboxImage.removeAttribute('src');lastZoomTrigger?.focus();};
+  document.querySelectorAll('[data-lightbox]').forEach(trigger=>trigger.addEventListener('click',()=>openLightbox(trigger)));lightboxClose.addEventListener('click',closeLightbox);lightbox.addEventListener('click',e=>{if(e.target===lightbox)closeLightbox();});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&lightbox.classList.contains('open')){e.preventDefault();closeLightbox();}});
+  const profileQr=document.querySelector('#profileQr');
+  if(profileQr){
+    const frame=profileQr.closest('.profile-shot'),storageKey='aicoding-profile-qr-position-v1',margin=8;
+    let drag=null,suppressClick=false;
+    const bounds=()=>({maxX:Math.max(margin,frame.clientWidth-profileQr.offsetWidth-margin),maxY:Math.max(margin,frame.clientHeight-profileQr.offsetHeight-margin)});
+    const place=(left,top,persist=false)=>{const {maxX,maxY}=bounds(),x=Math.max(margin,Math.min(maxX,left)),y=Math.max(margin,Math.min(maxY,top));profileQr.style.left=x+'px';profileQr.style.top=y+'px';profileQr.style.right='auto';profileQr.style.bottom='auto';if(persist){const xSpan=Math.max(1,maxX-margin),ySpan=Math.max(1,maxY-margin);try{localStorage.setItem(storageKey,JSON.stringify({x:(x-margin)/xSpan,y:(y-margin)/ySpan}));}catch{}}};
+    const restore=()=>{let saved=null;try{saved=JSON.parse(localStorage.getItem(storageKey));}catch{}if(!saved||!Number.isFinite(saved.x)||!Number.isFinite(saved.y))return;const {maxX,maxY}=bounds();place(margin+saved.x*Math.max(1,maxX-margin),margin+saved.y*Math.max(1,maxY-margin));};
+    profileQr.addEventListener('pointerdown',e=>{if(e.button!==0)return;const cardRect=profileQr.getBoundingClientRect(),frameRect=frame.getBoundingClientRect();drag={id:e.pointerId,startX:e.clientX,startY:e.clientY,left:cardRect.left-frameRect.left,top:cardRect.top-frameRect.top,moved:false};place(drag.left,drag.top);profileQr.setPointerCapture?.(e.pointerId);profileQr.classList.add('dragging');});
+    profileQr.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY;if(!drag.moved&&Math.hypot(dx,dy)<5)return;drag.moved=true;e.preventDefault();place(drag.left+dx,drag.top+dy);});
+    const finishDrag=(e,cancelled=false)=>{if(!drag||e.pointerId!==drag.id)return;const moved=drag.moved;try{profileQr.releasePointerCapture?.(e.pointerId);}catch{}profileQr.classList.remove('dragging');drag=null;if(moved&&!cancelled){const cardRect=profileQr.getBoundingClientRect(),frameRect=frame.getBoundingClientRect();place(cardRect.left-frameRect.left,cardRect.top-frameRect.top,true);suppressClick=true;}};
+    profileQr.addEventListener('pointerup',e=>finishDrag(e));profileQr.addEventListener('pointercancel',e=>finishDrag(e,true));
+    profileQr.addEventListener('click',e=>{if(!suppressClick)return;e.preventDefault();e.stopPropagation();suppressClick=false;});
+    profileQr.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();e.stopPropagation();const cardRect=profileQr.getBoundingClientRect(),frameRect=frame.getBoundingClientRect(),step=e.shiftKey?24:8;let left=cardRect.left-frameRect.left,top=cardRect.top-frameRect.top;if(e.key==='ArrowLeft')left-=step;if(e.key==='ArrowRight')left+=step;if(e.key==='ArrowUp')top-=step;if(e.key==='ArrowDown')top+=step;place(left,top,true);});
+    profileQr.addEventListener('dragstart',e=>e.preventDefault());
+    requestAnimationFrame(restore);window.addEventListener('load',restore,{once:true});window.addEventListener('resize',restore);
+  }
+  let startX=null;document.addEventListener('touchstart',e=>{if(e.target.closest('.profile-qr')){startX=null;return;}startX=e.touches[0].clientX;},{passive:true});document.addEventListener('touchend',e=>{if(startX===null||e.target.closest('.profile-qr')){startX=null;return;}const d=e.changedTouches[0].clientX-startX;if(Math.abs(d)>50)d<0?next():prev();startX=null;},{passive:true});
+  window.addEventListener('hashchange',()=>{const target=Number(location.hash.slice(1));if(Number.isFinite(target)&&target>0&&target!==index+1)go(target-1);});
+  const hash=Number(location.hash.slice(1));go(Number.isFinite(hash)&&hash>0?hash-1:0);
+})();
+</script>
+</body>
+</html>

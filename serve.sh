@@ -17,8 +17,13 @@ if [[ -n "$PID" ]]; then
   echo "✅  已释放端口 $PORT"
 fi
 
-echo "🚀  启动静态服务器 → http://localhost:$PORT"
-echo "     按 Ctrl+C 停止服务"
-echo ""
+LOG_FILE="/tmp/serve-$PORT.log"
 
-python3 -m http.server "$PORT"
+# 后台启动静态服务器
+nohup python3 -m http.server "$PORT" >"$LOG_FILE" 2>&1 &
+SERVER_PID=$!
+
+echo "🚀  静态服务器已在后台启动 → http://localhost:$PORT"
+echo "     PID: $SERVER_PID"
+echo "     日志: $LOG_FILE"
+echo "     停止服务: kill $SERVER_PID  (或 ./serve.sh $PORT 重启)"
