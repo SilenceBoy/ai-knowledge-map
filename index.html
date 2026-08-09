@@ -237,13 +237,25 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: .08em;
 }
 
-/* ── CATEGORY FILTER ─────────────────────────────────────── */
+/* ── CATEGORY & TAG FILTER ───────────────────────────────── */
 .filter-bar {
   padding: 24px 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.filter-row {
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.filter-row-tags {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border);
 }
 
 .filter-label {
@@ -283,6 +295,57 @@ a { color: inherit; text-decoration: none; }
   border-radius: 50%;
   background: currentColor;
   opacity: .7;
+}
+
+.tag-pill {
+  --tag-color: var(--accent);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 30px;
+  padding: 6px 12px;
+  background: color-mix(in srgb, var(--tag-color) 6%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--tag-color) 28%, var(--border));
+  border-radius: 9px;
+  color: var(--muted);
+  font: 600 12px/1 var(--mono);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.tag-pill:hover {
+  color: var(--text);
+  border-color: var(--tag-color);
+  transform: translateY(-1px);
+}
+
+.tag-pill.active {
+  color: #fff;
+  background: var(--tag-color);
+  border-color: var(--tag-color);
+  box-shadow: 0 5px 16px color-mix(in srgb, var(--tag-color) 22%, transparent);
+}
+
+.tag-pill-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.tag-count {
+  min-width: 18px;
+  padding: 2px 5px;
+  border-radius: 99px;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  font-size: 10px;
+  text-align: center;
+}
+
+.card-tag {
+  padding-left: 7px;
+  border-left: 1px solid currentColor;
+  color: var(--tag-color, var(--accent));
+  font-weight: 750;
+  letter-spacing: .03em;
 }
 
 /* ── MAIN GRID ───────────────────────────────────────────── */
@@ -903,7 +966,7 @@ a { color: inherit; text-decoration: none; }
     </p>
     <div class="hero-stats">
       <div class="stat">
-        <span class="stat-num" id="total-count">7</span>
+        <span class="stat-num" id="total-count">21</span>
         <span class="stat-label">篇文章</span>
       </div>
       <div class="stat">
@@ -920,26 +983,43 @@ a { color: inherit; text-decoration: none; }
 
 <!-- FILTER BAR -->
 <div class="shell">
-  <div class="filter-bar" role="group" aria-label="分类筛选">
-    <span class="filter-label">分类</span>
-    <button class="pill active" data-filter="all">全部</button>
-    <button class="pill" data-filter="ai">
-      <span class="pill-dot" style="background:#6a8caf"></span>AI &amp; 工程
-    </button>
-    <button class="pill" data-filter="growth">
-      <span class="pill-dot" style="background:#9b84b3"></span>个人成长
-    </button>
-    <button class="pill" data-filter="ops">
-      <span class="pill-dot" style="background:#d97757"></span>运营
-    </button>
-    <button class="pill" data-filter="management">
-      <span class="pill-dot" style="background:#788c5d"></span>管理
-    </button>
+  <div class="filter-bar" aria-label="文章筛选">
+    <div class="filter-row" role="group" aria-label="分类筛选">
+      <span class="filter-label">分类</span>
+      <button class="pill active" data-filter="all">全部</button>
+      <button class="pill" data-filter="ai">
+        <span class="pill-dot" style="background:#6a8caf"></span>AI &amp; 工程
+      </button>
+      <button class="pill" data-filter="growth">
+        <span class="pill-dot" style="background:#9b84b3"></span>个人成长
+      </button>
+      <button class="pill" data-filter="ops">
+        <span class="pill-dot" style="background:#d97757"></span>运营
+      </button>
+      <button class="pill" data-filter="management">
+        <span class="pill-dot" style="background:#788c5d"></span>管理
+      </button>
 
-    <div class="layout-control" role="group" aria-label="布局尺寸">
-      <button class="layout-btn" data-layout="large" title="大图模式">🎴 大</button>
-      <button class="layout-btn active" data-layout="medium" title="中图模式">📱 中</button>
-      <button class="layout-btn" data-layout="small" title="紧凑模式">🗂️ 小</button>
+      <div class="layout-control" role="group" aria-label="布局尺寸">
+        <button class="layout-btn" data-layout="large" title="大图模式">🎴 大</button>
+        <button class="layout-btn active" data-layout="medium" title="中图模式">📱 中</button>
+        <button class="layout-btn" data-layout="small" title="紧凑模式">🗂️ 小</button>
+      </div>
+    </div>
+
+    <div class="filter-row filter-row-tags" role="group" aria-label="标签筛选">
+      <span class="filter-label">标签</span>
+      <button class="tag-pill active" data-tag-filter="all">全部</button>
+      <button class="tag-pill" data-tag-filter="course-ppt" style="--tag-color:#6a8caf">
+        <span class="tag-pill-icon" aria-hidden="true">▤</span>
+        课件PPT
+        <span class="tag-count" id="tag-count-course-ppt">7</span>
+      </button>
+      <button class="tag-pill" data-tag-filter="image-text" style="--tag-color:#d97757">
+        <span class="tag-pill-icon" aria-hidden="true">▧</span>
+        图文
+        <span class="tag-count" id="tag-count-image-text">1</span>
+      </button>
     </div>
   </div>
 </div>
@@ -957,19 +1037,21 @@ a { color: inherit; text-decoration: none; }
           <h2 class="section-title">
             <span class="section-icon">🤖</span>AI &amp; 工程
           </h2>
-          <span class="section-count" id="count-ai">6 篇</span>
+          <span class="section-count" id="count-ai">10 篇</span>
         </div>
         <div class="card-grid" id="grid-ai">
 
           <!-- CARD: single-point-replication-deck -->
           <a href="map/ai/single-point-replication-deck.html" class="card"
              data-category="ai"
+             data-tags="course-ppt"
              data-title="单点复刻：用 AI 复制高手的一项具体能力"
              data-desc="不复制一个完整的人，而是把一个人在具体场景下反复稳定的能力，拆成样本、标准、流程和边界，做成新人可调用、团队可复用的工作助手。对外分享幻灯片，含五步法与运营 / 销售 / 客服 / 审核案例。">
             <div class="card-body">
               <span class="card-category">
                 <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#6a8caf"/></svg>
                 AI &amp; 工程 · 分享幻灯片
+                <span class="card-tag" style="--tag-color:#6a8caf">课件PPT</span>
               </span>
               <div class="card-title">单点复刻：用 AI 复制高手的一项具体能力</div>
               <p class="card-desc">
@@ -988,12 +1070,14 @@ a { color: inherit; text-decoration: none; }
           <!-- CARD: ai-fullstack-dev-talk -->
           <a href="map/ai/ai-fullstack-dev-talk.html" class="card"
              data-category="ai"
+             data-tags="course-ppt"
              data-title="AI 全栈开发 · 工程方法论 · 线下分享"
              data-desc="不是替你写代码，是把 AI 装进工程系统。AI 全栈开发的工程方法论线下分享专题。">
             <div class="card-body">
               <span class="card-category">
                 <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#6a8caf"/></svg>
                 AI &amp; 工程 · 专题
+                <span class="card-tag" style="--tag-color:#6a8caf">课件PPT</span>
               </span>
               <div class="card-title">AI 全栈开发 · 工程方法论</div>
               <p class="card-desc">
@@ -1036,12 +1120,14 @@ a { color: inherit; text-decoration: none; }
           <!-- CARD: ai-eight-use-scenarios-offline -->
           <a href="map/ai/ai_eight_use_scenarios_offline/index.html" class="card"
              data-category="ai"
+             data-tags="course-ppt"
              data-title="AI 八大使用场景 · 线下分享专题"
              data-desc="给小白装上“AI 雷达”：四象限判断矩阵与八大场景 the 离线学习合集。">
             <div class="card-body">
               <span class="card-category">
                 <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#6a8caf"/></svg>
                 AI &amp; 工程 · 专题
+                <span class="card-tag" style="--tag-color:#6a8caf">课件PPT</span>
               </span>
               <div class="card-title">AI 八大使用场景 · 线下分享</div>
               <p class="card-desc">
@@ -1129,6 +1215,80 @@ a { color: inherit; text-decoration: none; }
             </div>
           </a>
 
+          <!-- CARD: codex-mvp-workshop-ppt -->
+          <a href="map/ai/codex-mvp-workshop-ppt.html" class="card"
+             data-category="ai"
+             data-tags="course-ppt"
+             data-title="用 Codex 把想法做成「能演示的 MVP」"
+             data-desc="从需求发现到上线，把一个业务想法做成可演示的 MVP。">
+            <div class="card-body">
+              <span class="card-category">
+                <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#6a8caf"/></svg>
+                AI &amp; 工程 · 实战
+                <span class="card-tag" style="--tag-color:#6a8caf">课件PPT</span>
+              </span>
+              <div class="card-title">用 Codex 把想法做成「能演示的 MVP」</div>
+              <p class="card-desc">
+                从找需求到上线变现，把一个业务想法拆成可执行步骤，用 Codex 做出能演示、能继续迭代的 MVP。
+              </p>
+              <div class="card-footer">
+                <span class="card-date">待补充</span>
+                <span class="card-arrow">→</span>
+              </div>
+            </div>
+            <div class="card-visual">
+              <div class="visual-badge">🎯</div>
+            </div>
+          </a>
+
+          <!-- CARD: ai-requirement-to-launch-talk-ppt -->
+          <a href="map/ai/ai-requirement-to-launch-talk-ppt.html" class="card"
+             data-category="ai"
+             data-tags="course-ppt"
+             data-title="我如何把一个 AI 需求做成可上线系统"
+             data-desc="面向 AI 新手的真实案例分享：从找需求、拆 MVP、指挥 AI 落地，到上线与变现思考。">
+            <div class="card-body">
+              <span class="card-category">
+                <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#6a8caf"/></svg>
+                AI &amp; 工程 · 分享课件
+                <span class="card-tag" style="--tag-color:#6a8caf">课件PPT</span>
+              </span>
+              <div class="card-title">我如何把一个 AI 需求做成可上线系统</div>
+              <p class="card-desc">从找需求到拆 MVP，用真实案例讲清如何与 AI 协作完成落地。</p>
+              <div class="card-footer">
+                <span class="card-date">待补充</span>
+                <span class="card-arrow">→</span>
+              </div>
+            </div>
+            <div class="card-visual">
+              <div class="visual-badge">🧩</div>
+            </div>
+          </a>
+
+          <!-- CARD: AI-coding client-perspective -->
+          <a href="map/ai/课件-像甲方一样做AICoding-口播优化版.html" class="card"
+             data-category="ai"
+             data-tags="course-ppt"
+             data-title="像甲方一样做 AI Coding"
+             data-desc="30 分钟从需求到轻量上线，每一步都有验收点；先看成果，再决定是否放行。">
+            <div class="card-body">
+              <span class="card-category">
+                <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#6a8caf"/></svg>
+                AI &amp; 工程 · 方法课件
+                <span class="card-tag" style="--tag-color:#6a8caf">课件PPT</span>
+              </span>
+              <div class="card-title">像甲方一样做 AI Coding</div>
+              <p class="card-desc">把 AI 变成可交付结果：每一步先验收，再放行。</p>
+              <div class="card-footer">
+                <span class="card-date">待补充</span>
+                <span class="card-arrow">→</span>
+              </div>
+            </div>
+            <div class="card-visual">
+              <div class="visual-badge">🧭</div>
+            </div>
+          </a>
+
         </div>
       </section>
 
@@ -1138,9 +1298,35 @@ a { color: inherit; text-decoration: none; }
           <h2 class="section-title">
             <span class="section-icon">🌱</span>个人成长
           </h2>
-          <span class="section-count" id="count-growth">2 篇</span>
+          <span class="section-count" id="count-growth">3 篇</span>
         </div>
         <div class="card-grid" id="grid-growth">
+
+          <!-- CARD: ai-era-super-individual-capabilities-deck -->
+          <a href="map/growth/ai-era-super-individual-capabilities-deck.html" class="card"
+             data-category="growth"
+             data-tags="course-ppt"
+             data-title="AI 时代的超级个体能力 · 生财有术线下分享"
+             data-desc="七大核心能力 × 三大原能力，30 分钟线下分享演示。">
+            <div class="card-body">
+              <span class="card-category">
+                <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#9b84b3"/></svg>
+                个人成长 · 能力成长
+                <span class="card-tag" style="--tag-color:#6a8caf">课件PPT</span>
+              </span>
+              <div class="card-title">AI 时代的超级个体能力</div>
+              <p class="card-desc">
+                七大核心能力 × 三大原能力，用 30 分钟讲清 AI 时代超级个体如何构建自己的能力地图与最快回本路径。
+              </p>
+              <div class="card-footer">
+                <span class="card-date">2026-08-04</span>
+                <span class="card-arrow">→</span>
+              </div>
+            </div>
+            <div class="card-visual">
+              <div class="visual-badge">🧭</div>
+            </div>
+          </a>
 
           <!-- CARD: traffic-is-river-prepare-bucket -->
           <a href="map/growth/traffic-is-river-prepare-bucket.html" class="card"
@@ -1199,7 +1385,7 @@ a { color: inherit; text-decoration: none; }
           <h2 class="section-title">
             <span class="section-icon">⚙️</span>运营
           </h2>
-          <span class="section-count" id="count-ops">0 篇</span>
+          <span class="section-count" id="count-ops">6 篇</span>
         </div>
         <div class="card-grid" id="grid-ops">
 
@@ -1326,12 +1512,14 @@ a { color: inherit; text-decoration: none; }
           <!-- CARD: parasite-to-symbiosis -->
           <a href="map/ops/parasite-to-symbiosis.html" class="card"
              data-category="ops"
+             data-tags="image-text"
              data-title="让你一直穷的，从来不是没钱"
              data-desc="用心理学拆解穷人翻身的认知陷阱：幸存者偏差、损失厌恶、聚光灯效应、信号错配。最快的路不是从零开始，而是先嵌入一个更强的系统借力生长，从寄生走到共生。3:4 图文卡片，可翻页。">
             <div class="card-body">
               <span class="card-category">
                 <svg width="8" height="8" viewBox="0 0 8 8" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="#d97757"/></svg>
                 运营 · 认知心理学
+                <span class="card-tag" style="--tag-color:#d97757">图文</span>
               </span>
               <div class="card-title">让你一直穷的，从来不是没钱</div>
               <p class="card-desc">
@@ -1477,6 +1665,13 @@ a { color: inherit; text-decoration: none; }
         <div class="widget-header">最近更新</div>
         <div class="widget-body">
           <div class="recent-list">
+            <a href="map/growth/ai-era-super-individual-capabilities-deck.html" class="recent-item">
+              <div class="recent-dot"></div>
+              <div class="recent-info">
+                <div class="recent-title">AI 时代的超级个体能力</div>
+                <div class="recent-meta">个人成长 · 2026-08-04</div>
+              </div>
+            </a>
             <a href="map/ops/ai-self-media-judgment.html" class="recent-item">
               <div class="recent-dot"></div>
               <div class="recent-info">
@@ -1600,10 +1795,12 @@ a { color: inherit; text-decoration: none; }
 
 <script>
   // ── Filter ────────────────────────────────────────────────
-  const filterBtns = document.querySelectorAll('[data-filter]');
-  const navBtns    = document.querySelectorAll('[data-nav-filter]');
-  const sections   = document.querySelectorAll('.section[data-category]');
-  const cards      = document.querySelectorAll('.card[data-category]');
+  const filterBtns    = document.querySelectorAll('[data-filter]');
+  const tagFilterBtns = document.querySelectorAll('[data-tag-filter]');
+  const navBtns       = document.querySelectorAll('[data-nav-filter]');
+  const sections      = document.querySelectorAll('.section[data-category]');
+  const cards         = document.querySelectorAll('.card[data-category]');
+  const searchInput   = document.getElementById('search-input');
 
   // ── Auto-hide empty categories ────────────────────────────
   // 按真实卡片数量动态计数；0 篇的分类隐藏其 section / 筛选按钮 / 侧边栏导航项，
@@ -1625,57 +1822,62 @@ a { color: inherit; text-decoration: none; }
       document.querySelector(`[data-nav-filter="${cat}"]`)?.classList.add('is-empty-cat');
     }
   });
+  const totalCountEl = document.getElementById('total-count');
+  if (totalCountEl) totalCountEl.textContent = totalCount;
   const navAllEl = document.getElementById('nav-all');
   if (navAllEl) navAllEl.textContent = totalCount;
 
-  function applyFilter(cat) {
-    filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === cat));
+  const TAGS = ['course-ppt', 'image-text'];
+  TAGS.forEach(tag => {
+    const count = document.querySelectorAll(`.card[data-tags~="${tag}"]`).length;
+    const countEl = document.getElementById('tag-count-' + tag);
+    if (countEl) countEl.textContent = count;
+  });
 
-    sections.forEach(sec => {
-      const match = cat === 'all' || sec.dataset.category === cat;
-      sec.toggleAttribute('data-hidden', !match);
+  let activeCategory = 'all';
+  let activeTag = 'all';
+
+  function applyFilters() {
+    const query = searchInput.value.trim().toLowerCase();
+
+    filterBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.filter === activeCategory);
+    });
+    tagFilterBtns.forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tagFilter === activeTag);
     });
 
-    cards.forEach(c => {
-      const match = cat === 'all' || c.dataset.category === cat;
-      c.toggleAttribute('data-hidden', !match);
+    cards.forEach(card => {
+      const categoryMatch = activeCategory === 'all' || card.dataset.category === activeCategory;
+      const tags = (card.dataset.tags || '').split(/\s+/).filter(Boolean);
+      const tagMatch = activeTag === 'all' || tags.includes(activeTag);
+      const title = card.dataset.title?.toLowerCase() || '';
+      const desc = card.dataset.desc?.toLowerCase() || '';
+      const searchMatch = !query || title.includes(query) || desc.includes(query);
+      card.toggleAttribute('data-hidden', !(categoryMatch && tagMatch && searchMatch));
+    });
+
+    sections.forEach(section => {
+      const visibleCards = section.querySelectorAll('.card:not([data-hidden])').length;
+      section.toggleAttribute('data-hidden', visibleCards === 0);
     });
   }
 
-  filterBtns.forEach(btn => btn.addEventListener('click', () => applyFilter(btn.dataset.filter)));
-  navBtns.forEach(btn => btn.addEventListener('click', () => applyFilter(btn.dataset.navFilter)));
+  filterBtns.forEach(btn => btn.addEventListener('click', () => {
+    activeCategory = btn.dataset.filter;
+    applyFilters();
+  }));
+  tagFilterBtns.forEach(btn => btn.addEventListener('click', () => {
+    activeTag = btn.dataset.tagFilter;
+    applyFilters();
+  }));
+  navBtns.forEach(btn => btn.addEventListener('click', () => {
+    activeCategory = btn.dataset.navFilter;
+    applyFilters();
+  }));
 
   // ── Search ────────────────────────────────────────────────
-  const searchInput = document.getElementById('search-input');
-
-  searchInput.addEventListener('input', () => {
-    const q = searchInput.value.trim().toLowerCase();
-
-    // Reset filter pills when searching
-    if (q) filterBtns.forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
-
-    cards.forEach(card => {
-      if (!q) {
-        card.removeAttribute('data-hidden');
-        return;
-      }
-      const title = card.dataset.title?.toLowerCase() || '';
-      const desc  = card.dataset.desc?.toLowerCase() || '';
-      const match = title.includes(q) || desc.includes(q);
-      card.toggleAttribute('data-hidden', !match);
-    });
-
-    // Hide empty sections
-    sections.forEach(sec => {
-      if (!q) {
-        sec.removeAttribute('data-hidden');
-        return;
-      }
-      const grid = sec.querySelector('.card-grid');
-      const visibleCards = grid ? [...grid.querySelectorAll('.card:not([data-hidden])')].length : 0;
-      sec.toggleAttribute('data-hidden', visibleCards === 0);
-    });
-  });
+  searchInput.addEventListener('input', applyFilters);
 
   // ── Layout Switcher ───────────────────────────────────────
   const layoutBtns = document.querySelectorAll('.layout-btn');
