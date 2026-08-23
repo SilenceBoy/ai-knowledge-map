@@ -3,8 +3,9 @@
 - 状态：待验证
 - 负责人：Codex
 - 创建时间：2026-08-23 16:31（Asia/Shanghai）
-- 最近更新：2026-08-23 16:35（Asia/Shanghai）
+- 最近更新：2026-08-23 17:19（Asia/Shanghai）
 - 关联全局任务：TASK-20260823-163130
+- 关联分支/提交：`main` / `9831082`
 - 验收人：人工
 
 ## 目标
@@ -26,6 +27,8 @@
 - 已创建`我的课程/index.html`并迁移课件；首页导航已增加“我的课程”入口。
 - 首页入口测试先在缺少课程目录页时按预期失败，恢复页面后通过。
 - 已通过 5 个 Python 页面测试、`tests/test_serve_background.sh`、源/目标字节一致性检查和临时静态服务器 HTTP 200 访问检查。
+- 已提交 `9831082`（`feat: add my courses entry and AI scenarios course`），并以 fast-forward 合并到本地 `main`；未推送远端。
+- 合并后的 `main` 已复跑全部页面、服务、Playwright 筛选/移动端与字节一致性检查，均通过。
 
 ## 正在进行
 
@@ -53,3 +56,4 @@
 - RED：暂时移除`我的课程/index.html`后运行`python3 tests/test_homepage_links.py`，按预期报“首页“我的课程”入口或课程目录页缺失”。
 - GREEN：恢复目录页后运行`python3 tests/test_homepage_links.py`，通过；其余`test_homepage_tags.py`、`test_scene_navigation.py`、`test_ai_coding_client_perspective.py`、`test_growth_ppt_integration.py`与`tests/test_serve_background.sh`均通过。
 - 完整性：源/目标课件字节一致；临时静态服务器访问`/我的课程/`及`/我的课程/ai_eight_use_scenarios_offline/`均为 HTTP 200；`git diff --check`通过。
+- 合并验证：在`main`运行上述全部测试，并以 Bundled Node/Playwright 运行`tests/test_homepage_tag_filters.mjs`，均通过；`main`指向`9831082`。
