@@ -17,12 +17,15 @@ class AnchorParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self.card_hrefs: list[str] = []
+        self.all_hrefs: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         if tag != "a":
             return
         attributes = dict(attrs)
         href = attributes.get("href")
+        if href:
+            self.all_hrefs.append(href)
         classes = (attributes.get("class") or "").split()
         if href and "card" in classes:
             self.card_hrefs.append(href)
@@ -58,7 +61,16 @@ def main() -> int:
     if missing or unexpected:
         return 1
 
-    print(f"PASS: 首页已覆盖 {len(expected_cards)} 个顶层文章与专题入口")
+    courses_home = Path("我的课程/index.html")
+    course_file = Path("我的课程/ai_eight_use_scenarios_offline/index.html")
+    if "我的课程/" not in parser.all_hrefs or not courses_home.is_file():
+        print("首页“我的课程”入口或课程目录页缺失")
+        return 1
+    if not course_file.is_file() or "ai_eight_use_scenarios_offline/index.html" not in courses_home.read_text(encoding="utf-8"):
+        print("课程目录页缺少八个日常场景课件入口")
+        return 1
+
+    print(f"PASS: 首页已覆盖 {len(expected_cards)} 个顶层文章与专题入口，并包含我的课程入口")
     return 0
 
 

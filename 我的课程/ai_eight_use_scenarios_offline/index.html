@@ -1,0 +1,2204 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI 八大使用场景 · 60 分钟线下版</title>
+  <style>
+:root {
+  color-scheme: light dark;
+  --bg: #faf8f5;
+  --surface: #f0ede8;
+  --surface-2: #fffdf9;
+  --text: #2c2825;
+  --muted: #746d64;
+  --border: #d4cfc7;
+  --clay: #d97757;
+  --olive: #788c5d;
+  --sky: #6a8caf;
+  --ink: #141413;
+  --rose: #c66060;
+  --shadow: 0 18px 60px rgba(44, 40, 37, .10);
+}
+[data-theme="dark"] {
+  --bg: #171615;
+  --surface: #23211f;
+  --surface-2: #2c2926;
+  --text: #f4efe8;
+  --muted: #b8afa4;
+  --border: #49433d;
+  --clay: #e79678;
+  --olive: #a9bc88;
+  --sky: #9bb8d5;
+  --ink: #f8f4ed;
+  --rose: #e07d7d;
+  --shadow: 0 18px 60px rgba(0, 0, 0, .28);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(217, 119, 87, .10), transparent 32%),
+    radial-gradient(circle at 86% 100%, rgba(106, 140, 175, .08), transparent 30%),
+    linear-gradient(135deg, var(--bg), var(--surface));
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; }
+
+/* ============ 顶栏 ============ */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  backdrop-filter: blur(16px);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  border-bottom: 1px solid var(--border);
+}
+.shell { width: min(1180px, calc(100% - 32px)); margin: 0 auto; }
+.topbar-inner {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 750; }
+.brand-mark {
+  width: 30px; height: 30px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  display: grid; place-items: center;
+  border-radius: 8px;
+  color: var(--clay);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+}
+.nav-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+.btn {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(0,0,0,.03);
+  font-size: 14px;
+}
+.btn:hover { border-color: var(--clay); }
+.btn-mini { min-height: 30px; padding: 4px 10px; font-size: 13px; }
+
+/* ============ 进度条 ============ */
+.progress {
+  display: flex; align-items: center; gap: 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+.progress-dots { display: flex; gap: 5px; }
+.progress-dots i {
+  display: block;
+  width: 18px; height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  transition: background .2s ease, transform .2s ease;
+  cursor: pointer;
+}
+.progress-dots i.active { background: var(--clay); transform: scaleY(1.4); }
+.progress-dots i.done { background: var(--olive); }
+
+/* ============ 翻页轨道 ============ */
+.deck {
+  position: relative;
+  width: 100%;
+}
+.slide {
+  min-height: calc(100vh - 58px);
+  padding: 48px 0 100px;
+  display: none;
+  animation: slideIn .35s ease;
+}
+.slide.active { display: block; }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ 通用语义类 ============ */
+.kicker {
+  color: var(--clay);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.eyebrow { color: var(--muted); font-size: 14px; }
+h1.slide-title {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: 78px;
+  line-height: 1.02;
+  margin: 14px 0 18px;
+  letter-spacing: 0;
+}
+h2.section-title {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: 46px;
+  line-height: 1.1;
+  margin: 12px 0 14px;
+  letter-spacing: 0;
+}
+.lead { font-size: 21px; color: var(--muted); max-width: 760px; }
+.big {
+  font-family: Georgia, "Times New Roman", "Songti SC", serif;
+  font-size: 132px;
+  line-height: .92;
+  letter-spacing: -.01em;
+}
+
+/* 卡片、窗口 */
+.card, .window, .prompt-box, .panel {
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  box-shadow: var(--shadow);
+  border-radius: 12px;
+}
+.panel { padding: 22px; }
+.card { padding: 18px; }
+.card h3 { margin: 0 0 8px; font-size: 18px; }
+.card p { margin: 0; color: var(--muted); }
+
+/* 标签 */
+.tag-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px 11px;
+  color: var(--muted);
+  background: var(--surface);
+  font-size: 13px;
+}
+.tag.clay  { color: var(--clay); border-color: color-mix(in srgb, var(--clay) 50%, var(--border)); }
+.tag.olive { color: var(--olive); border-color: color-mix(in srgb, var(--olive) 50%, var(--border)); }
+.tag.sky   { color: var(--sky); border-color: color-mix(in srgb, var(--sky) 50%, var(--border)); }
+.tag.rose  { color: var(--rose); border-color: color-mix(in srgb, var(--rose) 50%, var(--border)); }
+
+/* grid */
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* 提示词区域 */
+.prompt-box { overflow: hidden; }
+.prompt-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+.prompt-head strong { font-size: 14px; }
+pre {
+  margin: 0;
+  padding: 18px;
+  overflow: auto;
+  white-space: pre-wrap;
+  color: var(--surface-2);
+  background: var(--ink);
+  line-height: 1.6;
+  font-size: 14px;
+}
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+/* 警示 */
+.warning {
+  border-left: 4px solid var(--clay);
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--clay) 12%, var(--surface-2));
+  border-radius: 8px;
+}
+.note {
+  border-left: 4px solid var(--olive);
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--olive) 10%, var(--surface-2));
+  border-radius: 8px;
+}
+
+/* ============ slide 1 封面 ============ */
+.cover-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, .8fr);
+  gap: 32px;
+  align-items: center;
+}
+.cover-stats {
+  padding: 22px;
+}
+.cover-stats .stat {
+  border-top: 1px solid var(--border);
+  padding: 14px 0;
+}
+.cover-stats .stat:first-of-type { border-top: 0; padding-top: 0; }
+.cover-stats .stat b {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  display: block;
+  line-height: 1.15;
+}
+.cover-stats .stat span { color: var(--muted); font-size: 13px; }
+.audience-list {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+}
+.audience-list li {
+  border-top: 1px dashed var(--border);
+  padding: 10px 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+.audience-list li::before { content: "·  "; color: var(--clay); }
+
+/* ============ slide 2 双路径 ============ */
+.path-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.path-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 22px;
+  background: var(--surface-2);
+  position: relative;
+}
+.path-card.bad   { border-top: 4px solid var(--rose); }
+.path-card.good  { border-top: 4px solid var(--olive); }
+.path-card h3 { margin: 0 0 6px; font-size: 20px; }
+.path-card .label {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+.path-steps { list-style: none; padding: 0; margin: 14px 0 0; }
+.path-steps li {
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--border);
+  display: flex;
+  gap: 10px;
+  font-size: 15px;
+}
+.path-steps li:last-child { border-bottom: 0; }
+.path-steps li .step-num {
+  flex: 0 0 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--surface);
+  display: grid; place-items: center;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted);
+}
+.path-card.good .step-num { background: color-mix(in srgb, var(--olive) 30%, var(--surface)); color: var(--text); }
+.path-card.bad .step-num { background: color-mix(in srgb, var(--rose) 25%, var(--surface)); color: var(--text); }
+.path-summary {
+  margin-top: 14px;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--ink) 4%, var(--surface));
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* ============ slide 3 菜鸟 vs 老手 ============ */
+.chat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.chat-pane {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--surface-2);
+  display: flex; flex-direction: column;
+}
+.chat-pane .chat-head {
+  padding: 10px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 13px;
+}
+.chat-pane .chat-head .who { font-weight: 700; }
+.chat-pane.bad .chat-head .who  { color: var(--rose); }
+.chat-pane.good .chat-head .who { color: var(--olive); }
+.chat-body { padding: 14px; display: flex; flex-direction: column; gap: 10px; font-size: 14.5px; min-height: 320px; }
+.bubble {
+  padding: 10px 12px;
+  border-radius: 12px;
+  max-width: 92%;
+  white-space: pre-wrap;
+  line-height: 1.55;
+}
+.bubble.user {
+  align-self: flex-end;
+  background: color-mix(in srgb, var(--sky) 22%, var(--surface));
+  color: var(--text);
+  border: 1px solid color-mix(in srgb, var(--sky) 35%, var(--border));
+}
+.bubble.ai {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.bubble.ai .ai-mini-h { color: var(--muted); font-size: 12px; margin-bottom: 4px; font-family: ui-monospace, monospace; }
+.diff-bar {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+  margin-top: 14px;
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+}
+.diff-bar div { padding: 10px 12px; border-radius: 8px; }
+.diff-bar .bad-meter  { background: color-mix(in srgb, var(--rose) 14%, var(--surface));  color: var(--text); }
+.diff-bar .good-meter { background: color-mix(in srgb, var(--olive) 16%, var(--surface)); color: var(--text); }
+
+/* ============ slide 5 图片提问 ============ */
+.img-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 22px; }
+.fake-screenshot {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.fake-screenshot .ss-bar {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.fake-screenshot .ss-bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--clay); }
+.fake-screenshot .ss-bar i:nth-child(2) { background: var(--olive); }
+.fake-screenshot .ss-bar i:nth-child(3) { background: var(--sky); }
+.fake-screenshot .ss-bar span { margin-left: 8px; font-size: 12px; color: var(--muted); font-family: ui-monospace, monospace; }
+.ss-body { padding: 16px; }
+.fake-chart-svg { width: 100%; height: auto; display: block; border-radius: 8px; background: var(--surface-2); }
+
+/* ============ slide 6 时间轴 ============ */
+.timeline-wide {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+.time-cell {
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--clay);
+  border-radius: 10px;
+  padding: 14px 12px;
+  background: var(--surface-2);
+  position: relative;
+}
+.time-cell b { display: block; font-family: ui-monospace, monospace; font-size: 13px; color: var(--clay); margin-bottom: 6px; }
+.time-cell p { margin: 0; font-size: 14px; color: var(--text); }
+.time-cell span.duration { color: var(--muted); font-size: 12px; display: block; margin-top: 6px; }
+.timeline-result {
+  margin-top: 18px;
+  padding: 18px 20px;
+  border: 1px solid color-mix(in srgb, var(--olive) 35%, var(--border));
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--olive) 10%, var(--surface-2));
+}
+
+/* ============ slide 7 误区对比 ============ */
+.myth-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.myth-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+  padding: 16px 18px;
+}
+.myth-card .myth-row { display: grid; grid-template-columns: 78px 1fr; gap: 12px; padding: 8px 0; }
+.myth-card .myth-row + .myth-row { border-top: 1px dashed var(--border); }
+.myth-card .myth-label {
+  font-family: ui-monospace, monospace;
+  font-size: 12px;
+  color: var(--muted);
+  align-self: start;
+  padding-top: 3px;
+}
+.myth-card .myth-label.bad  { color: var(--rose); }
+.myth-card .myth-label.good { color: var(--olive); }
+.myth-card .myth-text { font-size: 14.5px; line-height: 1.55; }
+
+/* ============ slide 8 收束 ============ */
+.takeaway-list {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+}
+.takeaway-list li {
+  display: grid;
+  grid-template-columns: 56px 1fr;
+  gap: 16px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  align-items: start;
+}
+.takeaway-list li:first-child { border-top: 0; }
+.takeaway-list li .num {
+  font-family: Georgia, serif;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--clay);
+}
+.takeaway-list li .body h3 { margin: 0 0 4px; font-size: 19px; }
+.takeaway-list li .body p { margin: 0; color: var(--muted); font-size: 15px; }
+.next-row {
+  margin-top: 24px;
+  padding: 16px 18px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-2);
+}
+
+/* ============ 底部导航 ============ */
+.deck-nav {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 25;
+  display: flex; gap: 6px;
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px;
+  box-shadow: var(--shadow);
+}
+.deck-nav button {
+  border: 0; background: transparent; padding: 6px 10px; cursor: pointer;
+  border-radius: 999px; color: var(--text);
+  font-family: ui-monospace, monospace; font-size: 13px;
+}
+.deck-nav button:hover { background: var(--surface); }
+.deck-nav .counter { padding: 6px 10px; color: var(--muted); font-family: ui-monospace, monospace; font-size: 13px; }
+
+/* ============ 帮助蒙层 ============ */
+.help {
+  position: fixed; inset: 0;
+  display: none; align-items: center; justify-content: center;
+  background: color-mix(in srgb, var(--ink) 65%, transparent);
+  z-index: 40;
+}
+.help.open { display: flex; }
+.help-panel {
+  width: min(420px, 86vw);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+.help-panel h3 { margin: 0 0 12px; }
+.kb { display: grid; grid-template-columns: 70px 1fr; gap: 8px 14px; font-size: 14px; }
+.kb code {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 12.5px;
+}
+
+/* ============ 响应式 ============ */
+@media (max-width: 920px) {
+  .cover-grid, .path-grid, .chat-grid, .img-grid, .myth-grid { grid-template-columns: 1fr; }
+  .timeline-wide { grid-template-columns: 1fr 1fr; }
+  .deck-nav { right: 10px; bottom: 10px; }
+  h1.slide-title { font-size: 40px; }
+}
+@media (max-width: 560px) {
+  .timeline-wide { grid-template-columns: 1fr; }
+}
+
+/* ==== AI8 STAGE v1 ==== */
+/* 16:9 固定舞台（1440x810）+ 三级自适应 + 窄屏阅读模式 + 打印。
+   原理：给 body 加 transform，position:fixed 的 .deck-nav / .help 会被
+   自动收容到舞台内，因此无需改动任何 DOM 结构。 */
+
+:root { --letterbox: #ddd6cb; }
+[data-theme="dark"] { --letterbox: #0d0c0b; }
+
+html.stage-on {
+  --stage-w: 1440px;
+  --stage-h: 810px;   /* 由 JS 按屏幕比例改写，见 fitStage() */
+  --stage-scale: 1;
+  height: 100%;
+  overflow: hidden;
+  background: var(--letterbox);
+}
+html.stage-on body {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+  transform: translate(-50%, -50%) scale(var(--stage-scale));
+  transform-origin: center center;
+  box-shadow: 0 10px 60px rgba(0, 0, 0, .28);
+}
+
+/* 顶栏收窄，把垂直空间还给内容 */
+html.stage-on .topbar-inner { min-height: 48px; }
+
+/* 幻灯片：从「只有下限」改成「硬上限」 */
+html.stage-on .deck { height: calc(var(--stage-h) - 49px); }
+html.stage-on .slide {
+  min-height: 0;
+  height: calc(var(--stage-h) - 49px);
+  padding: 28px 0 52px;
+  animation: ai8Fade .28s ease;
+  transform-origin: center center;
+  transform: scale(var(--fit, 1));
+  flex-direction: column;
+  justify-content: center;
+}
+/* 舞台高度跟随屏幕比例，内容在可用高度里垂直居中，
+   屏幕越高留白越均匀，不会全堆在上半屏 */
+html.stage-on .slide.active { display: flex; }
+/* flex 不再折叠外边距，首尾这两截空白要手动收回来 */
+html.stage-on .slide > *:first-child { margin-top: 0; }
+html.stage-on .slide > *:last-child { margin-bottom: 0; }
+@keyframes ai8Fade { from { opacity: 0; } to { opacity: 1; } }
+
+/* 全局空间回收：这条 min-height 是撑高空白的下限，删掉只会消除强制留白 */
+html.stage-on .chat-body { min-height: 0; }
+html.stage-on h2.section-title { font-size: 40px; }
+
+/* 第二档「紧凑」：只压空白，不缩字号 */
+html.stage-on .slide.is-tight .card,
+html.stage-on .slide.is-tight .panel,
+html.stage-on .slide.is-tight .note,
+html.stage-on .slide.is-tight .info,
+html.stage-on .slide.is-tight .warning,
+html.stage-on .slide.is-tight .chat-body,
+html.stage-on .slide.is-tight .prompt-box pre { padding: 10px 12px; }
+html.stage-on .slide.is-tight .grid,
+html.stage-on .slide.is-tight .grid-2,
+html.stage-on .slide.is-tight .grid-3,
+html.stage-on .slide.is-tight .grid-4,
+html.stage-on .slide.is-tight .tag-row,
+html.stage-on .slide.is-tight [class*="-grid"],
+html.stage-on .slide.is-tight [class*="-row"],
+html.stage-on .slide.is-tight [class*="-list"],
+html.stage-on .slide.is-tight [class*="-steps"] { gap: 10px; }
+html.stage-on .slide.is-tight h2.section-title { font-size: 33px; margin: 6px 0 8px; }
+html.stage-on .slide.is-tight h1.slide-title { font-size: 60px; margin: 8px 0 12px; }
+html.stage-on .slide.is-tight p { margin: 6px 0; }
+html.stage-on .slide.is-tight li { margin-bottom: 6px; }
+html.stage-on .slide.is-tight .next-row { padding: 8px 12px; margin-top: 12px; }
+html.stage-on .slide.is-tight .lead { font-size: 18px; }
+
+/* 超载页调试面板：按 F 打开 */
+.ai8-fit-panel {
+  position: fixed; right: 16px; top: 64px; z-index: 60;
+  width: 340px; max-height: 620px; overflow: auto; display: none;
+  background: var(--surface-2); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px; box-shadow: var(--shadow);
+  font-size: 12.5px; line-height: 1.5;
+}
+.ai8-fit-panel.open { display: block; }
+.ai8-fit-panel h4 { margin: 0 0 8px; font-size: 13px; }
+.ai8-fit-panel table { width: 100%; border-collapse: collapse; }
+.ai8-fit-panel td { padding: 3px 4px; border-bottom: 1px dashed var(--border); vertical-align: top; }
+.ai8-fit-panel .lv-常规 { color: var(--olive); }
+.ai8-fit-panel .lv-紧凑 { color: var(--clay); }
+.ai8-fit-panel .lv-缩放 { color: var(--rose, #c66060); font-weight: 600; }
+
+/* 窄屏 = 阅读模式：取消舞台，全部幻灯片堆叠成一篇长页 */
+@media (max-width: 920px) {
+  html.stage-on { height: auto; overflow: auto; background: var(--bg); }
+  html.stage-on body {
+    position: static; width: auto; height: auto; min-height: 100vh;
+    overflow: visible; transform: none; box-shadow: none;
+  }
+  html.stage-on .deck { height: auto; }
+  html.stage-on .slide {
+    display: block !important; height: auto; min-height: 0;
+    padding: 22px 0 30px; transform: none !important; animation: none;
+    border-bottom: 1px solid var(--border);
+  }
+  html.stage-on .slide::before {
+    content: attr(data-title);
+    display: block; margin-bottom: 10px;
+    font-family: ui-monospace, monospace; font-size: 11px;
+    letter-spacing: .08em; color: var(--muted);
+  }
+  html.stage-on .deck-nav,
+  html.stage-on .progress-dots,
+  html.stage-on .ai8-fit-panel { display: none !important; }
+  /* 宽表格横向溢出兜底 */
+  html.stage-on .slide table { display: block; width: max-content; max-width: 100%; overflow-x: auto; }
+}
+
+/* 打印 / 导出 PDF：8 页全部展开，每页一张 */
+@media print {
+  @page { size: 1440px 810px; margin: 0; }
+  html.stage-on { height: auto; overflow: visible; background: #fff; }
+  html.stage-on body {
+    position: static; width: 1440px; height: auto;
+    overflow: visible; transform: none; box-shadow: none;
+  }
+  html.stage-on .deck { height: auto; }
+  html.stage-on .slide {
+    display: block !important; height: 810px; padding: 40px 0;
+    transform: none !important; animation: none;
+    page-break-after: always; break-after: page;
+  }
+  .topbar, .deck-nav, .help, .ai8-fit-panel { display: none !important; }
+}
+
+
+/* ==== AI8 DECK KIT v1 ==== */
+/* 60 分钟小白版的共用内容组件。只用 8 个文件都有的 --clay/--olive/--sky/--rose。 */
+
+/* 自带布局的分栏（不依赖各文件 .grid / .grid-2 的组合语义） */
+.k-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.k-3col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: start; }
+.k-col-title { display: block; margin-bottom: 6px; }
+@media (max-width: 920px) { .k-2col, .k-3col { grid-template-columns: 1fr; } }
+
+/* 什么时候用它 —— 触发信号 */
+.k-when { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0 16px; padding: 0; }
+.k-when > span {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 14px; border-radius: 999px;
+  border: 1px solid var(--border); background: var(--surface-2);
+  font-size: 14.5px;
+}
+.k-when > span::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--clay); flex: 0 0 6px;
+}
+
+/* 说清楚四句话 */
+.k-four { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 16px 0; }
+.k-four > div {
+  border: 1px solid var(--border); border-top: 3px solid var(--clay);
+  border-radius: 14px; padding: 14px 16px 16px; background: var(--surface-2);
+}
+.k-four > div:nth-child(2) { border-top-color: var(--olive); }
+.k-four > div:nth-child(3) { border-top-color: var(--sky); }
+.k-four > div:nth-child(4) { border-top-color: var(--rose); background: transparent; }
+.k-four .n { font-family: ui-monospace, monospace; font-size: 12px; color: var(--muted); letter-spacing: .06em; }
+.k-four h4 { margin: 6px 0; font-size: 18px; }
+.k-four p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+.k-four .opt {
+  display: inline-block; margin-left: 6px; padding: 1px 7px; border-radius: 5px;
+  font-size: 11px; font-weight: 400;
+  background: color-mix(in srgb, var(--rose) 14%, transparent); color: var(--rose);
+}
+
+/* 随口说 vs 会说的 */
+.k-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+.k-vs > div { border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface-2); }
+.k-vs .h {
+  padding: 9px 14px; font-size: 12.5px; font-family: ui-monospace, monospace;
+  letter-spacing: .05em; border-bottom: 1px solid var(--border);
+}
+.k-vs .bad  .h { background: color-mix(in srgb, var(--rose) 12%, transparent);  color: var(--rose); }
+.k-vs .good .h { background: color-mix(in srgb, var(--olive) 14%, transparent); color: var(--olive); }
+.k-vs .b { padding: 14px; }
+.k-vs .say {
+  margin: 0 0 10px; padding: 10px 12px; border-radius: 10px;
+  background: var(--surface); font-size: 14.5px; line-height: 1.6;
+}
+.k-vs .good .say { border-left: 3px solid var(--olive); }
+.k-vs .bad  .say { border-left: 3px solid var(--rose); }
+.k-vs .got { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+.k-vs .got b { color: var(--text); font-weight: 600; }
+
+/* 演示位（讲师用页） */
+.k-demo {
+  border: 2px dashed var(--clay); border-radius: 16px; padding: 18px 22px; margin: 14px 0;
+  background: color-mix(in srgb, var(--clay) 6%, var(--surface-2));
+}
+.k-demo .lb {
+  display: inline-block; padding: 3px 10px; border-radius: 6px;
+  background: var(--clay); color: #fff; font-size: 12px; letter-spacing: .06em;
+}
+.k-demo h3 { margin: 10px 0 12px; font-size: 22px; }
+.k-demo ol { margin: 0; padding-left: 20px; }
+.k-demo ol > li { margin-bottom: 6px; font-size: 15px; line-height: 1.55; }
+.k-demo .watch {
+  margin-top: 12px; padding: 10px 14px; border-radius: 10px;
+  background: var(--surface); border-left: 3px solid var(--olive); font-size: 14.5px;
+}
+.k-demo .fallback { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
+
+/* 边界（每章倒数第一/二页） */
+.k-bound { display: grid; gap: 10px; margin: 14px 0; padding: 0; }
+.k-bound > li {
+  list-style: none; display: grid; grid-template-columns: 30px 1fr; gap: 12px;
+  padding: 12px 14px; border-radius: 12px; background: var(--surface-2);
+  border: 1px solid var(--border); border-left: 3px solid var(--rose);
+}
+.k-bound .n { font-family: ui-monospace, monospace; font-size: 17px; color: var(--rose); }
+.k-bound h4 { margin: 0 0 3px; font-size: 16px; }
+.k-bound p { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.55; }
+
+/* 带走三句 */
+.k-take { display: grid; gap: 8px; margin: 14px 0; padding: 0; }
+.k-take > li {
+  list-style: none; display: grid; grid-template-columns: 28px 1fr; gap: 12px;
+  padding: 11px 0; border-bottom: 1px dashed var(--border);
+}
+.k-take > li:last-child { border-bottom: 0; }
+.k-take .n { font-family: Georgia, "Songti SC", serif; font-size: 22px; color: var(--clay); line-height: 1; }
+.k-take h4 { margin: 0 0 3px; font-size: 17px; }
+.k-take p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+
+/* 四象限地图（开场页） */
+.k-quad { display: grid; grid-template-columns: 76px 1fr 1fr; gap: 10px; margin: 14px 0; }
+.k-quad .ax {
+  display: flex; align-items: center; justify-content: center; text-align: center;
+  font-size: 13px; color: var(--muted); line-height: 1.35;
+}
+.k-quad .ax-top { font-family: ui-monospace, monospace; font-size: 12px; letter-spacing: .08em; }
+.k-quad .q {
+  border: 1px solid var(--border); border-top: 3px solid var(--clay);
+  border-radius: 14px; padding: 13px 16px; background: var(--surface-2);
+}
+.k-quad .q.c2 { border-top-color: var(--olive); }
+.k-quad .q.c3 { border-top-color: var(--sky); }
+.k-quad .q.c4 { border-top-color: var(--rose); }
+.k-quad .q .ord { float: right; font-family: ui-monospace, monospace; font-size: 11px; color: var(--muted); }
+.k-quad .q h4 { margin: 0 0 8px; font-size: 17px; }
+.k-quad .q .sc { display: flex; gap: 8px; flex-wrap: wrap; }
+.k-quad .q .sc b {
+  font-weight: 500; font-size: 13px; padding: 4px 10px; border-radius: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+}
+
+/* 今晚只做一件事 */
+.k-action {
+  border-radius: 16px; padding: 20px 24px; margin: 14px 0;
+  background: color-mix(in srgb, var(--clay) 10%, var(--surface-2));
+  border: 1px solid color-mix(in srgb, var(--clay) 32%, var(--border));
+}
+.k-action .lb { font-family: ui-monospace, monospace; font-size: 12px; letter-spacing: .08em; color: var(--clay); }
+.k-action p { margin: 10px 0 0; font-size: 19px; line-height: 1.55; font-family: Georgia, "Songti SC", serif; }
+
+/* 「示例」角标 —— 教学示例必须和真实结果区分开 */
+.k-eg {
+  display: inline-block; margin-left: 8px; padding: 2px 8px; border-radius: 6px;
+  font-size: 11.5px; letter-spacing: .04em; vertical-align: middle; font-weight: 400;
+  background: color-mix(in srgb, var(--sky) 16%, transparent); color: var(--sky);
+}
+
+/* 过渡语：告诉听众为什么下一章讲这个 */
+.k-next {
+  margin-top: 14px; padding: 12px 16px; border-radius: 12px;
+  background: var(--surface); border-left: 3px solid var(--sky); font-size: 14.5px; line-height: 1.6;
+}
+.k-next .lb { font-family: ui-monospace, monospace; font-size: 11.5px; letter-spacing: .06em; color: var(--sky); }
+
+/* 完整提示词收进折叠区：现场不念，课后可复制 */
+details.k-full { margin-top: 10px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface-2); }
+details.k-full > summary { cursor: pointer; padding: 10px 14px; font-size: 13.5px; color: var(--muted); list-style: none; }
+details.k-full > summary::-webkit-details-marker { display: none; }
+details.k-full > summary::before { content: '▸ '; color: var(--clay); }
+details.k-full[open] > summary::before { content: '▾ '; }
+details.k-full .fbody { padding: 0 14px 14px; }
+details.k-full pre { margin: 0; }
+
+@media (max-width: 920px) {
+  .k-four, .k-vs { grid-template-columns: 1fr; }
+  .k-quad { grid-template-columns: 1fr; }
+  .k-quad .ax { display: none; }
+}
+
+
+/* ==== 合并版：31 页的圆点导航 ==== */
+.progress-dots i { width: 12px; }
+.progress-dots i.chapter-start { margin-left: 9px; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="shell topbar-inner">
+    <div class="brand">
+      <span class="brand-mark">AI</span>
+      <span>八大使用场景 · <b id="chapter-label" style="font-weight:600;">开场</b></span>
+    </div>
+    <div class="progress" aria-label="演讲进度">
+      <span id="counter-text">01 / 32</span>
+      <span class="progress-dots" id="dots"></span>
+    </div>
+    <nav class="nav-actions">
+      <button class="btn btn-mini" type="button" onclick="toggleTheme()" title="切换主题">明 / 暗</button>
+      <button class="btn btn-mini" type="button" onclick="openHelp()" title="快捷键（?）">?</button>
+    </nav>
+  </div>
+</header>
+
+<main class="deck" id="deck">
+  <section class="slide active shell" data-chapter="开场" data-title="标题页">
+    <div class="kicker">线下分享 · 60 分钟</div>
+    <h1 class="slide-title">AI 八大使用场景</h1>
+    <p class="lead" style="font-size:24px;max-width:900px;">遇到一件事，<br>先想清楚该用哪一种问法。</p>
+
+    <div class="k-3col" style="margin-top:24px;">
+      <div class="card" style="border-top:3px solid var(--clay);">
+        <span class="eyebrow">你能带走 01</span>
+        <h3 style="margin:6px 0 6px;font-size:19px;">一张判断地图</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.65;">碰到一件事，立刻知道该用哪一招。</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--olive);">
+        <span class="eyebrow">你能带走 02</span>
+        <h3 style="margin:6px 0 6px;font-size:19px;">一套万能问法</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.65;">四句话，八个场景通用。</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--sky);">
+        <span class="eyebrow">你能带走 03</span>
+        <h3 style="margin:6px 0 6px;font-size:19px;">八个当天能用的场景</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.65;">今晚回去就能试，不用等。</p>
+      </div>
+    </div>
+
+    <div class="k-next"><span class="lb">今天的约定</span><br>
+      全场只有一个词需要你记：<b>提示词</b>——意思就是<b>你打给 AI 的那段话</b>。除此之外我都说人话。</div>
+  </section>
+
+  <section class="slide shell" data-chapter="开场" data-title="讲师介绍">
+    <div class="kicker">开场 · 我是谁</div>
+    <h2 class="section-title">今天讲的这些，<br>我自己也是拿 AI 学会的。</h2>
+
+    <div class="k-2col" style="grid-template-columns:1fr 1.4fr;">
+      <div class="card" style="border-left:3px solid var(--clay);">
+        <span class="eyebrow">讲师</span>
+        <h3 style="margin:6px 0 10px;font-size:26px;">Bin 哥</h3>
+        <p style="margin:0 0 12px;font-size:15px;line-height:1.75;">
+          <b>前阿里巴巴本地生活技术经理。</b><br>
+          这几年我主要在做一件事——<b>拿 AI 学会我原本不会的东西</b>，再研究怎么让它变成日常干活的方式，而不是需要的时候才想起来用一下。</p>
+        <div class="k-when" style="margin:0;">
+          <span>AI 应用实践者</span><span>累计使用 7000+ 小时</span>
+        </div>
+        <p style="margin:12px 0 0;font-size:13px;color:var(--muted);font-family:ui-monospace,monospace;">www.silencebin.com</p>
+      </div>
+
+      <div>
+        <span class="eyebrow k-col-title">下面这四件，对应今天要讲的内容</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>自媒体，是我拿 AI 学会的</h4>
+            <p>我不是先会写作才去做账号。怎么起号、怎么选题、怎么把话说得有人看，全是一边问它一边做出来的——就是今天「你给规矩它出初稿」和「说不清就给它看」那两招。</p></div></li>
+          <li><span class="n">2</span><div><h4>全栈开发，也是我拿 AI 补出来的</h4>
+            <p>我原来只做后端。前端、数据库、上线维护这些不会的部分，靠 AI 一路问一路做，最后自己把一个网站送上线了——今天那段「不会写代码也能做个小工具」就是从这儿来的。</p></div></li>
+          <li><span class="n">3</span><div><h4>写真和商业视觉，用的是同一套办法</h4>
+            <p>今天「画图也是同一套」那一页，讲的就是它。</p></div></li>
+          <li><span class="n">4</span><div><h4>一直在研究怎么跟 AI「共生」</h4>
+            <p>这个词说人话就是：<b>不是把它当个工具偶尔用一下，而是让它长在你日常干活的流程里。</b>今天这八招，就是这么攒下来的。</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="note">所以今天不会教你我自己没试过的东西。我更在意的也不是「会不会用 AI」，而是它能不能变成你真的用得上的东西。</p>
+  </section>
+
+  <section class="slide shell" data-chapter="开场" data-title="四象限 · 全场总地图">
+    <div class="kicker">开场 · 全场总地图</div>
+    <h2 class="section-title">一张图，判断该用哪一招。</h2>
+    <p class="lead">先问自己两个问题：① 我心里<b>清不清楚</b>要什么？② 我是要把东西<b>读进来</b>，还是<b>做出来</b>？</p>
+
+    <div class="k-quad">
+      <div class="ax"></div>
+      <div class="ax ax-top">把东西读进来</div>
+      <div class="ax ax-top">把东西做出来</div>
+
+      <div class="ax">心里<br>清楚</div>
+      <div class="q c1"><span class="ord">第 1 站</span><h4>我想搞懂一件事</h4>
+        <div class="sc"><b>01 提问学习</b><b>02 总结整合</b></div></div>
+      <div class="q c2"><span class="ord">第 2 站</span><h4>我要交个东西出去</h4>
+        <div class="sc"><b>04 创作生成</b><b>07 翻译转化</b></div></div>
+
+      <div class="ax">心里<br>没底</div>
+      <div class="q c4"><span class="ord">第 4 站</span><h4>我怕自己漏了什么</h4>
+        <div class="sc"><b>06 深思反问</b><b>08 分析研究</b></div></div>
+      <div class="q c3"><span class="ord">第 3 站</span><h4>我卡住了，要点子</h4>
+        <div class="sc"><b>03 创意启发</b><b>05 模仿参考</b></div></div>
+    </div>
+
+    <p class="note">今天按象限走一圈，不按编号顺序：<b>01 → 02 → 04 → 07 → 03 → 05 → 06 → 08</b>。每换一站我会说一句为什么。</p>
+  </section>
+
+  <section class="slide shell" data-chapter="01 提问学习" data-title="01 · 同一个问题，两种问法">
+    <div class="kicker">第 1 站 · 我想搞懂一件事 · 01 提问学习</div>
+    <h2 class="section-title">同一个问题，问法不同，<br>拿回来的东西差一大截。</h2>
+
+    <div class="k-when">
+      <span>嘴里蹦出一个你没听过的词</span>
+      <span>说明书、合同看不懂</span>
+      <span>要进一个完全陌生的领域</span>
+    </div>
+
+    <div class="k-vs">
+      <div class="bad">
+        <div class="h">随口问<span class="k-eg">示例</span></div>
+        <div class="b">
+          <p class="say">变频空调是什么意思？</p>
+          <p class="got">回你一行定义就完了。<b>你还得接着追问三四轮</b>，问完还是不知道自己该买哪台。</p>
+        </div>
+      </div>
+      <div class="good">
+        <div class="h">会问的<span class="k-eg">示例</span></div>
+        <div class="b">
+          <p class="say">我要给 20 平米的卧室买台空调，完全不懂。请你：① 用生活里的比方告诉我变频是什么；② 没有它会怎样；③ 按我这个房间给个具体例子；④ 它跟定频、跟能效等级最容易搞混的 3 个点，各一句话说清。</p>
+          <p class="got">一次拿回<b>比方 + 为什么 + 我这种情况的例子 + 别搞混的地方</b>，你自己就能去挑了。</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">同样是 30 秒，同样是一句话。差别不在 AI，在你那句话里塞了多少信息。</p>
+  </section>
+
+  <section class="slide shell" data-chapter="01 提问学习" data-title="01 · 说清楚四句话（全课通用）">
+    <div class="kicker">全课通用 · 剩下七个场景用的都是它</div>
+    <h2 class="section-title">全场只教一套问法。</h2>
+    <p class="lead">上一页那个「会问的」，拆开就是下面这四句。</p>
+
+    <div class="k-four">
+      <div><div class="n">01</div><h4>我是谁</h4>
+        <p>这事儿什么背景。<br>「我要给 20 平米卧室买空调，完全不懂」</p></div>
+      <div><div class="n">02</div><h4>我要你做什么</h4>
+        <p>一句话说清让它干的活。<br>「告诉我变频是什么」</p></div>
+      <div><div class="n">03</div><h4>有什么要求</h4>
+        <p>多长、什么格式、什么语气、不要什么。<br>「用生活里的比方」「各一句话说清」</p></div>
+      <div><div class="n">04</div><h4>给你看个样子<span class="opt">可选</span></h4>
+        <p>贴一段你想要的样子。<br><b>这句是加分项，不是必填。</b></p></div>
+    </div>
+
+    <div class="prompt-box">
+      <div class="prompt-head">
+        <strong>空白模板 · 填进去就能用</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p01-four', this)">复制这段话</button>
+      </div>
+<pre><code id="p01-four">我是【你的身份 / 你的处境】，我想搞懂【那个词 / 那件事】。
+
+请你：
+1. 用一个生活里的比方告诉我它是什么；
+2. 说清它解决了什么问题，没有它会怎样；
+3. 按我上面的情况给一个具体例子；
+4. 列出 3 个最容易和它搞混的东西，各用一句话说清区别。</code></pre>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="01 提问学习" data-title="01 · 看不懂的直接拍给它〔演示①〕">
+    <div class="kicker">01 提问学习 · 现场演示</div>
+    <h2 class="section-title">看不懂的东西，<br>不用打字描述，拍下来直接扔给它。</h2>
+
+    <div class="k-when">
+      <span>体检报告上的箭头</span>
+      <span>电器说明书</span>
+      <span>甩过来的一张图表</span>
+      <span>看不懂的合同条款</span>
+    </div>
+
+    <div class="k-demo">
+      <span class="lb">演示 ① · 约 2 分钟</span>
+      <h3>现场拍一份你带来的材料，当场问明白</h3>
+      <ol>
+        <li>拍照，直接发给 AI，<b>一个字都不用描述</b></li>
+        <li>问这三句：这张图主要在说什么？最关键的 3 个信息是什么？站在我的角度，我最该关心哪一部分？</li>
+        <li>追问一句：<b>「第 X 条我没看懂，用大白话再说一遍」</b></li>
+      </ol>
+      <div class="watch"><b>请大家盯着看：</b>我全程没有去描述这张图长什么样，只是把它扔了过去。</div>
+      <p class="fallback">兜底：上传失败或网络不通，切备用截图继续讲。</p>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="01 提问学习" data-title="01 · 边界 + 带走三句">
+    <div class="kicker">01 提问学习 · 收束</div>
+    <h2 class="section-title">它不是什么都知道，<br>也会一本正经地编。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow">三条边界</span>
+        <ul class="k-bound">
+          <li><span class="n">1</span><div><h4>它只知道「过去的资料」</h4>
+            <p>问新出的词、刚发生的事，要把联网 / 搜索的开关打开。</p></div></li>
+          <li><span class="n">2</span><div><h4>它不知道的时候不会说「我不知道」</h4>
+            <p>会编得很像真的。关键信息——数字、条款、人名——自己核一遍。</p></div></li>
+          <li><span class="n">3</span><div><h4>快速入门靠它，真要吃透还得看正经资料</h4>
+            <p>把 AI 当地图，把书当腿。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <span class="eyebrow">带走三句</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>不会的就问 AI，但一次要问够</h4>
+            <p>是什么 + 打个比方 + 举个例子 + 跟什么容易搞混。</p></div></li>
+          <li><span class="n">2</span><div><h4>看不懂的图直接拍给它</h4>
+            <p>不用先转成文字，也不用自己描述。</p></div></li>
+          <li><span class="n">3</span><div><h4>想入门一个新领域，走三步</h4>
+            <p>先让它画张地图 → 按地图一块块啃 → 最后让它出题考你。</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="next-row" style="margin-top: 14px;">
+      <div>
+        <span class="eyebrow">下一站 · 问明白了，下一个麻烦是「材料太多读不完」</span>
+        <h3 style="margin: 6px 0 0;">02 · 总结整合 —— 总结不是删字，是换个密度</h3>
+      </div>
+      <button class="btn" type="button" onclick="nextSlide()">下一章 →</button>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="02 总结整合" data-title="02 · 总结不是删字，是换个密度">
+    <div class="kicker">第 1 站 · 我想搞懂一件事 · 02 总结整合</div>
+    <h2 class="section-title">总结不是删字，<br>是换个密度。</h2>
+    <p class="lead">同一份菜，装便当、摆宴席、拍朋友圈，是三种摆法，不是「少放点菜」。</p>
+
+    <div class="k-when">
+      <span>一篇长文没时间读</span>
+      <span>开完会要出纪要</span>
+      <span>一堆聊天记录要给老板一个说法</span>
+    </div>
+
+    <div class="k-3col">
+      <div class="card">
+        <span class="eyebrow">给群里看</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">一句话版</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.6;">30 字以内。作用是勾住人，让人愿意点进去。</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">给自己看</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">要点版</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.6;">3–5 条，每条 20 字以内。作用是让你判断「要不要细看」。</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">拿去汇报存档</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">精读版</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.6;">300 字左右。作用是<b>替代原文</b>，别人看完不用再翻。</p>
+      </div>
+    </div>
+
+    <p class="note">开口之前先想三件事：<b>给谁看、要几个字、要什么样子</b>。这三档可以一次要齐，不用问三遍。</p>
+  </section>
+
+  <section class="slide shell" data-chapter="02 总结整合" data-title="02 · 换个样子看">
+    <div class="kicker">02 总结整合 · 四种摆法</div>
+    <h2 class="section-title">同一份内容换个摆法，<br>理解速度差很多。</h2>
+    <p class="lead">先想「我要拿它干嘛」，再选摆法。下面四句话，照抄就能用。</p>
+
+    <div class="k-four">
+      <div><div class="n">摆法 01</div><h4>排成表格</h4>
+        <p>要横着比、竖着比的时候用。<br>「整理成表格，列是……，行是……」</p></div>
+      <div><div class="n">摆法 02</div><h4>列成要点</h4>
+        <p>要快速扫一眼的时候用。<br>「提炼成 5 个要点，每条不超过 20 字」</p></div>
+      <div><div class="n">摆法 03</div><h4>排成时间线</h4>
+        <p>要理清先后顺序的时候用。<br>「按时间先后排成一条线」</p></div>
+      <div><div class="n">摆法 04</div><h4>画成脑图</h4>
+        <p>要看清层级关系的时候用。<br>「输出成能直接生成脑图的格式」</p></div>
+    </div>
+
+    <div class="prompt-box">
+      <div class="prompt-head">
+        <strong>一次把三档要齐 · 最省事的一句</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p02-three', this)">复制这段话</button>
+      </div>
+<pre><code id="p02-three">请基于下面这篇内容，一次给我三个版本：
+1. 一句话版（30 字内），发群里用；
+2. 要点版（3-5 条，每条不超过 20 字），我用来判断要不要细看；
+3. 精读版（300 字内），保留核心结论和最关键的一两个依据。
+
+内容：【粘贴原文】</code></pre>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="02 总结整合" data-title="02 · 一堆材料变成能发出去的东西〔演示②〕">
+    <div class="kicker">02 总结整合 · 现场演示</div>
+    <h2 class="section-title">开一小时会，<br>五分钟出纪要。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">固定四步</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>录下来</h4><p>手机录音就行。</p></div></li>
+          <li><span class="n">2</span><div><h4>转成文字稿</h4><p>用任意一个语音转文字的工具。</p></div></li>
+          <li><span class="n">3</span><div><h4>让它按四块整理</h4><p>会议主题 / 讨论了什么 / 定了什么（谁负责、什么时候前）/ 还没定的。</p></div></li>
+          <li><span class="n">4</span><div><h4>自己核一遍再发</h4><p>这一步不能省。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <div class="k-demo" style="margin-top:0;">
+          <span class="lb">演示 ② · 约 2 分钟</span>
+          <h3>一段真实记录 → 现场出纪要</h3>
+          <ol>
+            <li>把会议记录 / 群聊记录粘进去</li>
+            <li>按上面四块提要求</li>
+            <li><b>现场指出它写错或漏掉的一处</b></li>
+          </ol>
+          <div class="watch"><b>请大家盯着看：</b>第 4 步。我一定会自己核一遍再发出去。</div>
+          <p class="fallback">兜底：切备用截图继续讲。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="prompt-box" style="margin-top:14px;">
+      <div class="prompt-head">
+        <strong>关键约束句 · 防止它编</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p02-meet', this)">复制这段话</button>
+      </div>
+<pre><code id="p02-meet">人名、数字、日期必须和原文完全一致，不能四舍五入。
+没写清楚负责人和截止时间的，写「未明确」，不要编。</code></pre>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="02 总结整合" data-title="02 · 三个坑 + 带走三句">
+    <div class="kicker">02 总结整合 · 收束</div>
+    <h2 class="section-title">给别人看的总结，发出去之前<br>必核三样：数字、人名、关键结论。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">三个坑</span>
+        <ul class="k-bound">
+          <li><span class="n">1</span><div><h4>数字会被改</h4>
+            <p>它为了读着顺，会把「43.7%」写成「约 44%」。</p></div></li>
+          <li><span class="n">2</span><div><h4>中间会被吃掉</h4>
+            <p>东西太长，它容易只顾头尾，中段一笔带过。</p></div></li>
+          <li><span class="n">3</span><div><h4>情绪会被磨平</h4>
+            <p>作者在骂人，它写成「作者持保留意见」。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <span class="eyebrow k-col-title">带走三句</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>总结是换密度，不是删字</h4>
+            <p>先想清楚给谁看、要几个字、要什么样子。</p></div></li>
+          <li><span class="n">2</span><div><h4>一次把三档要齐</h4>
+            <p>一句话 / 要点 / 精读，问一遍就够。</p></div></li>
+          <li><span class="n">3</span><div><h4>对外的总结必核三样</h4>
+            <p>数字、人名、关键结论。</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <details class="k-full">
+      <summary>三句保命话（课后复制，现场不念）</summary>
+      <div class="fbody">
+        <div class="prompt-head" style="border:0;padding:0 0 8px;">
+          <strong>三句保命话</strong>
+          <button class="btn btn-mini" type="button" onclick="copyPrompt('p02-guard', this)">复制这段话</button>
+        </div>
+<pre><code id="p02-guard">所有数字、金额、日期必须和原文完全一致，不能四舍五入。
+请按原文的章节顺序，每一节都给一段总结，不要跳过。
+请保留原文的情绪强度，作者在强烈批评，总结里也要是批评。</code></pre>
+      </div>
+    </details>
+
+    <div class="next-row" style="margin-top: 14px;">
+      <div>
+        <span class="eyebrow">下一站 · 往里读讲完了，换一半：你心里清楚要什么，让它做出来</span>
+        <h3 style="margin: 6px 0 0;">04 · 创作生成 —— 你给规矩，它出初稿</h3>
+      </div>
+      <button class="btn" type="button" onclick="nextSlide()">下一章 →</button>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="04 创作生成" data-title="04 · 你给规矩，它出初稿">
+    <div class="kicker">第 2 站 · 我要交个东西出去 · 04 创作生成</div>
+    <h2 class="section-title">它不是「帮你写」，<br>是「按你的规矩出初稿」。</h2>
+    <p class="lead">点外卖。「给我做点吃的」，和「川菜，麻辣，不要香菜，加一份米饭，半小时内送到」——同一家店，出来的东西完全不一样。</p>
+
+    <div class="k-when">
+      <span>要发一条小红书</span>
+      <span>要写周报</span>
+      <span>要出一版活动文案</span>
+      <span>要做 PPT 大纲</span>
+    </div>
+
+    <div class="k-2col">
+      <div class="card" style="border-left:3px solid var(--sky);">
+        <span class="eyebrow">心里没方向的时候</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">让它给你一堆候选</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.6;">那是第 3 站的事，等下讲。你现在还不知道要什么，就别急着让它出成品。</p>
+      </div>
+      <div class="card" style="border-left:3px solid var(--clay);">
+        <span class="eyebrow">心里有方向的时候</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">给规矩，要成品</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.6;">就是这一节。你越说得清要什么，它给的初稿离能用越近。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="04 创作生成" data-title="04 · 四句话在这儿最见效">
+    <div class="kicker">04 创作生成 · 还是开场那四句话</div>
+    <h2 class="section-title">规矩说得越细，<br>初稿离能用越近。</h2>
+
+    <div class="k-vs">
+      <div class="bad">
+        <div class="h">随口说<span class="k-eg">示例</span></div>
+        <div class="b">
+          <p class="say">帮我写一篇关于夏季冰美式的小红书。</p>
+          <p class="got">出来一段<b>谁看都眼熟的通稿</b>：「夏日清凉，一杯冰美式带走燥热」。发出去没人看。</p>
+        </div>
+      </div>
+      <div class="good">
+        <div class="h">会说的 · 就是那四句<span class="k-eg">示例</span></div>
+        <div class="b">
+          <p class="say"><b>我是谁</b>：你是个写咖啡的小红书博主，擅长打卡种草。<br>
+            <b>要你做什么</b>：写一篇推「夏季冰美式」的正文。<br>
+            <b>有什么要求</b>：300–500 字；开头两行要钩人；中间讲个人经历；列 4 个卖点；结尾问一句；语气轻松能自嘲；别用「最」「第一」「绝对」。<br>
+            <b>给你看个样子</b>：（可选）贴一句你喜欢的调子。</p>
+          <p class="got">出 3 版，挑一版<b>改两笔就能发</b>。</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">这四句话你在开场那一页已经见过了。八个场景用的都是它，只是往里填的东西不一样。</p>
+  </section>
+
+  <section class="slide shell" data-chapter="04 创作生成" data-title="04 ·「要求」那一句怎么写">
+    <div class="kicker">04 创作生成 · 第 ③ 句是决定性的一句</div>
+    <h2 class="section-title">「要求」这一句，<br>写满这六条就够了。</h2>
+
+    <div class="k-3col">
+      <div class="card"><span class="eyebrow">01</span><h3 style="margin:4px 0 6px;font-size:18px;">给谁看</h3>
+        <p style="margin:0;font-size:13.5px;color:var(--muted);">同事？客户？陌生人？决定了用什么词。</p></div>
+      <div class="card"><span class="eyebrow">02</span><h3 style="margin:4px 0 6px;font-size:18px;">发在哪</h3>
+        <p style="margin:0;font-size:13.5px;color:var(--muted);">朋友圈、群里、公众号、正式文件，规矩完全不同。</p></div>
+      <div class="card"><span class="eyebrow">03</span><h3 style="margin:4px 0 6px;font-size:18px;">多长</h3>
+        <p style="margin:0;font-size:13.5px;color:var(--muted);">给个具体范围，别说「简短一点」。</p></div>
+      <div class="card"><span class="eyebrow">04</span><h3 style="margin:4px 0 6px;font-size:18px;">什么结构</h3>
+        <p style="margin:0;font-size:13.5px;color:var(--muted);">开头怎么起 → 中间讲什么 → 结尾要读者干嘛。</p></div>
+      <div class="card"><span class="eyebrow">05</span><h3 style="margin:4px 0 6px;font-size:18px;">什么语气</h3>
+        <p style="margin:0;font-size:13.5px;color:var(--muted);">正式、口语、自嘲、温柔，说一个词就行。</p></div>
+      <div class="card" style="border-color:var(--clay);"><span class="eyebrow" style="color:var(--clay);">06 · 最容易忘</span>
+        <h3 style="margin:4px 0 6px;font-size:18px;">不要什么</h3>
+        <p style="margin:0;font-size:13.5px;color:var(--muted);">先把你<b>不想要</b>的说清楚，比说十句想要的都管用。</p></div>
+    </div>
+
+    <details class="k-full">
+      <summary>四句话通用模板（课后复制，现场不念）</summary>
+      <div class="fbody">
+        <div class="prompt-head" style="border:0;padding:0 0 8px;">
+          <strong>四句话通用模板</strong>
+          <button class="btn btn-mini" type="button" onclick="copyPrompt('p04-tpl', this)">复制这段话</button>
+        </div>
+<pre><code id="p04-tpl">【我是谁】你是一位 [角色]，擅长 [相关能力]。
+【要你做什么】请为 [主题 / 产品] 写一篇 [内容类型]。
+【有什么要求】
+- 给谁看：[人群]
+- 发在哪：[平台]
+- 多长：[具体范围]
+- 什么结构：[开头 → 中间 → 结尾要读者干嘛]
+- 什么语气：[口语 / 专业 / 文艺 / 正式]
+- 不要什么：[不出现什么词 / 不要什么风格]
+【给你看个样子】（可选）参考这个调子：[贴一段样本]
+
+请出 3 版，每版风格略有差异。</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <section class="slide shell" data-chapter="04 创作生成" data-title="04 · 画图也是同一套〔演示③〕">
+    <div class="kicker">04 创作生成 · 现场演示</div>
+    <h2 class="section-title">画图不是堆形容词，<br>是把七件事说清楚。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">七件事</span>
+        <div class="k-when" style="margin-top:6px;">
+          <span>画什么</span><span>在哪儿</span><span>什么风格</span><span>什么光</span>
+          <span>什么颜色</span><span>怎么取景</span><span>出多大比例</span>
+        </div>
+        <p class="note" style="margin-top:10px;">和写字那六条是同一个道理：你说不清，它只能给你最平庸的那一版。</p>
+      </div>
+      <div>
+        <div class="k-demo" style="margin-top:0;">
+          <span class="lb">演示 ③ · 约 2 分钟</span>
+          <h3>同一个需求，说两次</h3>
+          <ol>
+            <li>先随口说一句，出一张</li>
+            <li>再按七件事说清楚，出一张</li>
+            <li>两张摆一起，当场比</li>
+          </ol>
+          <div class="watch"><b>请大家盯着看：</b>我只是把话说清楚了，<b>没有换任何工具</b>。</div>
+          <p class="fallback">兜底：切两张备好的对比图。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="04 创作生成" data-title="04 · 边界 + 带走三句">
+    <div class="kicker">04 创作生成 · 收束</div>
+    <h2 class="section-title">它是初稿机，<br>你是终审的那个人。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">三条边界</span>
+        <ul class="k-bound">
+          <li><span class="n">1</span><div><h4>写得不好，先回头看你的要求</h4>
+            <p>六条写满了吗？大多数「AI 不行」其实是话没说清。</p></div></li>
+          <li><span class="n">2</span><div><h4>一次就能直接用，几乎不可能</h4>
+            <p>出 3 版 → 挑一版 → 再改两轮，这才是正常流程。</p></div></li>
+          <li><span class="n">3</span><div><h4>发出去之前你自己得读一遍</h4>
+            <p>署你名字的东西，你负责。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <span class="eyebrow k-col-title">带走三句</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>你给规矩，它出初稿</h4>
+            <p>规矩越细，初稿越准。</p></div></li>
+          <li><span class="n">2</span><div><h4>还是那四句话</h4>
+            <p>我是谁 / 要你做什么 / 有什么要求 / 给你看个样子。</p></div></li>
+          <li><span class="n">3</span><div><h4>一次出 3 版，你来定稿</h4>
+            <p>别指望第一版，也别只要一版。</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="next-row" style="margin-top: 14px;">
+      <div>
+        <span class="eyebrow">下一站 · 同样是做出来，还有一类更狠的：把一种东西变成另一种</span>
+        <h3 style="margin: 6px 0 0;">07 · 翻译转化 —— 人话、图、文档，它都能互相翻</h3>
+      </div>
+      <button class="btn" type="button" onclick="nextSlide()">下一章 →</button>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="07 翻译转化" data-title="07 · 什么都能互相翻">
+    <div class="kicker">第 2 站 · 我要交个东西出去 · 07 翻译转化</div>
+    <h2 class="section-title">翻译不只是中英互译。<br>任何一种东西变成另一种，都是翻译。</h2>
+
+    <div class="k-four">
+      <div><div class="n">主线 01</div><h4>一种语言 ↔ 另一种</h4>
+        <p>看外文资料、给老外回邮件。</p></div>
+      <div><div class="n">主线 02</div><h4>图 ↔ 文字</h4>
+        <p>看不懂的图让它说人话，说清楚的话让它变成图。</p></div>
+      <div><div class="n">主线 03</div><h4>长 ↔ 短</h4>
+        <p>一千字压成一句，一句话撑成一段。</p></div>
+      <div><div class="n">主线 04</div><h4>行话 ↔ 大白话</h4>
+        <p>把看不懂的专业说法，翻成你听得懂的话。</p></div>
+    </div>
+
+    <p class="lead" style="margin-top:14px;">口诀只有一句：说清楚 <b>「从哪种，翻到哪种」</b>。</p>
+
+    <div class="prompt-box">
+      <div class="prompt-head">
+        <strong>四句照抄就能用</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p07-trans', this)">复制这段话</button>
+      </div>
+<pre><code id="p07-trans">把这段论文翻成 10 岁小孩能听懂的话。
+把这 1000 字浓缩成一句话。
+把这份公告改成朋友圈的语气。
+把这段聊天整理成会议纪要的措辞。</code></pre>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="07 翻译转化" data-title="07 · 不会写代码也能做个小工具〔演示④〕">
+    <div class="kicker">07 翻译转化 · 全场重点演示</div>
+    <h2 class="section-title">你只要会说人话，<br>就能让它给你做一个自己用的小工具。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">三条原则</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>从「自己用」的小东西开始</h4>
+            <p>整理文件夹、批量改图、把一堆表格合成一张。</p></div></li>
+          <li><span class="n">2</span><div><h4>全程说大白话</h4>
+            <p>不用担心说得不专业，你说清楚要什么就行。</p></div></li>
+          <li><span class="n">3</span><div><h4>报错了，把报错原样贴回去</h4>
+            <p><b>这是最关键的一条。</b>你不需要看懂它，只需要原样贴回去让它接着修。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <div class="k-demo" style="margin-top:0;">
+          <span class="lb">演示 ④ · 约 3 分钟 · 全场重点</span>
+          <h3>一句真实需求 → 跑出结果</h3>
+          <ol>
+            <li>说需求，让它出第一版</li>
+            <li>跑一次，<b>大概率报错——这正是要给你们看的</b></li>
+            <li>把报错原样贴回去，再跑一次</li>
+          </ol>
+          <div class="watch"><b>请大家盯着看报错那一刻我做了什么：</b>我没有去学代码，我只是把错误原样贴了回去。</div>
+          <p class="fallback">兜底：必须备录屏。现场跑不通就直接放录屏，并说明「这就是真实过程」。</p>
+        </div>
+      </div>
+    </div>
+
+    <details class="k-full">
+      <summary>入门模板（课后复制，现场不念）</summary>
+      <div class="fbody">
+        <div class="prompt-head" style="border:0;padding:0 0 8px;">
+          <strong>小工具入门模板</strong>
+          <button class="btn btn-mini" type="button" onclick="copyPrompt('p07-tool', this)">复制这段话</button>
+        </div>
+<pre><code id="p07-tool">我想要一个小工具：
+- 功能是：[用大白话描述，比如「把一个文件夹里的图片批量压到 1MB 以下」]
+- 我给它的是：[什么文件 / 什么数据]
+- 我要的结果是：[存在哪里 / 显示什么]
+
+我完全不会编程。请给我：
+1. 能直接跑的完整代码，带中文注释；
+2. 每一步在干嘛，用我能懂的话说；
+3. 怎么装、怎么跑，从头开始讲；
+4. 可能会遇到什么问题，怎么办。</code></pre>
+      </div>
+    </details>
+  </section>
+
+  <section class="slide shell" data-chapter="07 翻译转化" data-title="07 · 跟一份长文档说话">
+    <div class="kicker">07 翻译转化 · 把文档变成一问一答</div>
+    <h2 class="section-title">长文档不用从头读，<br>可以直接问它问题。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">怎么用</span>
+        <div class="card" style="margin-top:6px;">
+          <p style="margin:0 0 10px;font-size:15px;line-height:1.7;">把文件传上去，然后像问人一样问：</p>
+          <p style="margin:0 0 8px;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14.5px;">核心结论是什么？</p>
+          <p style="margin:0 0 8px;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14.5px;">我最该关心哪 3 个数字？</p>
+          <p style="margin:0;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14.5px;">有没有哪里说得含糊、有保留？</p>
+        </div>
+      </div>
+      <div>
+        <span class="eyebrow k-col-title">必须加的一句</span>
+        <div class="card" style="margin-top:6px;border-left:3px solid var(--clay);">
+          <h3 style="margin:0 0 8px;font-size:20px;">请把结论对应的原文出处和页码一并给我。</h3>
+          <p style="margin:0;font-size:14.5px;color:var(--muted);line-height:1.7;">它<b>会编引用</b>。有了页码，你才能回头抽查几处，确认它没瞎说。<br><br>这一句不是可选项。</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">能不能一次读完，取决于<b>你用的是哪个产品、文件本身有多大、是什么格式</b>——不是一个固定数字能覆盖的。读完了也要按页码抽查几处。</p>
+  </section>
+
+  <section class="slide shell" data-chapter="07 翻译转化" data-title="07 · 边界 + 带走三句">
+    <div class="kicker">07 翻译转化 · 收束</div>
+    <h2 class="section-title">越重要的东西，<br>越要自己核。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">三条边界</span>
+        <ul class="k-bound">
+          <li><span class="n">1</span><div><h4>日常理解和初稿可以先用它</h4>
+            <p>但<b>要公开发布的，以及法律、医疗、合同这类内容，必须由专业的人复核</b>。</p></div></li>
+          <li><span class="n">2</span><div><h4>它会编引用</h4>
+            <p>所以上一页那句「给我页码」不是可选项。</p></div></li>
+          <li><span class="n">3</span><div><h4>自己用的小工具随便做</h4>
+            <p>要给别人用、要收钱的产品，找专业的人。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <span class="eyebrow k-col-title">带走三句</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>翻译不只是语言</h4>
+            <p>图和文字、长和短、行话和大白话，都是翻译。</p></div></li>
+          <li><span class="n">2</span><div><h4>不会编程也能做小工具</h4>
+            <p>从一个自己用的小东西开始；报错就原样贴回去。</p></div></li>
+          <li><span class="n">3</span><div><h4>把长文档变成一问一答</h4>
+            <p>但一定要让它给出处和页码。</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="next-row" style="margin-top: 14px;">
+      <div>
+        <span class="eyebrow">下一站 · 前面两组你心里都清楚要什么。换一半：心里没底的时候怎么办</span>
+        <h3 style="margin: 6px 0 0;">03 · 创意启发 —— 卡住了，就撒一大网</h3>
+      </div>
+      <button class="btn" type="button" onclick="nextSlide()">下一章 →</button>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="03 创意启发" data-title="03 · 卡住了就撒一大网">
+    <div class="kicker">第 3 站 · 我卡住了，要点子 · 03 创意启发</div>
+    <h2 class="section-title">别让它给你「一个好点子」，<br>让它给你「一筐候选」，你来挑。</h2>
+    <p class="lead">一个人在那儿想，是在自己屋里翻箱倒柜；让它撒网，是去超市逛一圈。</p>
+
+    <div class="k-when">
+      <span>起标题起不出来</span>
+      <span>活动没主题</span>
+      <span>方向完全没头绪</span>
+    </div>
+
+    <div class="k-3col">
+      <div class="card" style="border-top:3px solid var(--clay);">
+        <span class="eyebrow">缺一不可 · 01</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">说清楚要几个</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.6;">「给我 10 个」，不要说「给我几个」。不给数量，它只会给你最保守的那一个。</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--olive);">
+        <span class="eyebrow">缺一不可 · 02</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">要求彼此差别大</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.6;">不明说，它给你 10 个同一个味道的。要写明「风格差别要大」。</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--sky);">
+        <span class="eyebrow">缺一不可 · 03</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">把背景说给它</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.6;">什么行业、多少人、什么场合。背景越具体，点子越有烟火气。</p>
+      </div>
+    </div>
+
+    <div class="prompt-box">
+      <div class="prompt-head">
+        <strong>撒网模板 · 填空就能用</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p03-net', this)">复制这段话</button>
+      </div>
+<pre><code id="p03-net">我要做 [任务 / 活动 / 内容]，背景是 [行业、人数、场合]。
+
+请给我 10 个方向完全不同的点子，每个包含：
+1. 名字；2. 一句话场景；3. 一个亮点动作。
+
+要求：10 个之间风格差别要大——温情、搞笑、高级感、反常识、跨界都可以，不要同质化。</code></pre>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="03 创意启发" data-title="03 · 换两招 + 边界 + 带走三句">
+    <div class="kicker">03 创意启发 · 收束</div>
+    <h2 class="section-title">它负责给候选，<br>你负责拍板。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">撒网还不够，就换两招</span>
+        <ul class="k-take">
+          <li><span class="n">A</span><div><h4>卡在细节，就先铺维度</h4>
+            <p>「先列出我该想清楚的 8 个方面，每个方面再给 5 个候选」，然后你自由组合。</p></div></li>
+          <li><span class="n">B</span><div><h4>想突破常规，就换个视角逼它</h4>
+            <p>换个行业的玩法搬过来 / 换个完全不同的人来想 / 先问「怎么做最糟」再反推。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <span class="eyebrow k-col-title">三条边界</span>
+        <ul class="k-bound">
+          <li><span class="n">1</span><div><h4>挑哪个、能不能落地，只有你知道</h4>
+            <p>决策权别交出去。</p></div></li>
+          <li><span class="n">2</span><div><h4>一轮就收工太亏</h4>
+            <p>好点子常常在第三轮才出来。</p></div></li>
+          <li><span class="n">3</span><div><h4>你要是已经有方向了，别用这一节</h4>
+            <p>那是「给规矩、出初稿」，回去用第 2 站那一套。</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="k-next"><span class="lb">带走三句</span><br>
+      <b>①</b> 撒网，不是求一个标准答案。&nbsp;&nbsp;
+      <b>②</b> 三要素：说清要几个、要求差别大、把背景说给它。&nbsp;&nbsp;
+      <b>③</b> 不满意就再问一轮，好点子是问出来的。</div>
+
+    <div class="next-row" style="margin-top: 12px;">
+      <div>
+        <span class="eyebrow">下一站 · 还有一种「说不清」：你知道想要什么感觉，但形容不出来</span>
+        <h3 style="margin: 6px 0 0;">05 · 模仿参考 —— 说不清楚的，直接给它看</h3>
+      </div>
+      <button class="btn" type="button" onclick="nextSlide()">下一章 →</button>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="05 模仿参考" data-title="05 · 说不清楚的，直接给它看">
+    <div class="kicker">第 3 站 · 我卡住了，要点子 · 05 模仿参考</div>
+    <h2 class="section-title">你形容半天的「那种感觉」，<br>不如直接把样本递给它。</h2>
+    <p class="lead">跟裁缝说「要有点文艺、不太甜、很自然」，他能做出一百种；直接递一件你喜欢的衣服过去，一次就对。</p>
+
+    <div class="k-3col">
+      <div class="card" style="border-top:3px solid var(--clay);">
+        <span class="eyebrow">用法 01</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">仿文字</h3>
+        <p style="margin:0 0 10px;font-size:14px;color:var(--muted);line-height:1.6;">想要某个人写东西的那个味道。</p>
+        <p style="margin:0;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14px;">「学这个语气和结构，写一篇关于 XX 的」</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--olive);">
+        <span class="eyebrow">用法 02</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">仿图</h3>
+        <p style="margin:0 0 10px;font-size:14px;color:var(--muted);line-height:1.6;">想要某张图的调子。</p>
+        <p style="margin:0;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14px;">「参考这张图的风格、颜色、氛围，画 XX」</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--sky);">
+        <span class="eyebrow">用法 03</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">仿格式</h3>
+        <p style="margin:0 0 10px;font-size:14px;color:var(--muted);line-height:1.6;">没写过这种文档，不知道该长什么样。</p>
+        <p style="margin:0;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14px;">「照这个结构写，内容换成 XX」</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="05 模仿参考" data-title="05 · 两步法">
+    <div class="kicker">05 模仿参考 · 本章唯一的方法</div>
+    <h2 class="section-title">一步问只学到皮毛，<br>分两步才学到骨头。</h2>
+
+    <div class="k-vs">
+      <div class="bad">
+        <div class="h">一步法 · 不好用<span class="k-eg">示例</span></div>
+        <div class="b">
+          <p class="say">用某某博主的风格，写一篇关于咖啡的。</p>
+          <p class="got">它只能<b>靠猜</b>。出来的东西「像，但不是」，而且下次还得重猜一遍，攒不下任何东西。</p>
+        </div>
+      </div>
+      <div class="good">
+        <div class="h">两步法 · 学到结构<span class="k-eg">示例</span></div>
+        <div class="b">
+          <p class="say"><b>第一步 · 先让它把风格说出来</b>：读下面这 3–5 段，提炼——句子长短什么特点、什么语气、怎么开头怎么收尾、常用哪些口头禅，最后<b>给这种风格起个名字</b>。</p>
+          <p class="say" style="margin-bottom:8px;"><b>第二步 · 再让它用这个名字写</b>：用刚才那个「城市散漫派」，写一篇关于「独自喝咖啡」的，内容全新，风格保持一致。</p>
+          <p class="got">起了名字之后<b>可以一直复用</b>——这就是你的风格档案。</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">挑 3–5 段好的，比塞 20 段杂的管用。样本质量决定它学到什么。</p>
+  </section>
+
+  <section class="slide shell" data-chapter="05 模仿参考" data-title="05 · 三条红线 + 带走三句">
+    <div class="kicker">05 模仿参考 · 收束 · 本章最重要的一页</div>
+    <h2 class="section-title">风格可以学，<br>句子不能抄。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">三条红线</span>
+        <ul class="k-bound">
+          <li><span class="n">1</span><div><h4>学风格可以，整段照搬不行</h4>
+            <p>就算改了几个字，也可能算侵权。</p></div></li>
+          <li><span class="n">2</span><div><h4>没授权的形象和品牌，不能拿去商用</h4>
+            <p>自己练手没问题；要拿去挣钱，当心。</p></div></li>
+          <li><span class="n">3</span><div><h4>风格是借来的，观点得是自己的</h4>
+            <p>别把仿来的内容说成「我的原创观点」。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <span class="eyebrow k-col-title">带走三句</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>说不清就直接给它看</h4>
+            <p>样本比形容管用。</p></div></li>
+          <li><span class="n">2</span><div><h4>两步法</h4>
+            <p>先让它把风格说出来并起个名字，再用这个名字写新内容。</p></div></li>
+          <li><span class="n">3</span><div><h4>最值得模仿的是你自己</h4>
+            <p>先建一版你的风格档案，以后有新作品再往里加。</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="prompt-box" style="margin-top:12px;">
+      <div class="prompt-head">
+        <strong>保命一句 · 防止它照抄原文</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p05-guard', this)">复制这段话</button>
+      </div>
+<pre><code id="p05-guard">请基于这个风格创作，但不要照抄原文中的任何一句话，所有句子都要是全新的表达。</code></pre>
+    </div>
+
+    <div class="next-row" style="margin-top: 12px;">
+      <div>
+        <span class="eyebrow">下一站 · 最后一组，也是我觉得最值钱的一组：你怕自己漏了什么的时候</span>
+        <h3 style="margin: 6px 0 0;">06 · 深思反问 —— 让它当那个会怼你的人</h3>
+      </div>
+      <button class="btn" type="button" onclick="nextSlide()">下一章 →</button>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="06 深思反问" data-title="06 · 让它当那个会怼你的人">
+    <div class="kicker">第 4 站 · 我怕自己漏了什么 · 06 深思反问</div>
+    <h2 class="section-title">大多数人是「我问它答」。<br>反过来用——「我说，它问我」。</h2>
+    <p class="lead">你写完方案给老板看，老板一路追问，问到你答不上来。让 AI 提前当一次这个老板。</p>
+
+    <div class="k-vs">
+      <div class="bad">
+        <div class="h">客气模式<span class="k-eg">示例</span></div>
+        <div class="b">
+          <p class="say">帮我看看我这个方案怎么样。</p>
+          <p class="got">「整体思路清晰，有几点建议：细化用户画像、考虑竞品、执行计划更详细。整体是个不错的开始！」<br><br><b>你感觉良好，一无所获。</b></p>
+        </div>
+      </div>
+      <div class="good">
+        <div class="h">质疑模式<span class="k-eg">示例</span></div>
+        <div class="b">
+          <p class="say">请扮演一个苛刻的投资人，狠狠质疑我这个方案，不要给面子。</p>
+          <p class="got">「你说用户有这个痛点——你访谈了几个真实用户？还是你自己猜的？」<br>「他们现在用什么替代方案？为什么会放弃那个来用你的？」<br><br><b>直接戳到软处。</b></p>
+        </div>
+      </div>
+    </div>
+
+    <p class="note">你不主动说「不要给面子」，它默认就是客气的。这是它的性格，不是它的水平。</p>
+  </section>
+
+  <section class="slide shell" data-chapter="06 深思反问" data-title="06 · 三种用法 + 三个触发词">
+    <div class="kicker">06 深思反问 · 记住三个词就够了</div>
+    <h2 class="section-title">狠狠质疑。不要给面子。出题考我。</h2>
+
+    <div class="k-3col">
+      <div class="card" style="border-top:3px solid var(--clay);">
+        <span class="eyebrow">用法 01 · 要做决定 / 要交方案 / 要上台讲</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">拷问你的想法</h3>
+        <p style="margin:0;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14px;line-height:1.6;">「请扮演一个苛刻的投资人 / 最挑剔的客户，从这几个角度质疑我，<b>不要给面子</b>。」</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--olive);">
+        <span class="eyebrow">用法 02 · 学完一个东西 / 准备面试答辩</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">出题考你</h3>
+        <p style="margin:0;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14px;line-height:1.6;">「<b>出 10 道题考我</b>，先出题，不要给答案。我答完一道，你再点评。」</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--sky);">
+        <span class="eyebrow">用法 03 · 要做重大决定</span>
+        <h3 style="margin:6px 0 8px;font-size:19px;">推演后果</h3>
+        <p style="margin:0;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14px;line-height:1.6;">「帮我推演这个决定：最好会怎样、最坏会怎样、最可能怎样、<b>最容易被忽视的坑</b>是什么、哪个节点最关键。」</p>
+      </div>
+    </div>
+
+    <p class="note">这三种都不是让它替你想，是<b>让它当一面镜子</b>。</p>
+  </section>
+
+  <section class="slide shell" data-chapter="06 深思反问" data-title="06 · 边界 + 带走三句">
+    <div class="kicker">06 深思反问 · 收束</div>
+    <h2 class="section-title">它照出盲区，<br>决定还是你做。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">三条边界</span>
+        <ul class="k-bound">
+          <li><span class="n">1</span><div><h4>推演不是算命</h4>
+            <p>它是把各种可能性摆出来给你看，不是预测未来。</p></div></li>
+          <li><span class="n">2</span><div><h4>「它问得我答不上来」</h4>
+            <p>那正是你的盲区，不是它在刁难你。</p></div></li>
+          <li><span class="n">3</span><div><h4>它不懂你的具体业务</h4>
+            <p>但大多数尖锐问题是通用的——「凭什么是你」「为什么是现在」放哪儿都成立。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <span class="eyebrow k-col-title">带走三句</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>AI 最大的价值不是给你答案</h4>
+            <p>是照出你的盲区。</p></div></li>
+          <li><span class="n">2</span><div><h4>三个触发词</h4>
+            <p>狠狠质疑、不要给面子、出题考我。</p></div></li>
+          <li><span class="n">3</span><div><h4>三种用法</h4>
+            <p>拷问方案 / 出题考我 / 推演后果。</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <details class="k-full">
+      <summary>多角色拷问模板（课后复制，现场不念）</summary>
+      <div class="fbody">
+        <div class="prompt-head" style="border:0;padding:0 0 8px;">
+          <strong>多角色拷问模板</strong>
+          <button class="btn btn-mini" type="button" onclick="copyPrompt('p06-roles', this)">复制这段话</button>
+        </div>
+<pre><code id="p06-roles">请同时扮演 4 个角色质疑我的方案，每个角色各出 3 个最尖锐的问题，不要给面子：
+① 苛刻的投资人：问怎么赚钱、能做多大、别人凭什么抄不走
+② 挑剔的用户：问体验、问我为什么要换掉现在用的、问我凭什么掏钱
+③ 竞争对手：问你跟我有什么不一样、我抄你最快要多久
+④ 管风险的：问这事有没有法律风险、数据怎么处理、政策变了怎么办
+
+方案是：[描述]</code></pre>
+      </div>
+    </details>
+
+    <div class="next-row" style="margin-top: 12px;">
+      <div>
+        <span class="eyebrow">下一站 · 还有一种「漏了什么」：一堆材料摆在面前，你不知道该看哪儿</span>
+        <h3 style="margin: 6px 0 0;">08 · 分析研究 —— 一堆材料，读出重点</h3>
+      </div>
+      <button class="btn" type="button" onclick="nextSlide()">下一章 →</button>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="08 分析研究" data-title="08 · 一堆材料，读出重点">
+    <div class="kicker">第 4 站 · 我怕自己漏了什么 · 08 分析研究</div>
+    <h2 class="section-title">分析说白了就是「找关系」。</h2>
+    <p class="lead">在话里找情绪和观点，在数字里找趋势和不对劲的地方。</p>
+
+    <div class="k-2col">
+      <div class="card" style="border-top:3px solid var(--olive);">
+        <span class="eyebrow">路 A · 一堆话</span>
+        <h3 style="margin:6px 0 10px;font-size:19px;">评论、留言、聊天记录、访谈</h3>
+        <p style="margin:0;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14.5px;line-height:1.65;">让它<b>按主题归堆</b>：每一堆给个名字、有多少条、附两条原话。<br>再问一句：最大的赞是什么？最大的痛是什么？</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--sky);">
+        <span class="eyebrow">路 B · 一张表</span>
+        <h3 style="margin:6px 0 10px;font-size:19px;">Excel、后台导出的数据</h3>
+        <p style="margin:0;padding:10px 12px;border-radius:10px;background:var(--surface);font-size:14.5px;line-height:1.65;">走右边那四步问。<br><b>让它自己跑一遍算给你看</b>，比让它「心算」靠谱得多。</p>
+      </div>
+    </div>
+
+    <div class="prompt-box" style="margin-top:14px;">
+      <div class="prompt-head">
+        <strong>四步问 · 照抄就能用</strong>
+        <button class="btn btn-mini" type="button" onclick="copyPrompt('p08-four', this)">复制这段话</button>
+      </div>
+<pre><code id="p08-four">1. 描述：最近这段时间，每个数大概什么走势？哪天变化最明显？
+2. 关联：这两个数是不是一起变的？
+3. 异常：有没有看着不对劲的地方？可能是什么原因？
+4. 建议：接下来一周，最该盯的 2-3 件事是什么？
+
+另外：请用代码计算并告诉我结果，不要估算。</code></pre>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="08 分析研究" data-title="08 · 边界 + 带走三句">
+    <div class="kicker">08 分析研究 · 收束</div>
+    <h2 class="section-title">它给的是「可能是什么」，<br>你来判断「真的是什么」。</h2>
+
+    <div class="k-2col">
+      <div>
+        <span class="eyebrow k-col-title">三条边界</span>
+        <ul class="k-bound">
+          <li><span class="n">1</span><div><h4>「一起变」不等于「谁导致谁」</h4>
+            <p>看到它说「A 导致 B」，先问一句：还有别的解释吗？</p></div></li>
+          <li><span class="n">2</span><div><h4>问到的人不代表所有人</h4>
+            <p>100 条评论里 80 条说好，不等于 80% 的人说好。不说话的才是大多数。</p></div></li>
+          <li><span class="n">3</span><div><h4>要传上去的材料先脱一层</h4>
+            <p>人名、手机号、公司机密，能删的删，能换的换。</p></div></li>
+        </ul>
+      </div>
+      <div>
+        <span class="eyebrow k-col-title">带走三句</span>
+        <ul class="k-take">
+          <li><span class="n">1</span><div><h4>分析就是找关系</h4>
+            <p>在话里找情绪和观点，在数字里找趋势和不对劲的地方。</p></div></li>
+          <li><span class="n">2</span><div><h4>四步问：描述 / 关联 / 异常 / 建议</h4>
+            <p>并且让它自己跑一遍算给你看，别让它心算。</p></div></li>
+          <li><span class="n">3</span><div><h4>关键数字必须自己核</h4>
+            <p>尤其是你要拿去做决定的那几个。</p></div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="k-next"><span class="lb">八个场景讲完了</span><br>
+      剩下几分钟，回答几个每次都会被问到的问题，然后给你一件今晚就能做的事。</div>
+  </section>
+
+  <section class="slide shell" data-chapter="收束" data-title="收束 · 每次都会被问到的四个问题">
+    <div class="kicker">收束 · 现场高频问题</div>
+    <h2 class="section-title">每次都会被问到的四个问题。</h2>
+
+    <div class="k-2col">
+      <div class="card">
+        <span class="eyebrow">Q1</span>
+        <h3 style="margin:4px 0 8px;font-size:19px;">怎么判断该用哪一招？</h3>
+        <p style="margin:0;font-size:14.5px;color:var(--muted);line-height:1.7;">回到开场那张图，问自己两句：我是要<b>读进来</b>还是<b>做出来</b>？我心里<b>清不清楚</b>要什么？两句一交叉就落到一个格子里，再从那两个场景挑一个。</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">Q2</span>
+        <h3 style="margin:4px 0 8px;font-size:19px;">答案不满意怎么办？</h3>
+        <p style="margin:0;font-size:14.5px;color:var(--muted);line-height:1.7;">按顺序查四件事：① 是不是用错了场景；② 那四句话有没有说全（最常漏的是「有什么要求」）；③ 要不要给它看个样子；④ 直接说「这段不对，因为 XX，重来一次」。</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">Q3</span>
+        <h3 style="margin:4px 0 8px;font-size:19px;">不会写提示词，能上手吗？</h3>
+        <p style="margin:0;font-size:14.5px;color:var(--muted);line-height:1.7;">能。就用今天那四句话：<b>我是谁 / 要你做什么 / 有什么要求 / 给你看个样子</b>。每句哪怕只填一行，也比「帮我写一篇文章」强得多。四句话用熟，比背一百个技巧管用。</p>
+      </div>
+      <div class="card">
+        <span class="eyebrow">Q4</span>
+        <h3 style="margin:4px 0 8px;font-size:19px;">用哪个 AI 好？</h3>
+        <p style="margin:0;font-size:14.5px;color:var(--muted);line-height:1.7;">大多数场景用哪个都够用。<b>先按任务挑，最后才比产品</b>：要处理的是文字、图、表格还是长文档？能不能传上去（涉不涉及个人信息和机密）？要不要联网、传文件、出图？各家功能随版本变，用之前自己确认。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide shell" data-chapter="收束" data-title="收束 · 带走三句话 + 今晚只做一件事">
+    <div class="kicker">全场收束</div>
+    <h2 class="section-title">带走这三句话。</h2>
+
+    <div class="k-3col">
+      <div class="card" style="border-top:3px solid var(--clay);">
+        <span class="eyebrow">01</span>
+        <h3 style="margin:4px 0 8px;font-size:19px;">判断先于开口</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.65;">遇到一件事，先问自己那两句，落到格子里，<b>再开口跟 AI 说话</b>。</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--olive);">
+        <span class="eyebrow">02</span>
+        <h3 style="margin:4px 0 8px;font-size:19px;">今天只试一个场景</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.65;">别想一口气全学会。挑今天<b>最痛的那一件</b>，用对应的那一招试 3 轮。</p>
+      </div>
+      <div class="card" style="border-top:3px solid var(--sky);">
+        <span class="eyebrow">03</span>
+        <h3 style="margin:4px 0 8px;font-size:19px;">串起来比单招强</h3>
+        <p style="margin:0;font-size:14px;color:var(--muted);line-height:1.65;">一个场景是<b>一招</b>；按固定顺序串起来就是<b>工作流</b>；让 AI 自己决定下一步做什么，才叫 <b>Agent</b>。</p>
+      </div>
+    </div>
+
+    <div class="k-action">
+      <span class="lb">今晚只做一件事</span>
+      <p>打开你常用的那个 AI，把你工作里<b>最烦、最重复、出错也不要紧</b>的一件小事，用今天那四句话说清楚，连着试 3 轮。<br>把第 1 轮和第 3 轮的结果留下来，对比一下。</p>
+    </div>
+  </section>
+</main>
+
+<!-- 浮动翻页 -->
+<nav class="deck-nav" aria-label="翻页">
+  <button type="button" onclick="prevSlide()" title="上一页（← / PgUp）">‹ 上一页</button>
+  <span class="counter"><span id="cur">1</span> / <span id="total">8</span></span>
+  <button type="button" onclick="nextSlide()" title="下一页（→ / PgDn / Space）">下一页 ›</button>
+</nav>
+
+<!-- 帮助蒙层 -->
+<div class="help" id="help" onclick="if(event.target===this)closeHelp()">
+  <div class="help-panel" role="dialog" aria-modal="true" aria-label="快捷键">
+    <h3>键盘快捷键</h3>
+    <div class="kb">
+      <code>← / PgUp</code><span>上一页</span>
+      <code>→ / PgDn / Space</code><span>下一页</span>
+      <code>Home / End</code><span>跳到首页 / 末页</span>
+      <code>T</code><span>切换明暗主题</span>
+      <code>1 - 8</code><span>直接跳到对应页</span>
+      <code>?</code><span>显示这个面板</span>
+      <code>Esc</code><span>关闭这个面板</span>
+    </div>
+    <div style="margin-top: 16px; text-align: right;">
+      <button class="btn btn-mini" type="button" onclick="closeHelp()">知道了</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const slides = Array.from(document.querySelectorAll('.slide'));
+const dotsBox = document.getElementById('dots');
+const curEl = document.getElementById('cur');
+const totalEl = document.getElementById('total');
+const counterText = document.getElementById('counter-text');
+let idx = 0;
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function renderDots() {
+  dotsBox.innerHTML = '';
+  slides.forEach((s, i) => {
+    const dot = document.createElement('i');
+    if (i === idx) dot.classList.add('active');
+    else if (i < idx) dot.classList.add('done');
+    if (i > 0 && s.dataset.chapter !== slides[i-1].dataset.chapter) dot.classList.add('chapter-start');
+    dot.title = (s.dataset.chapter ? s.dataset.chapter + ' · ' : '') + (s.dataset.title || ('第 ' + (i+1) + ' 屏'));
+    dot.addEventListener('click', () => goTo(i));
+    dotsBox.appendChild(dot);
+  });
+}
+function goTo(i) {
+  if (i < 0 || i >= slides.length) return;
+  slides[idx].classList.remove('active');
+  idx = i;
+  slides[idx].classList.add('active');
+  curEl.textContent = idx + 1;
+  totalEl.textContent = slides.length;
+  counterText.textContent = pad(idx+1) + ' / ' + pad(slides.length);
+  const chap = document.getElementById('chapter-label');
+  if (chap) chap.textContent = slides[idx].dataset.chapter || '';
+  renderDots();
+  window.scrollTo({ top: 0, behavior: 'instant' });
+}
+function nextSlide() { goTo(Math.min(idx + 1, slides.length - 1)); }
+function prevSlide() { goTo(Math.max(idx - 1, 0)); }
+
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || 'light';
+  const next = cur === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  try { localStorage.setItem('ai8-theme', next); } catch(e) {}
+}
+function openHelp()  { document.getElementById('help').classList.add('open'); }
+function closeHelp() { document.getElementById('help').classList.remove('open'); }
+
+function copyPrompt(id, btn) {
+  const node = document.getElementById(id);
+  if (!node) return;
+  navigator.clipboard.writeText(node.innerText).then(() => {
+    if (!btn) return;
+    const old = btn.innerText;
+    btn.innerText = '已复制 ✓';
+    setTimeout(() => btn.innerText = old, 1300);
+  });
+}
+
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('help').classList.contains('open')) {
+    if (e.key === 'Escape') closeHelp();
+    return;
+  }
+  // 输入框不响应
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch (e.key) {
+    case 'ArrowRight':
+    case 'PageDown':
+    case ' ':
+      e.preventDefault(); nextSlide(); break;
+    case 'ArrowLeft':
+    case 'PageUp':
+      e.preventDefault(); prevSlide(); break;
+    case 'Home': e.preventDefault(); goTo(0); break;
+    case 'End':  e.preventDefault(); goTo(slides.length - 1); break;
+    case 't': case 'T': toggleTheme(); break;
+    case '?': case '/': openHelp(); break;
+    default:
+      if (/^[1-9]$/.test(e.key)) {
+        const n = parseInt(e.key, 10) - 1;
+        if (n < slides.length) goTo(n);
+      }
+  }
+});
+
+// 初始化
+(function init() {
+  try {
+    const t = localStorage.getItem('ai8-theme');
+    if (t) document.documentElement.setAttribute('data-theme', t);
+  } catch(e) {}
+  renderDots();
+  totalEl.textContent = slides.length;
+  counterText.textContent = pad(1) + ' / ' + pad(slides.length);
+})();
+
+/* ==== AI8 STAGE v1 ==== */
+(function ai8Stage() {
+  // 舞台宽度固定 1440（内容 CSS 就是照这个宽度设计的），
+  // 高度跟着屏幕比例走，这样等比缩放后正好铺满屏幕，不留黑边。
+  var STAGE_W = 1440, MIN_H = 640, MAX_H = 1150, MIN_K = 0.62, CHROME = 49;
+  var stageH = 810;
+  var root = document.documentElement;
+  var report = [];
+  var panel = null;
+
+  function stageOn() { return window.matchMedia('(min-width: 921px)').matches; }
+  function budget() { return stageH - CHROME; }
+
+  function naturalHeight(el) {
+    var prev = el.style.height;
+    el.style.height = 'auto';
+    var h = el.offsetHeight;
+    el.style.height = prev;
+    return h;
+  }
+
+  // 非当前页需要临时可见才能量高度
+  function withVisible(el, fn) {
+    if (el.classList.contains('active')) return fn();
+    var s = el.style;
+    var keep = [s.visibility, s.position, s.left, s.right, s.top, s.pointerEvents];
+    s.visibility = 'hidden'; s.position = 'absolute';
+    s.left = '0'; s.right = '0'; s.top = '0'; s.pointerEvents = 'none';
+    el.classList.add('active');
+    var out = fn();
+    el.classList.remove('active');
+    s.visibility = keep[0]; s.position = keep[1]; s.left = keep[2];
+    s.right = keep[3]; s.top = keep[4]; s.pointerEvents = keep[5];
+    return out;
+  }
+
+  // 三级自适应：常规 -> 紧凑（只压空白）-> 整页缩放
+  function fitSlide(el) {
+    if (!el) return { level: '阅读', k: 1, h: 0 };
+    el.classList.remove('is-tight');
+    el.style.removeProperty('--fit');
+    if (!stageOn()) return { level: '阅读', k: 1, h: 0 };
+    var B = budget();
+    var h0 = withVisible(el, function () { return naturalHeight(el); });
+    if (h0 <= B + 1) return { level: '常规', k: 1, h: h0, budget: B };
+    el.classList.add('is-tight');
+    var h1 = withVisible(el, function () { return naturalHeight(el); });
+    if (h1 <= B + 1) return { level: '紧凑', k: 1, h: h0, tightH: h1, budget: B };
+    var k = Math.max(MIN_K, B / h1);
+    el.style.setProperty('--fit', k.toFixed(4));
+    return { level: '缩放', k: k, h: h0, tightH: h1, budget: B, clipped: (B / h1) < MIN_K };
+  }
+
+  // stage-on 常驻：它表示「增强版排版已接管」，
+  // 演示模式 / 阅读模式的切换交给媒体查询，否则窄屏下阅读模式样式会一起失效
+  function fitStage() {
+    root.classList.add('stage-on');
+    if (!stageOn()) {
+      root.style.setProperty('--stage-scale', '1');
+      return;
+    }
+    var vw = window.innerWidth, vh = window.innerHeight;
+    // 舞台高度 = 1440 按屏幕宽高比换算，缩放后正好铺满，无黑边。
+    // 只有比例极端（超宽 / 超方）时才夹到上下限，那时才会出现少量留白。
+    stageH = Math.max(MIN_H, Math.min(MAX_H, Math.round(STAGE_W * vh / vw)));
+    root.style.setProperty('--stage-h', stageH + 'px');
+    var s = Math.min(vw / STAGE_W, vh / stageH);
+    root.style.setProperty('--stage-scale', s.toFixed(5));
+  }
+
+  function fitAll() {
+    fitStage();
+    report = slides.map(function (s, i) {
+      var r = fitSlide(s);
+      r.n = i + 1;
+      r.title = s.dataset.title || '';
+      return r;
+    });
+    renderPanel();
+    return report;
+  }
+
+  function renderPanel() {
+    if (!panel) return;
+    var rows = report.map(function (r) {
+      return '<tr><td>' + r.n + '</td><td>' + r.title +
+        '</td><td class="lv-' + r.level + '">' + r.level +
+        (r.level === '缩放' ? ' ' + r.k.toFixed(2) + '×' : '') +
+        '</td><td>' + r.h + '</td></tr>';
+    }).join('');
+    panel.innerHTML = '<h4>一页一屏 · 落档情况（可用 ' + budget() + 'px）</h4>' +
+      '<table><tr><td>#</td><td>标题</td><td>档位</td><td>自然高</td></tr>' + rows + '</table>';
+  }
+
+  function ensurePanel() {
+    if (panel) return;
+    panel = document.createElement('div');
+    panel.className = 'ai8-fit-panel';
+    document.body.appendChild(panel);
+    renderPanel();
+  }
+
+  // 挂到翻页上：每次切页重新适配当前页
+  if (typeof goTo === 'function') {
+    var orig = goTo;
+    window.goTo = function (i) {
+      orig(i);
+      fitSlide(slides[idx]);
+    };
+  }
+
+  var t = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(t);
+    t = setTimeout(fitAll, 120);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'f' || e.key === 'F') {
+      ensurePanel();
+      panel.classList.toggle('open');
+    }
+  });
+
+  window.__ai8Fit = fitAll;
+  window.__ai8Report = function () { return report; };
+
+  fitAll();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(function () { fitAll(); });
+  }
+})();
+
+</script>
+</body>
+</html>
