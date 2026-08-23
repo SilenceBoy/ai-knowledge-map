@@ -3,8 +3,8 @@
 - 状态：待验证
 - 负责人：Codex
 - 创建时间：2026-08-23 16:31（Asia/Shanghai）
-- 最近更新：2026-08-23 17:19（Asia/Shanghai）
-- 关联全局任务：TASK-20260823-163130
+- 最近更新：2026-08-23 17:30（Asia/Shanghai）
+- 关联全局任务：TASK-20260823-163130、TASK-20260823-172553
 - 关联分支/提交：`main` / `9831082`
 - 验收人：人工
 
@@ -29,14 +29,15 @@
 - 已通过 5 个 Python 页面测试、`tests/test_serve_background.sh`、源/目标字节一致性检查和临时静态服务器 HTTP 200 访问检查。
 - 已提交 `9831082`（`feat: add my courses entry and AI scenarios course`），并以 fast-forward 合并到本地 `main`；未推送远端。
 - 合并后的 `main` 已复跑全部页面、服务、Playwright 筛选/移动端与字节一致性检查，均通过。
+- 已将课程发布目录重命名为`my-courses/`，首页入口同步改为英文 URL；中文页面标题保持不变。
 
 ## 正在进行
 
-等待人工在浏览器确认课程目录页和课件页的视觉展示。
+等待人工在浏览器确认英文 URL 的课程目录页和课件页视觉展示。
 
 ## 下一步
 
-1. 人工打开首页“我的课程”入口并确认视觉展示。
+1. 人工打开首页“我的课程”入口并确认英文 URL 与视觉展示。
 2. 人工打开课件并确认展示正常后，将任务标为“已完成”。
 
 ## 风险与阻塞
@@ -46,8 +47,8 @@
 
 ## 交付物
 
-- `我的课程/index.html`
-- `我的课程/ai_eight_use_scenarios_offline/index.html`
+- `my-courses/index.html`
+- `my-courses/ai_eight_use_scenarios_offline/index.html`
 - `index.html`
 - `tests/test_homepage_links.py`
 
@@ -57,3 +58,7 @@
 - GREEN：恢复目录页后运行`python3 tests/test_homepage_links.py`，通过；其余`test_homepage_tags.py`、`test_scene_navigation.py`、`test_ai_coding_client_perspective.py`、`test_growth_ppt_integration.py`与`tests/test_serve_background.sh`均通过。
 - 完整性：源/目标课件字节一致；临时静态服务器访问`/我的课程/`及`/我的课程/ai_eight_use_scenarios_offline/`均为 HTTP 200；`git diff --check`通过。
 - 合并验证：在`main`运行上述全部测试，并以 Bundled Node/Playwright 运行`tests/test_homepage_tag_filters.mjs`，均通过；`main`指向`9831082`。
+- 2026-08-23 17:25：用户确认将发布路径从`我的课程/`改为`my-courses/`，正在同步目录、首页链接和测试。
+- RED/GREEN（英文路径）：将入口测试改为期待`my-courses/`后，旧实现按预期报“英文入口或课程目录页缺失”；重命名目录并更新首页链接后，全部测试通过，且`我的课程/`已不存在。
+- 2026-08-23 17:29：用户已授权将英文发布路径调整提交到本地`main`，正在核对提交范围。
+- 2026-08-23 17:30：英文发布路径调整已提交到本地`main`；未推送远端，仍待人工视觉验收。

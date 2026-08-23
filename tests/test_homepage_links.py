@@ -61,10 +61,10 @@ def main() -> int:
     if missing or unexpected:
         return 1
 
-    courses_home = Path("我的课程/index.html")
-    course_file = Path("我的课程/ai_eight_use_scenarios_offline/index.html")
-    if "我的课程/" not in parser.all_hrefs or not courses_home.is_file():
-        print("首页“我的课程”入口或课程目录页缺失")
+    courses_home = Path("my-courses/index.html")
+    course_file = Path("my-courses/ai_eight_use_scenarios_offline/index.html")
+    if "my-courses/" not in parser.all_hrefs or not courses_home.is_file():
+        print("首页“我的课程”英文入口或课程目录页缺失")
         return 1
     if not course_file.is_file() or "ai_eight_use_scenarios_offline/index.html" not in courses_home.read_text(encoding="utf-8"):
         print("课程目录页缺少八个日常场景课件入口")
