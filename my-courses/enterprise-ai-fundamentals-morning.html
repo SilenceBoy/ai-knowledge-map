@@ -181,6 +181,15 @@ body.show-notes .note{display:block}
 .zone{position:fixed;top:0;bottom:0;width:16%;z-index:20;cursor:pointer}
 .zone.left{left:0}.zone.right{right:0}
 @media (max-width:760px){
+  html,body{height:auto;min-height:100%}
+  body{overflow-x:hidden;overflow-y:auto}
+  .deck{position:relative;inset:auto;display:block;min-height:100svh;padding-top:4px}
+  .slide{position:relative;inset:auto;min-height:100svh;height:auto;justify-content:flex-start;
+    padding:56px 20px calc(100px + env(safe-area-inset-bottom));transform:none;transition:opacity .2s ease}
+  .slide.active{transform:none}
+  .hud.tr{display:none}
+  .hud.br{right:14px;bottom:calc(12px + env(safe-area-inset-bottom));left:14px;justify-content:center}
+  .dots{display:none}
   .cards3,.cards2,.numbered.cols2{grid-template-columns:1fr}
   .flow .arrow{transform:rotate(90deg)}
   .zone,.hint{display:none}
@@ -1001,6 +1010,7 @@ body.show-notes .note{display:block}
     curEl.textContent = idx+1;
     progress.style.width = ((idx+1)/total*100) + '%';
     if(location.hash !== '#'+(idx+1)) history.replaceState(null,'','#'+(idx+1));
+    if(window.matchMedia('(max-width:760px)').matches) window.scrollTo(0,0);
   }
   function next(){
     var frags = slides[idx].querySelectorAll('.frag:not(.on)');
@@ -1029,13 +1039,17 @@ body.show-notes .note{display:block}
     else if(e.key==='n'||e.key==='N'){ toggleNotes(); }
   });
 
-  var x0=null;
-  document.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  var x0=null, y0=null;
+  document.addEventListener('touchstart', function(e){
+    x0 = e.touches[0].clientX;
+    y0 = e.touches[0].clientY;
+  }, {passive:true});
   document.addEventListener('touchend', function(e){
     if(x0===null) return;
     var dx = e.changedTouches[0].clientX - x0;
-    if(Math.abs(dx) > 45){ dx<0 ? next() : prev(); }
-    x0 = null;
+    var dy = e.changedTouches[0].clientY - y0;
+    if(Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)){ dx<0 ? next() : prev(); }
+    x0 = y0 = null;
   }, {passive:true});
 
   function toggleTheme(){
