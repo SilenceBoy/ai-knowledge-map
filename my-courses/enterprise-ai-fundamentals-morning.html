@@ -1,0 +1,1085 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="企业 AI 通识培训上午场课件：它是什么→什么活能给它→八种姿势→怎么说清楚→红线与接口，30 页，案例已全部填实">
+<title>企业AI通识培训·上午场·认识你的新同事</title>
+<style>
+:root{
+  color-scheme: light dark;
+  --bg:#faf8f5; --surface:#f0ede8; --surface-2:#fffdf9; --surface-3:#f6f2ec;
+  --text:#2c2825; --muted:#746d64; --border:#d4cfc7;
+  --clay:#d97757; --olive:#788c5d; --sky:#6a8caf; --violet:#8a6faf; --rose:#c66060; --gold:#c9a24a;
+  --ink:#141413;
+  --shadow:0 18px 60px rgba(44,40,37,.10);
+  --shadow-sm:0 6px 22px rgba(44,40,37,.08);
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+}
+[data-theme="dark"]{
+  --bg:#171615; --surface:#23211f; --surface-2:#2c2926; --surface-3:#201e1c;
+  --text:#f4efe8; --muted:#b8afa4; --border:#3a3733;
+  --shadow:0 18px 60px rgba(0,0,0,.45); --shadow-sm:0 6px 22px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:var(--sans); background:var(--bg); color:var(--text); overflow:hidden; -webkit-font-smoothing:antialiased;}
+.deck{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+.slide{position:absolute; inset:0; display:none; flex-direction:column; justify-content:center;
+  padding:clamp(24px,4.6vw,80px); opacity:0; transform:translateY(14px); transition:opacity .4s ease,transform .4s ease;}
+.slide.active{display:flex;opacity:1;transform:none}
+.slide-inner{width:100%;max-width:1100px;margin:0 auto}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:clamp(12px,1.3vw,15px);font-weight:600;
+  letter-spacing:.06em;color:var(--clay);text-transform:uppercase;margin-bottom:16px;}
+.kicker::before{content:"";width:26px;height:2px;background:var(--clay);border-radius:2px}
+h1{font-size:clamp(30px,5.4vw,68px);line-height:1.1;font-weight:800;letter-spacing:-.02em}
+h2{font-size:clamp(23px,3.4vw,42px);line-height:1.15;font-weight:800;letter-spacing:-.01em;margin-bottom:6px}
+.lead{font-size:clamp(15px,1.6vw,20px);color:var(--muted);line-height:1.6;margin-top:16px;max-width:52ch}
+.em{color:var(--clay);font-weight:700}
+.em-olive{color:var(--olive);font-weight:700}
+.em-sky{color:var(--sky);font-weight:700}
+.em-rose{color:var(--rose);font-weight:700}
+/* cover */
+.cover h1{font-size:clamp(34px,6.4vw,80px)}
+.cover .sub{margin-top:22px;font-size:clamp(16px,2vw,26px);color:var(--text);font-weight:600}
+.cover .tag{margin-top:13px;font-size:clamp(13px,1.5vw,18px);color:var(--muted)}
+.cover .badge{display:inline-block;margin-bottom:24px;padding:7px 16px;border-radius:999px;background:var(--surface);
+  border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:600;letter-spacing:.04em;}
+.cover .pill-row{margin-top:36px;display:flex;flex-wrap:wrap;gap:12px}
+.pill{padding:9px 16px;border-radius:12px;background:var(--surface);border:1px solid var(--border);font-size:clamp(13px,1.4vw,16px);font-weight:600;}
+.pill b{color:var(--clay)}
+/* flow */
+.flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin-top:30px}
+.flow .step{flex:1 1 0;min-width:110px;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:14px;padding:16px 14px;text-align:center;position:relative;box-shadow:var(--shadow-sm);}
+.flow .step .s-n{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.flow .step .s-t{font-weight:700;font-size:clamp(13px,1.4vw,16px);margin-top:6px;line-height:1.3}
+.flow .step.hot{background:var(--clay);border-color:var(--clay);color:#fff}
+.flow .step.hot .s-n,.flow .step.hot .s-t{color:#fff}
+.flow .arrow{display:flex;align-items:center;color:var(--border);font-size:20px}
+/* cards */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.cards2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:22px}
+.card{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:22px;box-shadow:var(--shadow-sm);}
+.card h3{font-size:clamp(16px,1.9vw,21px);font-weight:800;margin:0 0 8px;display:flex;align-items:center;gap:10px}
+.card p,.card li{font-size:clamp(13px,1.4vw,16px);color:var(--muted);line-height:1.55}
+.card .tagline{margin-top:10px;font-size:clamp(12px,1.3vw,14px);color:var(--text);font-weight:600}
+.card .tagline b{color:var(--clay)}
+.card ul{list-style:none;display:grid;gap:6px;margin-top:4px}
+.card li::before{content:"▸ ";color:var(--clay);font-weight:700}
+.tint-clay{border-top:3px solid var(--clay)} .tint-olive{border-top:3px solid var(--olive)}
+.tint-sky{border-top:3px solid var(--sky)} .tint-violet{border-top:3px solid var(--violet)}
+.tint-gold{border-top:3px solid var(--gold)} .tint-rose{border-top:3px solid var(--rose)}
+.card.full{grid-column:1 / -1}
+/* numbered */
+.numbered{display:grid;gap:13px;margin-top:22px}
+.numbered.cols2{grid-template-columns:1fr 1fr;gap:13px 26px}
+.row{display:flex;gap:15px;align-items:flex-start;background:var(--surface-2);border:1px solid var(--border);
+  border-radius:14px;padding:15px 19px;box-shadow:var(--shadow-sm)}
+.row .num{flex:none;width:36px;height:36px;border-radius:10px;background:var(--clay);color:#fff;
+  display:flex;align-items:center;justify-content:center;font-weight:800;font-family:var(--mono);}
+.row .num.rose{background:var(--rose)} .row .num.olive{background:var(--olive)} .row .num.sky{background:var(--sky)}
+.row .body .t{font-weight:700;font-size:clamp(15px,1.6vw,19px)}
+.row .body .d{color:var(--muted);font-size:clamp(13px,1.35vw,15px);margin-top:3px;line-height:1.5}
+/* code / copy box */
+.code-wrap{margin-top:22px;position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-sm)}
+.code-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+.code-bar .label{font-size:12.5px;font-weight:600;color:var(--muted);font-family:var(--mono)}
+.copy-btn{font-family:var(--sans);font-size:12px;font-weight:600;padding:5px 12px;border-radius:8px;
+  border:1px solid var(--border);background:var(--surface-2);color:var(--text);cursor:pointer;transition:.15s;white-space:nowrap}
+.copy-btn:hover{background:var(--clay);color:#fff;border-color:var(--clay)}
+pre{background:var(--ink);color:#e8e2d8;padding:18px 20px;overflow:auto;max-height:60vh;
+  font-family:var(--mono);font-size:clamp(11.5px,1.25vw,14.5px);line-height:1.6;white-space:pre-wrap}
+[data-theme="dark"] pre{background:#0d0c0b}
+pre.say{font-family:var(--sans);font-size:clamp(17px,2.4vw,28px);font-weight:700;line-height:1.6;padding:22px 24px}
+/* slogan */
+.slogan{margin-top:26px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;
+  padding:clamp(20px,3.5vw,36px);text-align:center;font-weight:800;font-size:clamp(20px,3.2vw,36px);box-shadow:var(--shadow-sm);letter-spacing:-.01em}
+/* timeline */
+.timeline{display:flex;flex-direction:column;gap:0;margin-top:20px}
+.tl-item{display:flex;gap:16px;align-items:stretch}
+.tl-left{flex:none;width:40px;text-align:right;padding-top:2px}
+.tl-left .min{font-family:var(--mono);font-weight:800;font-size:clamp(14px,1.7vw,19px);color:var(--clay)}
+.tl-mid{flex:none;display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:14px;height:14px;border-radius:50%;background:var(--clay);border:3px solid var(--bg);box-shadow:0 0 0 2px var(--clay);margin-top:5px}
+.tl-line{flex:1;width:2px;background:var(--border)}
+.tl-body{padding:0 0 16px;flex:1}
+.tl-body .t{font-weight:700;font-size:clamp(15px,1.6vw,19px)}
+.tl-body .d{color:var(--muted);font-size:clamp(12.5px,1.35vw,15px);margin-top:2px;line-height:1.45}
+.tl-item:last-child .tl-line{display:none}
+/* closing */
+.closing{text-align:center}
+.closing .quote{font-size:clamp(24px,4.2vw,52px);font-weight:800;line-height:1.35;letter-spacing:-.01em;max-width:22ch;margin:0 auto}
+.closing .sig{margin-top:30px;color:var(--muted);font-size:clamp(14px,1.6vw,19px);font-weight:600}
+.closing .roles{margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.closing .roles span{padding:8px 16px;border-radius:999px;background:var(--surface);border:1px solid var(--border);font-size:14px;font-weight:600}
+/* fragments (step reveal) */
+.frag{opacity:0;transform:translateY(8px);transition:opacity .35s ease,transform .35s ease}
+.frag.on{opacity:1;transform:none}
+/* tabs */
+.tabs{margin-top:22px}
+.tab-bar{display:flex;gap:8px;flex-wrap:wrap}
+.tab-btn{padding:8px 16px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--text);font-family:var(--sans);font-weight:600;cursor:pointer;font-size:14px;transition:.15s;box-shadow:var(--shadow-sm)}
+.tab-btn.active{background:var(--clay);color:#fff;border-color:var(--clay)}
+.tab-pane{display:none;margin-top:16px}
+.tab-pane.active{display:block}
+/* charts */
+.chart-wrap{margin-top:24px;background:var(--surface-2);border:1px solid var(--border);border-radius:16px;
+  padding:18px 20px;box-shadow:var(--shadow-sm)}
+.chart-wrap .c-title{font-size:14px;font-weight:700;margin-bottom:10px}
+.chart-wrap .c-src{font-size:11.5px;color:var(--muted);margin-top:8px;font-family:var(--mono)}
+.chart svg{width:100%;height:auto;display:block}
+.chart text{fill:var(--muted);font-size:12px;font-family:var(--mono)}
+.chart text.val{fill:var(--text);font-weight:700}
+.chart line.axis{stroke:var(--border);stroke-width:1}
+.chart .bar{fill:var(--clay);transition:opacity .15s}
+.chart .bar.b-olive{fill:var(--olive)} .chart .bar.b-sky{fill:var(--sky)}
+.chart .bar.b-rose{fill:var(--rose)} .chart .bar.b-gold{fill:var(--gold)} .chart .bar.b-violet{fill:var(--violet)}
+.chart .bar:hover{opacity:.75}
+.chart .ln{fill:none;stroke:var(--clay);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.chart .ln.l-sky{stroke:var(--sky)} .chart .ln.l-olive{stroke:var(--olive)}
+.chart .dot{fill:var(--clay);stroke:var(--bg);stroke-width:2}
+.chart .dot.d-sky{fill:var(--sky)} .chart .dot.d-olive{fill:var(--olive)}
+.chart .ring-bg{fill:none;stroke:var(--surface);stroke-width:22}
+.chart .ring{fill:none;stroke:var(--clay);stroke-width:22;stroke-linecap:round;transform:rotate(-90deg);transform-origin:center}
+.chart .ring.r-olive{stroke:var(--olive)} .chart .ring.r-sky{stroke:var(--sky)} .chart .ring.r-gold{stroke:var(--gold)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px}
+.legend span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted)}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.legend .k-clay{background:var(--clay)} .legend .k-olive{background:var(--olive)} .legend .k-sky{background:var(--sky)}
+.legend .k-rose{background:var(--rose)} .legend .k-gold{background:var(--gold)} .legend .k-violet{background:var(--violet)}
+/* speaker notes */
+.note{display:none;margin-top:24px;border:1.5px dashed var(--border);border-radius:14px;background:var(--surface-3);
+  padding:14px 18px;font-size:clamp(12.5px,1.3vw,15px);line-height:1.7;color:var(--text);max-width:72ch}
+.note .nlabel{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--clay);letter-spacing:.08em;display:block;margin-bottom:6px}
+.note .dir{color:var(--rose)}
+body.show-notes .note{display:block}
+/* chrome */
+.topbar{position:fixed;top:0;left:0;right:0;height:4px;background:var(--surface);z-index:40}
+.progress{height:100%;width:0;background:var(--clay);transition:width .35s ease}
+.hud{position:fixed;z-index:50;display:flex;align-items:center;gap:10px}
+.hud.br{right:22px;bottom:20px} .hud.tr{right:22px;top:18px}
+.nav-btn{width:42px;height:42px;border-radius:11px;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--text);cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);transition:.15s}
+.nav-btn:hover{background:var(--clay);color:#fff;border-color:var(--clay)}
+.counter{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--muted);background:var(--surface-2);
+  border:1px solid var(--border);border-radius:11px;padding:9px 13px;box-shadow:var(--shadow-sm)}
+.counter b{color:var(--clay)}
+.icon-btn{width:38px;height:38px;border-radius:10px;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--text);cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-sm);transition:.15s}
+.icon-btn:hover{background:var(--surface)}
+.icon-btn.on{background:var(--clay);color:#fff;border-color:var(--clay)}
+.dots{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:50;display:flex;gap:7px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:999px;padding:9px 13px;box-shadow:var(--shadow-sm);max-width:90vw;flex-wrap:wrap;justify-content:center}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--border);cursor:pointer;transition:.2s;border:none;padding:0}
+.dot.active{background:var(--clay);width:24px;border-radius:5px}
+.hint{position:fixed;left:22px;bottom:22px;z-index:50;color:var(--muted);font-size:12.5px;
+  background:var(--surface-2);border:1px solid var(--border);border-radius:9px;padding:7px 12px;box-shadow:var(--shadow-sm);opacity:.9}
+.hint kbd{font-family:var(--mono);background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:1px 6px;font-size:11px}
+.zone{position:fixed;top:0;bottom:0;width:16%;z-index:20;cursor:pointer}
+.zone.left{left:0}.zone.right{right:0}
+@media (max-width:760px){
+  .cards3,.cards2,.numbered.cols2{grid-template-columns:1fr}
+  .flow .arrow{transform:rotate(90deg)}
+  .zone,.hint{display:none}
+}
+@media print{
+  .hud,.dots,.hint,.zone,.topbar{display:none}
+  .slide{display:flex!important;opacity:1;position:relative;page-break-after:always;min-height:100vh}
+  .frag{opacity:1!important;transform:none!important}
+  .tab-pane{display:block!important}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="progress" id="progress"></div></div>
+
+<div class="deck" id="deck">
+
+<!-- SLIDES:START -->
+<!-- 01 封面 -->
+<section class="slide active cover">
+  <div class="slide-inner">
+    <span class="badge">企业 AI 通识培训 · 上午场 · 主讲 Bin</span>
+    <h1>认识你的<span class="em">新同事</span>：AI 能帮你干什么</h1>
+    <div class="sub">两小时，看懂它、判断它、指挥它——离场时你能说清：我这份工作里，哪些活可以交给 AI</div>
+    <div class="tag">它是什么 → 什么活能给它 → 八种姿势 → 怎么说清楚 → 红线与接口</div>
+    <div class="pill-row">
+      <span class="pill">⏱ 时长 <b>120 分钟</b></span>
+      <span class="pill">🧑‍💼 受众 <b>行政 · 财务 · 老板</b></span>
+      <span class="pill">🎁 带走 <b>「这活能不能给 AI」的判断</b></span>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 01</span>大家早上好，我是 Bin。今天只干一件事：搞清楚 AI 到底能帮你干什么、怎么让它干活不闯祸。上午我讲，下午分三组实操。座位上的自评表花一分钟勾一下——不是考试，是让你自己看清楚「我现在在哪儿」。<span class="dir">【开场前循环页，只说 30 秒】</span></div>
+  </div>
+</section>
+
+<!-- 02 自我介绍 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">开场 · 自我介绍 90 秒</span>
+    <h2>我是谁，为什么<span class="em">由我来讲</span></h2>
+    <div class="cards3">
+      <div class="card tint-sky">
+        <h3>👤 我是谁</h3>
+        <ul>
+          <li>前阿里巴巴本地生活 <b>技术经理</b></li>
+          <li><b>7000+ 小时</b> AI 共生实践</li>
+          <li>PMP 国际项目管理专业人士认证</li>
+          <li>讯飞星火 Prompt Engineer 提示词工程师认证</li>
+          <li>阿里达摩院 AI Agent 工程师认证</li>
+          <li>阿里 AIGC 高级设计认证</li>
+          <li>字节跳动 AI Coding 工程师认证</li>
+        </ul>
+      </div>
+      <div class="card tint-gold">
+        <h3>📦 我做过什么</h3>
+        <ul>
+          <li>交易系统：日订单 <b>1400 万</b> · 日 GTV <b>5 亿</b></li>
+          <li>政企交付：<b>17 个</b>异构系统集成</li>
+          <li>AI 实践 <b>7000+ 小时</b> · 1000+ 提示词模板 · 30+ 业务场景智能体</li>
+          <li>打通 <b>AI 全栈编程</b> 与 <b>AI 自媒体赋能</b> 的超级个体</li>
+        </ul>
+      </div>
+      <div class="card tint-olive">
+        <h3>🎯 今天我能给你什么</h3>
+        <p style="color:var(--text);font-weight:600">从基础开始——告诉你在<b>工作、生活、学习</b>里，AI 能用来做什么</p>
+        <ul>
+          <li>不教你背提示词——回去就忘</li>
+          <li>教你判断：哪些活能给 AI、哪些不能、哪些改一改就能</li>
+          <li>我的提效案例</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slogan">介绍下我的<span class="em">个人 AI 工作台</span></div>
+    <div class="note"><span class="nlabel">口播稿 · 02</span>我花 90 秒说清楚我是谁、为什么今天是我站在这儿。我是技术出身，在阿里巴巴本地生活做技术经理，带团队。<span class="dir">【认证五项让屏幕说，一句带过：「项目管理和 AI 方向的，这几年陆续考的」，不要逐个念】</span>我做过的系统，一天一千四百万单，一天五个亿的交易额——说这个不是炫耀，是想说明一件事：我知道一个系统要跑起来、不出错需要什么，这跟今天讲 AI 是一回事。这几年我七千多小时都花在 AI 上，不是研究它，是天天拿它干活。今天我从最基础的讲起：在工作、生活、学习里，AI 到底能用来做什么。我不教大家背提示词，那个回去就忘；我教你们判断哪些活能给它，中间会拿我自己的提效案例给你们看。<span class="dir">【转场，指屏幕下方那行字：「先花一分钟，给大家看看我自己每天在用的 AI 工作台长什么样。」】</span><span class="dir">【时间紧 30 秒版：我技术出身，在阿里做过技术经理，这几年七千多小时都在用 AI 干活。今天不教背提示词，教你判断哪些活能给 AI，顺带看几个我自己的提效案例。】</span></div>
+  </div>
+</section>
+
+<!-- 03 我的 AI 工作台 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">开场 · 我的 AI 工作台 60 秒</span>
+    <h2>介绍我的几个<span class="em">「员工」</span></h2>
+    <div class="cards2">
+      <div class="card tint-sky">
+        <h3>✍️ 内容 Agent<span style="font-weight:600;color:var(--muted);font-size:.8em">　Claude</span></h3>
+        <p>写文章、做课件、整理知识</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>💻 开发 Agent<span style="font-weight:600;color:var(--muted);font-size:.8em">　ChatGPT</span></h3>
+        <p>写代码、做工具、搭网站</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>📅 助理 Agent<span style="font-weight:600;color:var(--muted);font-size:.8em">　Hermes</span></h3>
+        <p>管日程、接闪念、处理日常琐事</p>
+      </div>
+      <div class="card tint-clay">
+        <h3>🧰 工作 Agent<span style="font-weight:600;color:var(--muted);font-size:.8em">　WorkBuddy</span></h3>
+        <p style="color:var(--text);font-weight:600">你们公司手上已经有的那一个</p>
+      </div>
+    </div>
+    <div class="slogan">都建在两个基础设施上：<span class="em">AI OS</span>（员工手册）＋ <span class="em">AI 知识库</span>（我们的资料）</div>
+    <div class="note"><span class="nlabel">口播稿 · 03</span><span class="dir">【一句一个，60 秒讲完，不展开怎么搭；有人问怎么搭，答「课后单聊」】</span>这就是我的工作台，我把它们当四个员工来管。内容 Agent 用 Claude，写文章、做课件；开发 Agent 用 ChatGPT，写代码、做工具；助理 Agent 叫 Hermes，管我的日程和琐事；工作 Agent，就是你们公司在用的 WorkBuddy。<span class="dir">【指第四张】</span>看到没有，你们手上已经有其中一个了——今天上午练的所有东西，在它上面都能用。下面这两条是地基：一个叫 AI OS，是我给这些员工写的「员工手册」，告诉它们我是谁、我要什么、活怎么干；另一个是 AI 知识库，是我这些年攒的资料，喂给它们，它们才知道「我们家的答案」。<span class="dir">【转场】</span>记住两个词就行：手册、资料。为什么非要它们，等下讲到第 11、12 页你们就明白了。</div>
+  </div>
+</section>
+
+<!-- 04 摸底三问＋今天的地图 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">开场 · 摸底＋地图 4 分钟</span>
+    <h2>先摸个底，再看今天的<span class="em">五件事</span></h2>
+    <p class="lead">三个问题，举手就行——看看这屋子里，大家走到哪一层了。</p>
+    <div class="numbered">
+      <div class="row frag"><div class="num sky">1</div><div class="body"><div class="t">用 AI 超过三个月的，请举手</div><div class="d">日常在用就算——哪怕只是问问题、改改文案</div></div></div>
+      <div class="row frag"><div class="num">2</div><div class="body"><div class="t">用 AI 创建过产品的，请举手</div><div class="d">一个工具、一个小程序、一套模板——能交出去的成品都算</div></div></div>
+      <div class="row frag"><div class="num olive">3</div><div class="body"><div class="t">用 AI 变现过的，请举手</div><div class="d">赚到过钱，或者省下的时间和成本被领导看见过——在公司里，这就是变现</div></div></div>
+    </div>
+    <div class="flow frag">
+      <div class="step"><div class="s-n">①</div><div class="s-t">它是什么</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="s-n">②</div><div class="s-t">什么活能给它</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="s-n">③</div><div class="s-t">八种姿势</div></div>
+      <div class="arrow">→</div>
+      <div class="step hot"><div class="s-n">④</div><div class="s-t">怎么说清楚</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="s-n">⑤</div><div class="s-t">红线与接口</div></div>
+    </div>
+    <p class="lead frag">换成带实习生的说法就是：<b>认识他 → 决定派什么活 → 知道他会哪几手 → 学会交代 → 守住纪律</b>。今天你不是学工具，是学当他的领导。</p>
+    <div class="note"><span class="nlabel">口播稿 · 04</span><span class="dir">【互动：三问逐个按 → 出，每问都数一下举手人数】</span>第一问，用 AI 超过三个月的请举手。第二问，用 AI 创建过产品的——一个工具、一个小程序、一套能交出去的模板。第三问，用 AI 变现过的。<span class="dir">【手会一层比一层少，没人举也不尴尬，那正是要的效果】</span>会用、做出东西、赚到钱，这是三个台阶，每上一层人就少一批。今天不聊第二第三层，先把第一层踩实——但你得知道楼梯往哪儿走。<span class="dir">【对老板补一句：在公司里，第三层的说法是「省下来的时间和成本被看见」】</span>接着看今天五件事：第四件是下午唯一必带技能；第五件是三条红线——哪些事不能交给它。只记住一个比喻：公司来了个实习生，后面全是怎么带他——<span class="dir">【指 flow 下那行】</span>认识他、派什么活、他会哪几手、怎么交代、守住纪律。今天你不是学工具，是学当他的领导。<span class="dir">【档位：若第二、三问举手超三分之一，说明这批人比预想靠前——环节①的接龙与幻觉部分加速，把时间还给第 27 页对比演示】</span></div>
+  </div>
+</section>
+
+<!-- 05 选择题 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">① 它是什么 · 一道选择题 2 分钟</span>
+    <h2>先做一道选择题：哪个活 <span class="em">AI 干得了</span>？</h2>
+    <p class="lead">不用举手，直接喊 A 或 B。凭直觉——找文件简单，写邮件难，对吧？</p>
+    <div class="cards2">
+      <div class="card tint-sky">
+        <h3>任务 A</h3>
+        <p style="color:var(--text);font-weight:600;font-size:1.05em">「帮我找一下我昨天保存的那份 PDF 报告在哪儿。」</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>任务 B</h3>
+        <p style="color:var(--text);font-weight:600;font-size:1.05em">「帮我写一封邀请同事参加周五分享会的邮件。」</p>
+      </div>
+    </div>
+    <div class="cards2 frag">
+      <div class="card tint-rose">
+        <h3>❌ A · 它完全干不了</h3>
+        <p><b>私有事实</b>——答案唯一、固定、只在你脑子里。它没见过你的电脑。</p>
+      </div>
+      <div class="card tint-olive">
+        <h3>✅ B · 它干得很好</h3>
+        <p><b>通用创建</b>——没有标准答案，有套路，全世界几亿封邀请邮件它都读过。</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>⚖️ 查条款版「任务 A」· 北京通州法院，2025</h3>
+        <p>一位律师让 AI 找支持己方的判例，AI 给了一个上海中院的案子——<b>案号是真的，内容是编的</b>，原案是一桩借贷纠纷。律师没核实就交给了法庭。法官把批评写进判决书，年底入选人民法院案例库。</p>
+        <p class="tagline">查制度、查政策、查判例、查文号——它给的「像真的」，行政和财务天天在干这类活</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>📢 写通知版 · 杭州「取消限行」，2023</h3>
+        <p>一位业主在群里用 ChatGPT 写了篇「杭州 3 月 1 日起取消限行」的通稿，<b>格式、口吻和真的一模一样</b>。邻居截图转发，全网刷屏，警方介入，业主道歉。</p>
+        <p class="tagline">它写得像，是本事也是风险——发出去，责任在人</p>
+      </div>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 05</span>先做道选择题，不用举手，直接喊。A，帮我找昨天存的那份 PDF；B，帮我写封邀请邮件。哪个 AI 干得了？<span class="dir">【等大家喊，多数喊 A】</span>直觉是找文件简单、写邮件难。事实正好相反：A 它完全干不了，B 它干得很好。<span class="dir">【按 → 出答案】</span>A 是「私有事实」，那份文件在哪儿只在你脑子里，它没见过；B 是「通用创建」，邀请邮件全世界几亿封它都读过，造一封通顺的就行。<span class="dir">【两个国内案例各 30 秒：通州法院律师提交 AI 编造判例、法官写进判决书；杭州业主用 ChatGPT 写「取消限行」假通稿、全网刷屏警方介入。国外可选加一件：加航客服机器人编丧亲票政策、法庭判公司赔。德勤那件留到第 24 页，别在这里用掉】</span>记住这个区分，今天上午所有内容都从这儿长出来。</div>
+  </div>
+</section>
+
+<!-- 06 文字接龙 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">① 它是什么 · 概念 2 分钟</span>
+    <h2>它只会一件事：<span class="em">猜下一个词</span></h2>
+    <div class="slogan">今天天气真 ＿＿</div>
+    <div class="flow">
+      <div class="step"><div class="s-n">好</div><div class="s-t">最像的下一个字</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="s-n">适合</div><div class="s-t">再接</div></div>
+      <div class="arrow">→</div>
+      <div class="step"><div class="s-n">出门</div><div class="s-t">再接</div></div>
+      <div class="arrow">→</div>
+      <div class="step hot"><div class="s-n">…</div><div class="s-t">几千次 ＝ 一份报告</div></div>
+    </div>
+    <p class="lead">把它想成一个疯狂背书、背了几万亿字的高中生——他没「理解」任何东西，但记住了什么字后面接什么字。它没有「查资料」这个动作，字典里只有一个动作：接下去。</p>
+    <div class="note"><span class="nlabel">口播稿 · 06</span>「今天天气真」，下一个字？<span class="dir">【等大家喊「好」】</span>你们刚才做的，就是 AI 唯一会做的事：猜下一个词。一份专业报告，本质是几千次接龙。把它想成一个疯狂背书、背了几万亿字的高中生——他没理解任何东西，但记住了什么字后面接什么字最常见。注意，它没有「查资料」这个动作。</div>
+  </div>
+</section>
+
+<!-- 07 金句 -->
+<section class="slide closing">
+  <div class="slide-inner">
+    <span class="kicker" style="justify-content:center;display:inline-flex">今天只记一句</span>
+    <div class="quote">AI 永远在回答「接下来该说什么词」，<br>而不是「<span class="em">什么是真的</span>」。</div>
+    <div class="sig">对它来说，「中国的首都是北京」不是一个事实，只是概率上最合理的一串字。</div>
+    <div class="note" style="margin:24px auto 0;text-align:left"><span class="nlabel">口播稿 · 07</span><span class="dir">【停 3 秒让大家读完】</span>它不是在骗你，它压根没有「真假」这个概念，只有「像不像」。你问它中国首都，它不是去查，是算出来「北京」接在后面概率最高。这一点刻进脑子里——后面它为什么会编、为什么张嘴就算会算错，根子都在这儿。</div>
+  </div>
+</section>
+
+<!-- 08 搜索 vs 生成 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">① 它是什么 · 对照 2 分钟（时间紧可压）</span>
+    <h2>搜索是<span class="em-olive">找现货</span>，AI 是<span class="em">当场织一件</span></h2>
+    <div class="cards2">
+      <div class="card tint-sky">
+        <h3>🔍 搜索引擎 · 去仓库找现货</h3>
+        <ul><li>网页本来就在，把原件递给你</li><li>擅长：查事实、查数据、查出处</li><li>风险：信息旧、混广告</li></ul>
+      </div>
+      <div class="card tint-clay">
+        <h3>🧶 AI · 当场织一件</h3>
+        <ul><li>看过全世界的毛衣，织一件「最像毛衣的毛衣」</li><li>它只追求一个指标：接在你的话后面<b>不违和</b></li><li>你让它「查」，它照样给你<b>织</b>一个——织得像，不代表有</li><li>擅长：起草、总结、改写、翻译、找思路</li></ul>
+      </div>
+    </div>
+    <div class="slogan">最危险的一刻：你以为它<span class="em-sky">去查了</span>，其实它<span class="em">当场织了一件</span></div>
+    <div class="note"><span class="nlabel">口播稿 · 08</span>搜索是去仓库找现货，原件递给你。AI 是当场织一件——又快又像，但没人保证是你要的那件。它整个工作过程只追求一个指标：接在你的话后面「不违和」。它擅长的活儿要的就是「织」，织得好就是好活。最危险的一刻是你去「查」的时候：你想要一件现成的，它没有，但它不会说没有——它当场织一件，织得跟真的一样。刚才那个律师就是这样，他以为它查到了判例，其实它是织出来的。<span class="dir">【时间紧：并入上页一句话】</span></div>
+  </div>
+</section>
+
+<!-- 09 幻觉三根因 + 实习生 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">① 它是什么 · 幻觉与实习生 3 分钟</span>
+    <h2>它为什么会编？三个根子——然后，<span class="em">实习生登场</span></h2>
+    <div class="numbered">
+      <div class="row"><div class="num rose">1</div><div class="body"><div class="t">每个字都是概率选的</div><div class="d">99% 对、1% 赌错——一千字的回答里，理论上就有十个字在赌</div></div></div>
+      <div class="row"><div class="num rose">2</div><div class="body"><div class="t">它没有「事实」这个概念</div><div class="d">只判断「听起来对不对」，不判断「是不是真的」</div></div></div>
+      <div class="row"><div class="num rose">3</div><div class="body"><div class="t">它被训练成「必须回答你」</div><div class="d">宁可编一个像样的，也不说「我不知道」——迎合你是它的本能</div></div></div>
+    </div>
+    <div class="cards2">
+      <div class="card tint-clay">
+        <h3>🧑‍💼 公司来了个实习生</h3>
+        <p>名校毕业、读遍天下书、手速快得吓人。就一个毛病：<b>爱面子，不知道也现编一个交差</b>。你会开除他吗？不会——你会学着带他：<b>责任你担、交代清楚、盯着改、然后信他能干</b>。</p>
+        <p class="tagline">从现在起，<b>你就是他的直属领导</b>——后面每一页，都是你要做的管理决定</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>🎓 那他是哪儿毕业的？</h3>
+        <p>你手机里那个「实习生」，是<b>哪家公司培养的</b>，性格就随谁——就像不同学校出来的人，做事风格不一样。</p>
+        <p class="tagline">下一页：六所「名校」，六种脾气</p>
+      </div>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 09</span>它为什么会编？三个根子。一，每个字都是概率选的，一千字里就有十个字在赌。二，它没有「事实」这个概念。三，最要命的：它被训练成必须回答你——宁可编一个像样的，也不说不知道，因为迎合你最讨好。这就是「它错得特别自信」的来源。那不用了？当然不是。想象公司来了个实习生……<span class="dir">【停顿：你会开除他吗？】</span>不会。你会学着带他，四件事：责任你担、交代清楚、盯着改、然后——信他能干。最后这条很多人做反了：每一步都不放心，反复打断，花在指挥它上的时间比自己干还长。<span class="dir">【转场，指第四张卡】</span>不过在带他之前，还得先搞清楚一件事：他是哪儿毕业的。</div>
+  </div>
+</section>
+
+<!-- 10 六所名校 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">① 它是什么 · 实习生的出身 2 分钟</span>
+    <h2>同样是「名校毕业」，<span class="em">六所学校，六种脾气</span></h2>
+    <div class="cards3">
+      <div class="card tint-sky">
+        <h3>🎈 豆包 <span style="font-weight:600;color:var(--muted);font-size:.8em">字节跳动</span></h3>
+        <p>最会聊天、最贴人，中文口语和热点梗最顺。<b>但也最爱迎合你</b>——想找人唱反调，别找它。</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>🧮 DeepSeek <span style="font-weight:600;color:var(--muted);font-size:.8em">深度求索</span></h3>
+        <p>量化团队出身，一水儿的理工脑子。讲道理、算逻辑、写代码强，便宜。<b>话不甜，但实在</b>。</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>📚 Kimi <span style="font-weight:600;color:var(--muted);font-size:.8em">月之暗面</span></h3>
+        <p>长文本起家。几十万字的报告、合同、标书扔进去还能找得准，<b>给的出处相对最实</b>。</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>⚖️ 通义千问 <span style="font-weight:600;color:var(--muted);font-size:.8em">阿里</span></h3>
+        <p>各项均衡、没有明显短板，开源生态最广，<b>企业里接得最多</b>——很多系统背后是它。</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>🏫 智谱 GLM <span style="font-weight:600;color:var(--muted);font-size:.8em">清华系</span></h3>
+        <p>学术出身，规矩、稳，出错少。文档和企业支持做得正经，<b>适合要「不出岔子」的场合</b>。</p>
+      </div>
+      <div class="card tint-sky">
+        <h3>💬 腾讯混元 <span style="font-weight:600;color:var(--muted);font-size:.8em">腾讯 · AI 小微</span></h3>
+        <p>强在<b>社交场</b>：微信里集成得最顺——读公众号、读视频号、看聊天记录和朋友圈、写朋友圈文案。<b>微信里的活找它</b>。</p>
+      </div>
+    </div>
+    <div class="slogan">同一个问题问三家，答案不一样——不是谁对谁错，是<span class="em">脾气不同</span></div>
+    <div class="note"><span class="nlabel">口播稿 · 10</span><span class="dir">【一句一个，别展开，别比高下；2 分钟讲完。时间紧：只念名字＋一句收束，60 秒】</span>「名校毕业」这四个字，说的是它背后是哪家公司训出来的——不同学校出来的人，做事风格不一样。豆包，字节的，最会聊天最贴人，中文口语和热点最顺，但它最爱迎合你，想找人唱反调别找它。DeepSeek，量化团队做的，一水儿理工脑子，讲道理、算逻辑、写代码强，还便宜，话不甜但实在。Kimi，月之暗面，长文本起家，几十万字的合同标书扔进去还能找得准，给的出处相对最实。通义千问，阿里的，各项均衡没短板，企业系统里接得最多。智谱，清华系，学术出身，规矩、稳、出错少。腾讯混元，腾讯的，强项是社交场——AI 小微在微信里集成得最顺，读公众号、读视频号、看聊天记录和朋友圈、写朋友圈文案。微信里的活找它。<span class="dir">【收束，回到 WorkBuddy】</span>同一个问题问三家，答案不一样——不是谁对谁错，是脾气不同。这些排位几个月一变，不用背；记住「它们有脾气」这件事就够了。你们公司选了 WorkBuddy，今天教的所有方法，在哪一家都能用。<span class="dir">【转场】</span>不过 WorkBuddy 跟前面这几个还不太一样——它不只是个对话框。这就是接下来两分钟要讲的：AI 有两种形态。<span class="dir">【若有人问「那我们该换哪个」：答「先把手上这个用透，换工具解决不了不会交代任务的问题」】</span></div>
+  </div>
+</section>
+
+<!-- 11 AI Chat -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">① 它是什么 · 两种形态之一 2 分钟</span>
+    <h2>对话框里的他：<span class="em">只动嘴，不动手</span></h2>
+    <p class="lead">行话叫 AI Chat。一个输入框，你问一句，它答一句——像发微信，一来一回。</p>
+    <div class="cards2">
+      <div class="card tint-sky">
+        <h3>💬 它只会「吐字」</h3>
+        <ul>
+          <li>答案停在对话框里</li>
+          <li>复制、粘贴、排版、存盘——<b>全是你的活</b></li>
+          <li>它给的是<b>一段字</b>，不是一份文件</li>
+        </ul>
+      </div>
+      <div class="card tint-rose">
+        <h3>🚫 它够不着你的东西</h3>
+        <ul>
+          <li>你的电脑、文件夹、系统，它<b>进不去</b></li>
+          <li>「把这 30 份报销单汇总成表」——<b>做不到</b>，它看不见那些单子</li>
+          <li>关掉窗口就清零，它<b>不记事</b>——<b>每个任务开个新窗口</b>，跑偏了直接重开</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slogan">Chat 给你<span class="em-sky">答案</span>，<span class="em">活还是你干</span></div>
+    <div class="note"><span class="nlabel">口播稿 · 11</span>大家现在手机上用的，绝大多数是这一种，行话叫 AI Chat——就一个对话框，你问一句，它答一句，跟发微信一样。它有两个天生的限制。第一，它只会吐字：你让它写通知，它给你一段文字，复制、粘贴到 Word、排版、发出去，全是你自己干。第二，它够不着你的东西——你电脑里的文件夹、公司的系统，它进不去。你说「把这 30 份报销单汇总成一张表」，它做不到，因为它压根看不见那 30 份单子。加上前面说的它不记事，关掉就清零——所以每个任务开个新窗口，这轮跑偏了直接重开，别在乱了的对话里挣扎；很多人以为「多聊几次它就懂我」，不会的，每次新对话都从零开始。<span class="dir">【收束】</span>所以 Chat 给你的是答案，活还是你干。</div>
+  </div>
+</section>
+
+<!-- 12 AI Agent -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">① 它是什么 · 两种形态之二 2 分钟</span>
+    <h2>Agent：<span class="em">长了手</span>的实习生</h2>
+    <p class="lead">第 3 页我说我那四个「员工」都叫 Agent——现在解释这个词。你交代的不是一个问题，是<b>一件事</b>。</p>
+    <div class="cards2">
+      <div class="card tint-clay">
+        <h3>🙌 它能动手</h3>
+        <ul>
+          <li>读你给的文件、翻资料、查系统</li>
+          <li>生成文件——表格、文档、图</li>
+          <li>跨软件操作，一步接一步</li>
+        </ul>
+      </div>
+      <div class="card tint-olive">
+        <h3>🔁 它自己转圈</h3>
+        <ul>
+          <li>你说目标，<b>它自己拆步骤</b></li>
+          <li>中间自己检查、发现不对会返工</li>
+          <li>交给你的是<b>成品</b>，不是一段字</li>
+        </ul>
+      </div>
+      <div class="card tint-sky full">
+        <h3>📊 同一件事，两种活法</h3>
+        <p style="color:var(--text);font-weight:600">「把这 30 份报销单汇总成表，按部门分类，超标的标出来」——Chat：做不到。Agent：读单子 → 归类 → 算 → 交给你一张表。</p>
+      </div>
+    </div>
+    <div class="slogan">Agent 给你<span class="em">结果</span></div>
+    <div class="note"><span class="nlabel">口播稿 · 12</span>另一种叫 Agent。第 3 页我说我那四个员工都叫 Agent，现在解释这个词——它跟对话框最大的区别是：<b>它长了手</b>。它能读你给的文件、能翻资料、能生成表格文档、能跨着几个软件一步步操作。而且你给它的是一件事，不是一个问题——你说目标，它自己拆步骤，中间自己检查，发现不对自己返工，最后交给你一个<b>成品</b>。同样那 30 份报销单：Chat 做不到；Agent 读单子、归类、算、给你一张表。<span class="dir">【收束】</span>Chat 给你答案，Agent 给你结果。</div>
+  </div>
+</section>
+
+<!-- 13 对比表 + WorkBuddy -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">① 它是什么 · 对照＋落点 2 分钟</span>
+    <h2>那你们手上的 <span class="em">WorkBuddy</span>，是哪一种？</h2>
+    <p class="lead">先看这两栏有什么不一样，再说答案。</p>
+    <div class="cards2">
+      <div class="card tint-sky">
+        <h3>💬 AI Chat · 对话框</h3>
+        <ul>
+          <li>你给它：<b>一个问题</b></li>
+          <li>它给你：<b>一段字</b></li>
+          <li>碰你的文件：<b>不能</b></li>
+          <li>跑腿的是：<b>你</b>（复制粘贴排版）</li>
+          <li>来回几次：<b>一问一答</b></li>
+          <li>错了：你看到再改，<b>没动东西</b></li>
+        </ul>
+      </div>
+      <div class="card tint-clay">
+        <h3>🤖 AI Agent · 干活的</h3>
+        <ul>
+          <li>你给它：<b>一件事</b></li>
+          <li>它给你：<b>一个成品</b></li>
+          <li>碰你的文件：<b>能</b>（你授权的范围）</li>
+          <li>跑腿的是：<b>它</b></li>
+          <li>来回几次：<b>它自己转好几圈</b></li>
+          <li>错了：<b>它已经动了东西</b>——代价更大</li>
+        </ul>
+      </div>
+      <div class="card tint-olive full">
+        <h3>🧰 下午你们要用的 WorkBuddy，就是 Agent</h3>
+        <p style="color:var(--text);font-weight:600">但注意：Agent 的脑子还是刚才那个实习生——一样会编、一样不记事、一样要你交代清楚。区别只是<b>他现在有手了</b>。</p>
+        <p class="tagline">给老板一句：AI 不是来替代员工的，是来<b>逼每个员工升级成管理者</b>——以后每人手里都有一支这样的队伍，管不管得好，产出差十倍</p>
+      </div>
+    </div>
+    <div class="slogan">有手的实习生，<span class="em-rose">交代不清楚的代价更大</span></div>
+    <div class="note"><span class="nlabel">口播稿 · 13</span><span class="dir">【逐行念左右对照，快，30 秒】</span>你给它什么：Chat 是一个问题，Agent 是一件事。它给你什么：一段字 vs 一个成品。能不能碰你的文件：不能 vs 能。谁跑腿：你 vs 它。几个来回：一问一答 vs 它自己转好几圈。错了怎么办：Chat 你看到再改，它没动过东西；Agent——它已经动了。<span class="dir">【落点，慢下来】</span>你们下午要用的 WorkBuddy，就是 Agent。但有一句话必须记住：<b>Agent 的脑子，还是刚才那个实习生</b>——一样会编、一样不记事、一样要你交代清楚。区别只是他现在有手了。所以今天上午讲的每一条，在它身上全都成立，而且更要紧——<b>有手的实习生，交代不清楚的代价更大</b>。<span class="dir">【对老板补一句：AI 不是来替代员工的，是来逼每个员工升级成管理者的——以后每人手里都有一支这样的队伍，管不管得好产出差十倍】</span><span class="dir">【转场】</span>光说没用——下一页我现场让它干一件给你们看。</div>
+  </div>
+</section>
+
+<!-- 14 Agent 现场演示 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">①b · 现场演示 6 分钟 · 锚点页</span>
+    <h2>现场看一次：派他<span class="em">整理一个文件夹</span></h2>
+    <div class="cards2">
+      <div class="card tint-rose">
+        <h3>📂 演示前：你也有这么一个文件夹吧</h3>
+        <ul>
+          <li>新建文件夹 / 新建文件夹(2)</li>
+          <li>文档1.docx、文档1-副本.docx</li>
+          <li>最终版.xlsx、最终版-真的最终版.xlsx</li>
+          <li>WechatIMG233.jpg ×20</li>
+        </ul>
+      </div>
+      <div class="card tint-clay">
+        <h3>🗣 我只说一句话</h3>
+        <p style="color:var(--text);font-weight:600">「把这个文件夹整理一下：按类型和日期分好，名字改成看得懂的，最后给我一份清单，说明哪个文件是什么。」</p>
+        <p class="tagline">然后我就不管了——剩下的它自己干</p>
+      </div>
+      <div class="card tint-olive full">
+        <h3>👀 请盯着三件事看</h3>
+        <p>① 它自己拆了<b>几步</b>？　② 中间有没有<b>自己发现不对、返工</b>？　③ 最后是<b>文件真的被整理了</b>，还是只给了一段「建议你按日期分类」？</p>
+      </div>
+    </div>
+    <div class="slogan">这件事<span class="em-rose">对话框一辈子干不了</span>——它碰不到你的文件</div>
+    <div class="note"><span class="nlabel">口播稿 · 14</span><span class="dir">【锚点页，永不压。⚠️ 必须用复制出来的样本文件夹演示，不要拿真实工作文件夹——它是真的会动文件的】</span>光说没用，现在让它干一件给大家看。<span class="dir">【指左卡】</span>这样的文件夹，在座各位电脑里有没有？<span class="dir">【等笑声／点头】</span>我只说一句话，然后就不管了。第一次派活给新实习生你会盯什么？盯三件事：它自己拆了几步、中间有没有返工、最后是文件真被整理了还是只给我一段建议。<span class="dir">【投屏，交代任务，回车】</span><span class="dir">【等待期别沉默：指着滚动的步骤实况解说「看，它在扫描；在按类型分；在改名字」；等太久就问「猜猜它下一步干什么」】</span><span class="dir">【出结果后】</span>三个问题：拆了几步？返工了吗？最后给的是什么？——不是一段建议，是<b>文件真的被挪了</b>。这件事对话框一辈子干不了，它碰不到你的文件。<span class="dir">【回环第 5 页】</span>还记得开头那道选择题吗？「帮我找我昨天存的那份 PDF」——Chat 干不了；但整理完之后，它能告诉你在哪儿了。<span class="dir">【落点】</span>下午你们要做的就是这件事，只不过换成你们自己手头的活。<span class="dir">【翻车预案：跑歪了照常讲「它也会失败，而且它已经动了文件——这就是为什么责任在你」，再放录屏。失败是更好的教学点，别慌】</span></div>
+  </div>
+</section>
+<!-- 15 能力边界 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">② 什么活能给它 · 概念 5 分钟</span>
+    <h2>这个实习生：<span class="em-olive">能干的</span> · <span class="em">给了工具能干的</span> · <span class="em-rose">真干不了的</span></h2>
+    <div class="cards3">
+      <div class="card tint-olive">
+        <h3>✅ 他能干 <span class="pill" style="padding:2px 8px;font-size:12px">对话框就行</span></h3>
+        <ul><li>起草、总结、改写、翻译、找思路</li><li>行政的一天：早上回邮件、上午写通知、下午整理会议纪要、临走把 30 页方案提炼成一页——<b>全是文字活</b></li><li>图、声音、视频对它也是「字」，一样能搞</li></ul>
+      </div>
+      <div class="card tint-sky">
+        <h3>🔧 给他工具就能干 <span class="pill" style="padding:2px 8px;font-size:12px">要 Agent</span></h3>
+        <p class="tagline" style="margin-top:0">以前说「AI 做不到」的，现在多半在这一栏</p>
+        <ul><li>只有你知道的事 → 把材料给他、让他接文件</li><li>实时信息 → 联网，但<b>必须二次核验</b>——它搜到的和你搜到的一样，前几条也是广告</li><li>算数 → 让他写公式、用表算，或让 Agent 跑一遍，<b>数你核</b></li><li>要 Excel／PPT 文件 → Agent 能出，拿到后核一遍</li></ul>
+      </div>
+      <div class="card tint-rose">
+        <h3>❌ 真干不了 <span class="pill" style="padding:2px 8px;font-size:12px">Chat、Agent 都一样</span></h3>
+        <ul><li><b>没记录下来的事，他不知道</b>——老板真正想要的、客户上次口头答应的、这事背后谁说了算：不落纸就等于不存在</li><li><b>要什么，他定不了</b>——三个方案和各自的风险他能给；「我们要哪个」是立场，不是计算</li><li><b>出了事，他担不了</b>——法律上他不是人，说的话不算数；签字的是你，被问责的也是你</li></ul>
+      </div>
+    </div>
+    <div class="slogan">他真干不了的三样，正好是<span class="em">你这个领导的活</span></div>
+    <div class="note"><span class="nlabel">口播稿 · 15</span>现在你是他领导了，第一件事：摸清他能干什么。<span class="dir">【左卡】</span>能干：所有文字类的活，对话框就行。<span class="dir">【中卡】</span>以前大家说 AI 做不到的三样——私有事实、实时信息、算数——现在都在这一栏：给材料、联网、写公式或让 Agent 跑，都能干，只是<b>数和事实你必须核</b>。别再说「AI 不能算数」，第 12 页刚看过它读三十份单子算出表。<span class="dir">【右卡，慢】</span>那真干不了的是什么？三样，Chat 和 Agent 都一样：没记录下来的事他不知道；要什么他定不了；出了事他担不了。<span class="dir">【落点】</span>这三样，正好是你这个领导的活——也是今天上午剩下的全部内容。</div>
+  </div>
+</section>
+
+<!-- 16 三连问 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">② 什么活能给它 · 三连问 6 分钟 · 锚点页</span>
+    <h2>派活给他之前，先问自己<span class="em">三个问题</span></h2>
+    <p class="lead">换成一个真人实习生，你心里过的也是这三关。</p>
+    <div class="numbered">
+      <div class="row frag"><div class="num">1</div><div class="body"><div class="t">答案在它的训练数据里吗？</div><div class="d">写通知的套路在；我们公司的制度不在。不在的——不给，或先喂材料</div></div></div>
+      <div class="row frag"><div class="num rose">2</div><div class="body"><div class="t">错了后果大吗？</div><div class="d">纪要错一句改一下就行；付款金额错一位……后果大的，人必须验收</div></div></div>
+      <div class="row frag"><div class="num sky">3</div><div class="body"><div class="t">标准答案唯一吗？</div><div class="d">写方案、想标语、拟备选——没有标准答案，<b>越发散越好</b>，直接给；对账、算税只有一个对的——<b>不是不能给，是不能让它「张嘴就算」</b>：让它写公式、用表格算，或者让 Agent 跑一遍，<b>数你必须核</b></div></div></div>
+    </div>
+    <div class="slogan frag">三栏：<span class="em-olive">直接给</span> · <span class="em">改造后给</span> · <span class="em-rose">不给</span>　——　<span class="em">活可以派，责任不能派</span></div>
+    <div class="note"><span class="nlabel">口播稿 · 16</span><span class="dir">【分步显现，按 → 逐条出】</span>问题一：答案在训练数据里吗。问题二：错了后果大吗。问题三：标准答案唯一吗。三问过完，任何活都落进三栏。<span class="dir">【落点】</span>你带真人实习生，心里过的也是这三关——不同的是他不会累、不会烦。结论一句：活可以派，责任不能派。<span class="dir">【锚点页，永不压；大字页可长停留】</span></div>
+  </div>
+</section>
+
+<!-- 17 三群体三栏 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">② 什么活能给它 · 落到岗位 6 分钟</span>
+    <h2>三种岗位，各自<span class="em">怎么派活</span></h2>
+    <p class="lead">「改造后给」是今天最值钱的一栏——大部分活不是不能给，是没改造。改造三招：给材料、给模板、让它出方案人拍板。</p>
+    <div class="tabs">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="tabAdmin">行政</button>
+        <button class="tab-btn" data-tab="tabFin">财务</button>
+        <button class="tab-btn" data-tab="tabBoss">老板</button>
+      </div>
+      <div class="tab-pane active" id="tabAdmin">
+        <div class="cards3">
+          <div class="card tint-olive"><h3>✅ 直接给</h3><p><b>录音／逐字稿 → 会议纪要＋待办表</b>（谁、做什么、几号前）<br><span class="pill" style="padding:2px 8px;font-size:12px">Chat 就够</span></p><p class="tagline">材料在你手上，没有标准答案，错了改一下就行</p></div>
+          <div class="card tint-clay"><h3>🔧 改造后给</h3><p>① <b>写通知／邮件</b>——先把上一版和模板喂给它 <span class="pill" style="padding:2px 8px;font-size:12px">Chat＋材料</span><br>② <b>回答「公司制度怎么规定」</b>——先把制度文件接进去 <span class="pill" style="padding:2px 8px;font-size:12px">要 Agent</span></p><p class="tagline">不接文件就问，就是第 5 页那个律师</p></div>
+          <div class="card tint-rose"><h3>❌ 不给</h3><p><b>替你决定</b>：这个假该不该批、这家供应商选哪个</p><p class="tagline">凭它一句话下结论、还要你担责的活</p></div>
+        </div>
+      </div>
+      <div class="tab-pane" id="tabFin">
+        <div class="cards3">
+          <div class="card tint-olive"><h3>✅ 直接给</h3><p><b>把「专业话」翻成人话</b>：一段付款条款、一条看不懂的 Excel 公式、一个科目口径<br><span class="pill" style="padding:2px 8px;font-size:12px">Chat 就够</span></p><p class="tagline">解释类，不是计算类</p></div>
+          <div class="card tint-clay"><h3>🔧 改造后给</h3><p>① <b>流水／发票与台账对账，标出差异</b> <span class="pill" style="padding:2px 8px;font-size:12px">要 Agent</span><br>② <b>费用明细汇总＋标异常</b> <span class="pill" style="padding:2px 8px;font-size:12px">要 Agent</span><br>③ <b>查税收政策文号</b>——给原文或接政策库 <span class="pill" style="padding:2px 8px;font-size:12px">要 Agent</span></p><p class="tagline">它跑腿，<b>数和结论你核</b>——这一栏是财务的主战场</p></div>
+          <div class="card tint-rose"><h3>❌ 不给</h3><p><b>「这笔款该不该付」「这么筹划税行不行」</b></p><p class="tagline">要担责的判断——付款、签合同这类环节，行业通行做法是<b>必须留人工确认</b></p></div>
+        </div>
+      </div>
+      <div class="tab-pane" id="tabBoss">
+        <div class="cards3">
+          <div class="card tint-olive"><h3>✅ 直接给</h3><p><b>拿你的方案让它挑刺</b>：找漏洞、提反对意见、问你没想过的问题<br><span class="pill" style="padding:2px 8px;font-size:12px">Chat 就够</span></p><p class="tagline">它最大的价值不是给答案，是照出盲区</p></div>
+          <div class="card tint-clay"><h3>🔧 改造后给</h3><p>① <b>竞品／行业情况</b>——联网＋逐条核验，或把资料喂给它 <span class="pill" style="padding:2px 8px;font-size:12px">Chat＋材料</span><br>② <b>几个部门的周报 → 一页管理简报</b> <span class="pill" style="padding:2px 8px;font-size:12px">要 Agent</span></p><p class="tagline">数据要核；文件要给它权限</p></div>
+          <div class="card tint-rose"><h3>❌ 不给</h3><p><b>替你拍板</b>：定战略、定人、定预算</p><p class="tagline">它可以给你三个方案和各自风险；<b>选哪个是你的活</b></p></div>
+        </div>
+      </div>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 17</span><span class="dir">【切标签逐群体讲；每格已标「Chat 就够／要 Agent」，讲的时候点一下】</span>每行先说直接给建立信心，再说不给划边界，重点讲改造后给。行政注意第二条：问「公司制度怎么规定」，不把制度文件接进去，就是第 5 页那个律师。财务的朋友会发现自己大量落在「改造后给」——不是 AI 对你没用，是你的岗位天生「错了后果大、标准答案唯一」，每一步都得配工具＋复核。真进「不给」那栏的很少，多半是凭它一句话就下结论的活，比如「这笔款该不该付」。下午专门练改造后给。</div>
+  </div>
+</section>
+
+<!-- 18 你手头的一件活 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">② 什么活能给它 · 互动 3 分钟</span>
+    <h2>想一件你这周手头的活，对同桌说：<span class="em">派不派给他</span></h2>
+    <div class="cards3">
+      <div class="card tint-olive"><h3>✅ 直接给</h3><p>为什么？</p></div>
+      <div class="card tint-clay"><h3>🔧 改造后给</h3><p>要补什么材料／模板？还是要接文件给 Agent？</p></div>
+      <div class="card tint-rose"><h3>❌ 不给</h3><p>三连问哪一问卡住了？</p></div>
+    </div>
+    <p class="lead">一人一分钟。有分歧的记下来，下午小组里吵。</p>
+    <div class="note"><span class="nlabel">口播稿 · 18</span><span class="dir">【互动：同桌互说；巡场抓两个分歧项留到下午】</span>问法就一句：这件活，你派不派给他？派，为什么；不派，卡在哪一问。这是上午唯一一次学员开口，别急着往下赶；抓到的分歧当场不裁决，留给下午小组。</div>
+  </div>
+</section>
+
+<!-- 19 休息 -->
+<section class="slide closing">
+  <div class="slide-inner">
+    <span class="kicker" style="justify-content:center;display:inline-flex">休息 10 分钟</span>
+    <div class="quote">回来讲它的<span class="em">八种用法</span>，<br>以及你的岗位在哪两格。</div>
+    <div class="sig">有问题现在可以来找我聊</div>
+    <div class="note" style="margin:24px auto 0;text-align:left"><span class="nlabel">口播稿 · 19</span><span class="dir">【停留本页；巡场听问题，记下老板问的东西】</span></div>
+  </div>
+</section>
+
+<!-- 20 四象限 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">③ 八种姿势 · 地图 3 分钟（本环节开场 1 分钟内必到此页）</span>
+    <h2>四个格子，装下他的<span class="em">八项本事</span></h2>
+    <div class="chart-wrap chart" style="margin-top:16px">
+      <svg viewBox="0 0 720 452" role="img" aria-label="AI 八种使用模式四象限图：横轴拿信息与出内容，纵轴目标明确与目标模糊">
+        <rect x="70" y="44" width="270" height="152" rx="14" fill="var(--surface-3)" stroke="var(--sky)" stroke-width="2"/>
+        <rect x="380" y="44" width="270" height="152" rx="14" fill="var(--surface-3)" stroke="var(--clay)" stroke-width="2"/>
+        <rect x="70" y="244" width="270" height="152" rx="14" fill="var(--surface-3)" stroke="var(--violet)" stroke-width="2"/>
+        <rect x="380" y="244" width="270" height="152" rx="14" fill="var(--surface-3)" stroke="var(--gold)" stroke-width="2"/>
+
+        <line x1="360" y1="30" x2="360" y2="410" stroke="var(--border)" stroke-width="2"/>
+        <line x1="50" y1="220" x2="670" y2="220" stroke="var(--border)" stroke-width="2"/>
+
+        <text x="360" y="20" text-anchor="middle" style="font-size:17px;font-weight:800;fill:var(--clay)">目标明确</text>
+        <text x="360" y="440" text-anchor="middle" style="font-size:17px;font-weight:800;fill:var(--clay)">目标模糊</text>
+        <text x="52" y="212" text-anchor="start" style="font-size:17px;font-weight:800;fill:var(--clay)">拿信息</text>
+        <text x="668" y="212" text-anchor="end" style="font-size:17px;font-weight:800;fill:var(--clay)">出内容</text>
+
+        <text x="205" y="94" text-anchor="middle" style="font-size:23px;font-weight:800;fill:var(--text)">提问学习 · 总结整合</text>
+        <text x="205" y="130" text-anchor="middle" style="font-size:15px;fill:var(--muted)">材料在手上，我要一个结果</text>
+        <text x="205" y="166" text-anchor="middle" style="font-size:14px;font-weight:700;fill:var(--sky)">行政最常待的一格</text>
+
+        <text x="515" y="94" text-anchor="middle" style="font-size:23px;font-weight:800;fill:var(--text)">创作生成 · 翻译转化</text>
+        <text x="515" y="130" text-anchor="middle" style="font-size:15px;fill:var(--muted)">我知道要什么，让它写、让它翻</text>
+        <text x="515" y="166" text-anchor="middle" style="font-size:14px;font-weight:700;fill:var(--clay)">行政 · 财务</text>
+
+        <text x="205" y="294" text-anchor="middle" style="font-size:23px;font-weight:800;fill:var(--text)">深思反问 · 分析研究</text>
+        <text x="205" y="330" text-anchor="middle" style="font-size:15px;fill:var(--muted)">我不知道问题在哪，让它照出来</text>
+        <text x="205" y="366" text-anchor="middle" style="font-size:14px;font-weight:700;fill:var(--violet)">老板 · 财务</text>
+
+        <text x="515" y="294" text-anchor="middle" style="font-size:23px;font-weight:800;fill:var(--text)">创意启发 · 模仿参考</text>
+        <text x="515" y="330" text-anchor="middle" style="font-size:15px;fill:var(--muted)">我说不清要什么，让它先给几个</text>
+        <text x="515" y="366" text-anchor="middle" style="font-size:14px;font-weight:700;fill:var(--gold)">老板</text>
+      </svg>
+      <div class="c-src">横轴：你是想从它那「拿信息」，还是让它「出内容」　·　纵轴：你的目标明确，还是说不清</div>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 20</span>前面说「文字类的活」太粗，具体到八种用法，先看这张图。<span class="dir">【先只讲两根轴，别急着念八个名字】</span>横轴：你是想从它那儿<b>拿信息</b>，还是让它<b>出内容</b>。纵轴：你的目标是<b>明确</b>的，还是自己也说不清。两根轴一交叉，四个格子，八种用法全在里面。<span class="dir">【再逐格一句】</span>左上，材料在你手上、要个结果——行政最常待这儿；右上，你知道要什么，让它写让它翻；左下，你不知道问题在哪，让它照出来；右下，你说不清要什么，让它先给你几个。<span class="dir">【收束】</span>今天不要求记八个，<b>只要求你认出自己岗位在哪两格</b>。<span class="dir">【0523 教训：这张图上一场直到三小时后才出现，本场必须在环节开场 1 分钟内出图】</span></div>
+  </div>
+</section>
+
+<!-- 21 八种姿势总览 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">③ 八种姿势 · 总览 3 分钟（排期内跳过，只念名字）</span>
+    <h2>八个抽屉，不是八个工具</h2>
+    <div class="numbered">
+      <div class="row"><div class="num sky">1</div><div class="body"><div class="t">提问学习 · 总结整合</div><div class="d">它当老师、当信息小秘书</div></div></div>
+      <div class="row"><div class="num">2</div><div class="body"><div class="t">创作生成 · 翻译转化</div><div class="d">它当按规则干活的写手、万能翻译机</div></div></div>
+      <div class="row"><div class="num">3</div><div class="body"><div class="t">深思反问 · 分析研究</div><div class="d">它当会质疑你的导师、懂数据的分析师</div></div></div>
+      <div class="row"><div class="num">4</div><div class="body"><div class="t">创意启发 · 模仿参考</div><div class="d">它当灵感发动机、会抄作业的高手</div></div></div>
+    </div>
+    <div class="slogan">练的不是提示词，是<span class="em">雷达</span>——让「这事可以喊他」比「我自己干吧」早一秒冒出来</div>
+    <div class="note"><span class="nlabel">口播稿 · 21</span>八个不是八个工具，是脑子里八个抽屉。今天练的是雷达。下面每个岗位挑两个讲透。<span class="dir">【时间紧：只念名字】</span></div>
+  </div>
+</section>
+
+<!-- 22 行政 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">③ 八种姿势 · 行政的两格 6 分钟</span>
+    <h2>行政派给他的两件活：<span class="em">总结整合</span> 与 <span class="em">创作生成</span></h2>
+    <div class="cards2">
+      <div class="card tint-sky">
+        <h3>📋 总结整合 · 信息小秘书 <span class="pill" style="padding:2px 8px;font-size:12px">Chat 就够</span></h3>
+        <p><b>怎么做</b>：一小时会议的录音或逐字稿丢进去 →「出三段：会议总结、分段纪要、<b>待办表</b>（谁·做什么·几号前）」</p>
+        <p class="tagline">用飞书妙记／通义听悟这类，这三段是内置的，待办还能<b>一键转成任务派给责任人</b></p>
+        <p class="tagline" style="color:var(--muted)">边界：材料在你手上才行；它没参加的会，别让它「回忆」</p>
+      </div>
+      <div class="card tint-clay">
+        <h3>✍️ 创作生成 · 按规则干活的写手 <span class="pill" style="padding:2px 8px;font-size:12px">Chat＋材料</span></h3>
+        <p><b>怎么做</b>：把<b>上一版通知</b>＋这次要改的三件事一起给它 →「照上一版的结构和口吻改成这次的，300 字内，末尾附一行『疑问联系 XX』」</p>
+        <p class="tagline">不给上一版，它只能给你「全世界通知的平均长相」</p>
+        <p class="tagline" style="color:var(--muted)">边界：有套路的文体最稳；<b>对外正式发文，人必须定稿</b>——第 5 页那份「取消限行」通稿就是没人定稿</p>
+      </div>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 22</span>行政两格。第一格总结整合：录音丢进去，出总结、分段纪要、待办表——谁、做什么、几号前。用飞书妙记通义听悟这类，这三段是内置的，待办还能一键转成任务派给人。边界：材料得在你手上，它没参加的会别让它回忆。第二格创作生成：写通知别只说「帮我写个通知」，<b>把上一版给它</b>，说照这个结构和口吻改。不给上一版，它只能给你全世界通知的平均长相。边界：对外正式发文人必须定稿——第 5 页那份取消限行的通稿，就是没人定稿。<span class="dir">【为第 27 页埋线】</span>等下我现场写一份通知，两种写法，你们看差别。</div>
+  </div>
+</section>
+
+<!-- 23 财务 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">③ 八种姿势 · 财务的两格 6 分钟</span>
+    <h2>财务派给他的两件活：<span class="em">翻译转化</span> 与 <span class="em">分析研究</span></h2>
+    <div class="cards2">
+      <div class="card tint-sky">
+        <h3>🔁 翻译转化 · 万能翻译机 <span class="pill" style="padding:2px 8px;font-size:12px">Chat 就够</span></h3>
+        <p><b>怎么做</b>：把一段付款条款、或一条看不懂的 Excel 公式贴进去 →「<b>用大白话解释一遍，再举一个带具体数字的例子</b>」</p>
+        <p class="tagline">「再举个带数字的例子」这半句是关键——没有它，你拿到的还是一段术语</p>
+        <p class="tagline" style="color:var(--muted)">边界：解释可以；<b>别让它替你判断这条款该不该签</b></p>
+      </div>
+      <div class="card tint-violet">
+        <h3>🔎 分析研究 · 只给线索不给结论 <span class="pill" style="padding:2px 8px;font-size:12px">要 Agent</span></h3>
+        <p><b>怎么做</b>：把<b>脱敏</b>的费用明细表交给它 →「按部门汇总，标出超标的和疑似重复报销的，出一张表」</p>
+        <p class="tagline">它靠<b>写代码在沙箱里算</b>，不是「张嘴算」——这就是第 16 页说的「配工具能做」</p>
+        <p class="tagline" style="color:var(--muted)">边界：它给线索，<b>数和结论你核</b>；真表要脱敏</p>
+      </div>
+    </div>
+    <div class="slogan">它可以帮你<span class="em-olive">看</span>，不能替你<span class="em-rose">签字</span></div>
+    <div class="note"><span class="nlabel">口播稿 · 23</span>财务两格。翻译转化：付款条款、看不懂的公式，贴进去让它用大白话解释——<b>注意后半句「再举个带具体数字的例子」</b>，没这半句你拿到的还是一段术语。边界：解释可以，别让它判断这条款该不该签。分析研究：脱敏的费用明细交给它，按部门汇总、标出超标和疑似重复报销。<span class="dir">【回指第 16 页】</span>它是靠写代码在沙箱里算的，不是张嘴算——这就是「配工具能做」的意思。边界：它给线索，数和结论你核。<span class="dir">【收束】</span>财务这一栏记一句：它可以帮你看，不能替你签字。</div>
+  </div>
+</section>
+
+<!-- 24 老板 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">③ 八种姿势 · 老板的两格 6 分钟</span>
+    <h2>老板派给他的两件活：<span class="em">深思反问</span> 与 <span class="em">提问学习</span></h2>
+    <div class="cards2">
+      <div class="card tint-violet">
+        <h3>🪞 深思反问 · 会质疑你的导师 <span class="pill" style="padding:2px 8px;font-size:12px">Chat 就够</span></h3>
+        <p><b>怎么做</b>：把你的方案贴进去 →「<b>你是一位持反对意见的董事</b>，找出三个最可能让这个方案失败的地方，每条说清为什么」</p>
+        <p class="tagline">必须明说「唱反调」——不然它会顺着你夸，尤其第 10 页说的那几个爱迎合的</p>
+        <p class="tagline" style="color:var(--muted)">边界：让它挑刺可以，<b>别让它替你拍板</b></p>
+      </div>
+      <div class="card tint-sky">
+        <h3>🎓 提问学习 · 进陌生领域 <span class="pill" style="padding:2px 8px;font-size:12px">要 Agent</span></h3>
+        <p><b>怎么做</b>：用「<b>深度研究</b>」这类模式（多步检索＋比对＋带引用）→ 先说清决策目标、限定范围、<b>指定只搜可信来源</b>，最后<b>逐条点开引用核一遍</b></p>
+        <p class="tagline">2026 年 2 月起，这类工具已支持<b>把搜索限定在你信任的站点</b></p>
+        <p class="tagline" style="color:var(--muted)">边界：核心不是「让 AI 替我研究」，是建立一条<b>能核验的研究链</b>——定目标、限范围、指来源、验引用、留白未知</p>
+      </div>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 24</span>老板两格。深思反问：把方案贴进去，让它当<b>持反对意见的董事</b>，找三个最可能失败的地方。注意「唱反调」这四个字必须明说——不然它会顺着你夸，尤其是第 10 页说的那几个爱迎合的。边界：挑刺可以，别让它拍板。提问学习：进一个陌生领域，用「深度研究」这类模式——它会多步检索、比对、给引用；2026 年 2 月起还能限定只搜你信任的站点。但<b>关键不是让它替你研究</b>，是建立一条能核验的研究链：定目标、限范围、指来源、<b>逐条验引用</b>、不知道的留白。<span class="dir">【案例 30 秒，就在这里讲完，不留到后面】</span>不验引用会怎样？2025 年 10 月，德勤澳大利亚给澳大利亚政府做的一份 44 万澳元的报告，已经挂上部门官网，被一位大学研究者查出来：里面引的法院判决原话、好几篇参考文献，是 AI 编的，根本不存在。德勤承认用了大模型，修订报告、退还部分费用。不是实习生犯错，是德勤。</div>
+  </div>
+</section>
+
+<!-- 25 收束 -->
+<section class="slide closing">
+  <div class="slide-inner">
+    <span class="kicker" style="justify-content:center;display:inline-flex">③ 收束（时间紧可压）</span>
+    <div class="quote">「他能干」和「该派给他」是两回事。<br>派不派、怎么派，永远是<span class="em">你这个领导</span>的活。</div>
+    <div class="sig">你已经认领了自己岗位的两格</div>
+    <div class="note" style="margin:24px auto 0;text-align:left"><span class="nlabel">口播稿 · 25</span>八种姿势，每人认领两格。记住：他能干和该派给他是两回事——派不派，是你这个领导的活。<span class="dir">【时间紧可压】</span></div>
+  </div>
+</section>
+
+<!-- 26 五要素 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">④ 怎么说清楚 · 概念 5 分钟</span>
+    <h2>怎么给实习生交代任务：<span class="em">五要素</span></h2>
+    <div class="cards2">
+      <div class="card tint-sky">
+        <h3>对干了十年的老员工说</h3>
+        <p style="color:var(--text);font-weight:600">「你去研究一下竞品。」</p>
+        <p class="tagline">行。他懂公司，剩下的自己能脑补</p>
+      </div>
+      <div class="card tint-rose">
+        <h3>对昨天入职的实习生说同一句</h3>
+        <p style="color:var(--text);font-weight:600">他到中午外卖都没订，就跑路了。</p>
+        <p class="tagline">谁是竞品？研究什么？出成什么样？给谁看？什么时候交？——<b>他缺的这五样，就是下面五要素</b></p>
+      </div>
+    </div>
+    <div class="numbered">
+      <div class="row"><div class="num">1</div><div class="body"><div class="t">角色</div><div class="d">你要它当谁</div></div></div>
+      <div class="row"><div class="num">2</div><div class="body"><div class="t">任务</div><div class="d">做什么——背景、目标、约束</div></div></div>
+      <div class="row"><div class="num">3</div><div class="body"><div class="t">方法</div><div class="d">怎么做——按什么框架、几步</div></div></div>
+      <div class="row"><div class="num">4</div><div class="body"><div class="t">示例</div><div class="d">给一个你想要的样子</div></div></div>
+      <div class="row"><div class="num">5</div><div class="body"><div class="t">输出</div><div class="d">格式、长度、不要做什么</div></div></div>
+    </div>
+    <div class="slogan">角色任务方法例，最后说清输出要求。——是<span class="em">思考清单</span>，不是填空模板</div>
+    <div class="note"><span class="nlabel">口播稿 · 26</span>知道派什么活了，接下来是怎么交代。这是下午唯一要带进去的技能。所有技巧压成五要素——就是那个实习生跑路前缺的五样。提醒：思考清单不是填空模板，简单任务一两个要素就够。每次用 AI 前停三秒默念一遍，问「哪个没说清」。</div>
+  </div>
+</section>
+
+<!-- 27 对比演示 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">④ 怎么说清楚 · 现场演示 8 分钟 · 锚点页</span>
+    <h2>同一份通知，两种交代法：<span class="em-rose">「帮我写」</span> vs <span class="em-olive">五要素</span></h2>
+    <div class="cards2">
+      <div class="card tint-rose">
+        <h3>❌ 平时的写法</h3>
+        <div class="code-wrap"><div class="code-bar"><span class="label">左屏</span><button class="copy-btn" data-copy="#demo2a">复制</button></div><pre id="demo2a">帮我写个中秋国庆放假通知。</pre></div>
+        <p class="tagline">能用，但不像我们公司的——它只能给「平均长相」</p>
+      </div>
+      <div class="card tint-olive">
+        <h3>✅ 五要素版</h3>
+        <div class="code-wrap"><div class="code-bar"><span class="label">右屏</span><button class="copy-btn" data-copy="#demo2b">复制</button></div><pre id="demo2b">角色：你是我们公司行政。
+任务：写 2026 年中秋＋国庆放假安排通知，对象是全体员工。
+方法：放假和调休日期一律以我贴的国务院通知为准，不许自己推算；结构沿用我们上一版。
+示例：【国务院办公厅通知原文】＋【我们公司上一版放假通知】
+输出：300 字内，正式不生硬，末尾写清值班安排，落款行政部。</pre></div>
+      </div>
+      <div class="card tint-sky full">
+        <h3>📎 右屏多给的，就是这三样</h3>
+        <p><b>① 国务院原文</b>　中秋 9/25–27 放 3 天；国庆 10/1–7 放 7 天，<b>9/20（周日）、10/10（周六）要上班</b>　　<b>② 公司上一版放假通知</b>　　<b>③ 这次的值班表</b></p>
+        <p class="tagline">这三样它都拿不到——除非你给。差别不在 AI 变聪明，在这儿</p>
+      </div>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 27</span><span class="dir">【操作：并排两个对话投屏】</span>左边跑：能用吗？能用。像我们公司的吗？不像。右边把三样材料贴进去再跑。差别不在 AI 变聪明，在你把只有你知道的东西给它了——这就是第 3 页说的「资料」。<span class="dir">【它把调休日写对了也别慌：那就说「它这次记住了，可你敢不核吗」，顺势接第 29 页红线二】</span><span class="dir">【锚点页，永不压】</span></div>
+  </div>
+</section>
+
+<!-- 28 先复述 要证据 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">④ 怎么说清楚 · 两个习惯 4 分钟</span>
+    <h2>交代完任务，再补<span class="em">两句话</span></h2>
+    <div class="cards2">
+      <div class="card tint-olive">
+        <h3>🔁 先复述再动手</h3>
+        <div class="code-wrap"><div class="code-bar"><span class="label">加在末尾</span><button class="copy-btn" data-copy="#h1">复制</button></div><pre id="h1">先用你的话复述我的需求、列出你打算怎么做、标出你不确定的地方，等我确认再开始。</pre></div>
+        <p class="tagline">让真人实习生复述一遍任务，很正常吧？对他也一样。<b>复述偏的地方，就是你没说清的地方</b></p>
+      </div>
+      <div class="card tint-sky">
+        <h3>🧾 要证据</h3>
+        <div class="code-wrap"><div class="code-bar"><span class="label">加在末尾</span><button class="copy-btn" data-copy="#h2">复制</button></div><pre id="h2">不确定的说不确定，没依据的不要编，数据标来源。</pre></div>
+        <p class="tagline">三不：不编造、不越权、不隐瞒不确定性——<b>让他敢说「我不知道」，比什么都会答值钱</b></p>
+      </div>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 28</span>交代完任务再补两句，跟你带真人实习生一样。先复述：让他把任务用自己的话说一遍，偏了的地方就是你没说清的地方。要证据：允许他说「我不知道」——第 9 页说过他爱面子，你不给他台阶，他就现编。</div>
+  </div>
+</section>
+
+<!-- 29 红线 -->
+<section class="slide">
+  <div class="slide-inner">
+    <span class="kicker">⑤ 红线与接口 · 4 分钟</span>
+    <h2>带他的<span class="em-rose">三条纪律</span></h2>
+    <div class="cards3">
+      <div class="card tint-rose"><h3>🔒 一 · 分清两类数据</h3><p><b>一律不进对话框</b>：API key、账号密码、身份证号、银行卡号。</p><p><b>不出内网</b>：涉国家安全的、单位标了密的。</p><p class="tagline">其余公司资料、员工信息该用就用——<b>怕到什么都不敢喂，AI 等于没有</b></p></div>
+      <div class="card tint-rose"><h3>🔢 二 · 关键数字人工核验</h3><p>它算的数、引的政策、报的行情、摘的要点，发出去前你自己看过。</p><p class="tagline">「看过」是指你能指出它是哪儿来的</p></div>
+      <div class="card tint-rose"><h3>✍️ 三 · AI 起草，人定稿</h3><p>对外发出去的东西，责任是你的，不是它的。</p><p class="tagline">实习生发出去的东西，署的是<b>你</b>的名</p></div>
+    </div>
+    <div class="cards2">
+      <div class="card tint-gold">
+        <h3>🍎 连苹果都栽在「摘要」上 · 2025-01</h3>
+        <p>iPhone 的 AI 把通知摘成一句话，结果把 BBC 一条新闻摘反了，还在飞镖世锦赛开打前几小时宣布了冠军。BBC 投诉后，苹果把新闻类摘要功能整个下线。</p>
+        <p class="tagline">你让它把一份报告摘三句转给老板——<b>那三句，你核过吗</b></p>
+      </div>
+      <div class="card tint-gold">
+        <h3>⚖️ 赖不掉 · 全国首例「AI 幻觉」案</h3>
+        <p>AI 答错还嘴硬，甚至承诺「生成内容有误我赔您 10 万」。用户当真去起诉，杭州互联网法院 2026 年 1 月判：AI 不是民事主体，这句承诺不算数——驳回。</p>
+        <p class="tagline">AI 说的话没人认账；发出去的字，落款是你</p>
+      </div>
+    </div>
+    <div class="note"><span class="nlabel">口播稿 · 29</span>最后，带他的三条纪律——第 9 页四件事里的「责任你担」，落到这里。红线一先说清<b>不是什么都不能喂</b>：不能进对话框的是凭证类——API key、密码、身份证、银行卡；不出内网的是涉密类——国企、涉国家安全、单位标了密的。<span class="dir">【企业版→用公司配的那个；非企业版→涉客户与薪酬的先去掉名字】</span>红线二：连苹果都摘错，你摘的呢。红线三：那句「赔您 10 万」，法院说不算数。<span class="dir">【两个案例各 30 秒，不展开】</span></div>
+  </div>
+</section>
+
+<!-- 30 结尾 -->
+<section class="slide closing">
+  <div class="slide-inner">
+    <span class="kicker" style="justify-content:center;display:inline-flex">上午最后一句</span>
+    <div class="quote">被替代的不是用 AI 的人，<br>是<span class="em">不会带 AI</span> 的人。</div>
+    <div class="sig">差别不在谁更聪明，在<span class="em">谁把话说清楚了</span>。</div>
+    <div class="note" style="margin:24px auto 0;text-align:left"><span class="nlabel">口播稿 · 30</span>被替代的不是用 AI 的人，是不会带 AI 的人。而带得好不好，差别不在谁更聪明，在谁把话说清楚了——这就是上午两小时的全部：你不是多了一个工具，是多了一个实习生，而你是他的领导。<span class="dir">【下午唯一要求】</span>不用带东西来，带上你手头最烦的那件活就行——越烦越好，烦的活才最值得派出去。</div>
+  </div>
+</section>
+
+<!-- SLIDES:END -->
+
+</div>
+
+<div class="zone left" id="zoneL"></div>
+<div class="zone right" id="zoneR"></div>
+
+<div class="hud tr">
+  <button class="icon-btn" id="noteBtn" title="口播稿 N">✎</button>
+  <button class="icon-btn" id="themeBtn" title="切换深浅色 D">◐</button>
+  <button class="icon-btn" id="fsBtn" title="全屏 F">⛶</button>
+</div>
+
+<div class="hud br">
+  <button class="nav-btn" id="prevBtn" title="上一页 ←">‹</button>
+  <span class="counter"><b id="cur">1</b> / <span id="total">1</span></span>
+  <button class="nav-btn" id="nextBtn" title="下一页 →">›</button>
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="hint"><kbd>←</kbd> <kbd>→</kbd> 翻页 · <kbd>N</kbd> 口播稿 · <kbd>F</kbd> 全屏 · <kbd>D</kbd> 深色</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var idx = 0;
+  var curEl = document.getElementById('cur');
+  var progress = document.getElementById('progress');
+  var dotsWrap = document.getElementById('dots');
+  document.getElementById('total').textContent = total;
+
+  slides.forEach(function(_,i){
+    var b = document.createElement('button');
+    b.className = 'dot' + (i===0?' active':'');
+    b.setAttribute('aria-label','第 '+(i+1)+' 页');
+    b.addEventListener('click', function(){ go(i); });
+    dotsWrap.appendChild(b);
+  });
+  var dots = Array.prototype.slice.call(dotsWrap.children);
+
+  function go(n){
+    idx = Math.max(0, Math.min(total-1, n));
+    slides.forEach(function(s,i){ s.classList.toggle('active', i===idx); });
+    dots.forEach(function(d,i){ d.classList.toggle('active', i===idx); });
+    curEl.textContent = idx+1;
+    progress.style.width = ((idx+1)/total*100) + '%';
+    if(location.hash !== '#'+(idx+1)) history.replaceState(null,'','#'+(idx+1));
+  }
+  function next(){
+    var frags = slides[idx].querySelectorAll('.frag:not(.on)');
+    if(frags.length){ frags[0].classList.add('on'); return; }
+    go(idx+1);
+  }
+  function prev(){
+    var on = slides[idx].querySelectorAll('.frag.on');
+    if(on.length){ on[on.length-1].classList.remove('on'); return; }
+    go(idx-1);
+  }
+
+  document.getElementById('nextBtn').addEventListener('click', next);
+  document.getElementById('prevBtn').addEventListener('click', prev);
+  document.getElementById('zoneR').addEventListener('click', next);
+  document.getElementById('zoneL').addEventListener('click', prev);
+
+  document.addEventListener('keydown', function(e){
+    if(e.target && /INPUT|TEXTAREA/.test(e.target.tagName)) return;
+    if(e.key==='ArrowRight'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='Home'){ go(0); }
+    else if(e.key==='End'){ go(total-1); }
+    else if(e.key==='f'||e.key==='F'){ toggleFs(); }
+    else if(e.key==='d'||e.key==='D'){ toggleTheme(); }
+    else if(e.key==='n'||e.key==='N'){ toggleNotes(); }
+  });
+
+  var x0=null;
+  document.addEventListener('touchstart', function(e){ x0 = e.touches[0].clientX; }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(x0===null) return;
+    var dx = e.changedTouches[0].clientX - x0;
+    if(Math.abs(dx) > 45){ dx<0 ? next() : prev(); }
+    x0 = null;
+  }, {passive:true});
+
+  function toggleTheme(){
+    var root = document.documentElement;
+    root.setAttribute('data-theme', root.getAttribute('data-theme')==='dark' ? 'light' : 'dark');
+  }
+  document.getElementById('themeBtn').addEventListener('click', toggleTheme);
+
+  function toggleFs(){
+    if(!document.fullscreenElement){ document.documentElement.requestFullscreen && document.documentElement.requestFullscreen(); }
+    else { document.exitFullscreen && document.exitFullscreen(); }
+  }
+  document.getElementById('fsBtn').addEventListener('click', toggleFs);
+
+  function toggleNotes(){
+    document.body.classList.toggle('show-notes');
+    document.getElementById('noteBtn').classList.toggle('on', document.body.classList.contains('show-notes'));
+  }
+  document.getElementById('noteBtn').addEventListener('click', toggleNotes);
+
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.tab-btn');
+    if(!btn) return;
+    var tabs = btn.closest('.tabs');
+    var target = btn.getAttribute('data-tab');
+    tabs.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.toggle('active', b===btn); });
+    tabs.querySelectorAll('.tab-pane').forEach(function(p){ p.classList.toggle('active', p.id===target); });
+  });
+
+  document.querySelectorAll('.copy-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var el = document.querySelector(btn.getAttribute('data-copy'));
+      if(!el) return;
+      var text = el.innerText;
+      navigator.clipboard && navigator.clipboard.writeText(text).then(function(){
+        var old = btn.textContent; btn.textContent = '已复制 ✓';
+        setTimeout(function(){ btn.textContent = old; }, 1400);
+      });
+    });
+  });
+
+  var h = parseInt((location.hash||'').replace('#',''),10);
+  go(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>
