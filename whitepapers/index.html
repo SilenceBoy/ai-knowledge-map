@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="浏览 Bin哥的 AI 应用、Agent 工程、AI 写真与个人成长白皮书。">
+  <title>白皮书库 | Bin哥的知识地图</title>
+  <link rel="stylesheet" href="../assets/portal.css">
+</head>
+<body class="portal-page">
+<nav class="portal-nav" aria-label="站点导航">
+  <div class="portal-width">
+    <a class="portal-brand" href="../">Bin哥的知识地图</a>
+    <div class="portal-nav-links">
+      <a href="../">首页</a>
+      <a href="../whitepapers/" aria-current="page">白皮书</a>
+      <a href="../#articles">文章笔记</a>
+      <a href="../my-courses/">我的课程</a>
+      <a href="https://www.silencebin.com">个人主页</a>
+    </div>
+  </div>
+</nav>
+<main class="portal-width">
+  <header class="library-header">
+    <h1 class="library-title">白皮书库</h1>
+    <p class="library-intro">从提示词、AI 编程到写真创作，按你关心的主题挑一本读。</p>
+  </header>
+
+  <div class="library-toolbar" hidden>
+    <div class="library-fields">
+      <input class="portal-field" id="paper-search" type="search" aria-label="搜索白皮书" placeholder="搜索标题、简介或关键词" autocomplete="off">
+      <select class="portal-field" id="paper-sort" aria-label="白皮书排序">
+        <option value="featured">推荐优先</option>
+        <option value="recent">日期从新到旧</option>
+      </select>
+    </div>
+    <div class="library-topics" role="group" aria-label="按主题筛选">
+      <button type="button" data-filter-topic="all" aria-pressed="true">全部</button>
+      <button type="button" data-filter-topic="ai" aria-pressed="false">AI 应用</button>
+      <button type="button" data-filter-topic="engineering" aria-pressed="false">Agent 与工程</button>
+      <button type="button" data-filter-topic="portrait" aria-pressed="false">AI 写真</button>
+      <button type="button" data-filter-topic="growth" aria-pressed="false">个人成长</button>
+    </div>
+  </div>
+
+  <p class="library-results" id="paper-count" role="status">共 6 份白皮书</p>
+  <div class="library-grid">
+    <div class="paper-grid" id="paper-grid">
+    <article class="paper-entry" data-topic="growth" data-date="2026-07-08" data-keywords="信息获取 写作 自主学习 超级个体">
+      <a class="paper-card" href="super-individual/">
+        <div class="book-stage"><span class="book-art" aria-hidden="true">
+        <strong>AI 时代的<br>超级个体</strong>
+        <small>七大核心能力</small>
+      </span></div>
+        <div class="paper-copy">
+          <span class="paper-meta">个人成长 / <time datetime="2026-07-08">2026-07-08</time> / 总览与 7 章</span>
+          <h2>AI 时代超级个体白皮书</h2>
+          <p>梳理七大核心能力，判断哪些工作可以交给 AI，哪些能力值得自己练。</p>
+        </div>
+        <span class="paper-action">阅读白皮书 <span aria-hidden="true">↗</span></span>
+      </a>
+    </article>
+    <article class="paper-entry" data-topic="engineering" data-date="2026-09-24" data-keywords="SOP 任务管理 协作 Codex">
+      <a class="paper-card" href="task-ledger/v3.html">
+        <div class="book-stage book-stage--ledger"><span class="book-art book-art--ledger" aria-hidden="true">
+        <strong>AI 任务<br>账本</strong>
+        <small>从对话到可信交付</small>
+      </span></div>
+        <div class="paper-copy">
+          <span class="paper-meta">Agent 与工程 / <time datetime="2026-09-24">2026-09-24</time> / v3.0</span>
+          <h2>AI 任务账本白皮书</h2>
+          <p>为跨 Agent 任务建立统一记录，用证据追踪需求、验证和交付。</p>
+        </div>
+        <span class="paper-action">阅读白皮书 <span aria-hidden="true">↗</span></span>
+      </a>
+    </article>
+    <article class="paper-entry" data-topic="ai" data-date="" data-keywords="提示词工程 零基础 提示词模板 Prompt">
+      <a class="paper-card" href="prompting/">
+        <div class="book-stage book-stage--prompt"><span class="book-art book-art--prompt" aria-hidden="true">
+        <strong>提示词<br>技巧</strong>
+        <small>从入门到复用</small>
+      </span></div>
+        <div class="paper-copy">
+          <span class="paper-meta">AI 应用 / 18 章及附章</span>
+          <h2>小白能学会的提示词技巧</h2>
+          <p>用角色、背景、任务和输出要求，把零散的想法写成清楚的指令。</p>
+        </div>
+        <span class="paper-action">阅读白皮书 <span aria-hidden="true">↗</span></span>
+      </a>
+    </article>
+    <article class="paper-entry" data-topic="engineering" data-date="2026-10-02" data-keywords="AI Coding Codex 需求 原型 测试 验收">
+      <a class="paper-card" href="coding-methodology/">
+        <div class="book-stage book-stage--coding"><span class="book-art book-art--coding" aria-hidden="true">
+        <strong>编程方法论</strong>
+        <small>人决定，AI 执行</small>
+      </span></div>
+        <div class="paper-copy">
+          <span class="paper-meta">Agent 与工程 / <time datetime="2026-10-02">2026-10-02</time> / v1.0</span>
+          <h2>编程方法论白皮书</h2>
+          <p>从真实项目看需求、原型、开发和验收各阶段，哪些决定应该由人来做。</p>
+        </div>
+        <span class="paper-action">阅读白皮书 <span aria-hidden="true">↗</span></span>
+      </a>
+    </article>
+    <article class="paper-entry" data-topic="portrait" data-date="2026-09-27" data-keywords="人物一致性 参考图 生图 自媒体 电商">
+      <a class="paper-card" href="ai-portrait-creation/">
+        <div class="book-stage book-stage--portrait"><span class="book-art book-art--portrait" aria-hidden="true">
+        <strong>AI 写真<br>创作</strong>
+        <small>从一张到一套</small>
+      </span></div>
+        <div class="paper-copy">
+          <span class="paper-meta">AI 写真 / <time datetime="2026-09-27">2026-09-27</time> / v0.1</span>
+          <h2>AI 写真创作白皮书</h2>
+          <p>用人物、穿搭和场景参考稳住人物一致性，从单张出图做到成套写真。</p>
+        </div>
+        <span class="paper-action">阅读白皮书 <span aria-hidden="true">↗</span></span>
+      </a>
+    </article>
+    <article class="paper-entry" data-topic="portrait" data-date="2026-10-29" data-keywords="写真工作室 三帧 自动化 SOP Skill Agent">
+      <a class="paper-card" href="ai-portrait-automation/">
+        <div class="book-stage book-stage--studio"><span class="book-art book-art--studio" aria-hidden="true">
+        <strong>写真<br>自动化</strong>
+        <small>小白入门版</small>
+      </span></div>
+        <div class="paper-copy">
+          <span class="paper-meta">AI 写真 / <time datetime="2026-10-29">2026-10-29</time> / 入门版 v1.0</span>
+          <h2>AI 写真自动化白皮书</h2>
+          <p>用一套三帧练习串起知识库、SOP、Skill 和 Agent，搭建可重复运行的写真流程。</p>
+        </div>
+        <span class="paper-action">阅读白皮书 <span aria-hidden="true">↗</span></span>
+      </a>
+    </article>
+    </div>
+    <div class="library-empty" id="paper-empty" hidden>
+      <p>没有找到符合条件的白皮书。可以换个关键词，或清除筛选。</p>
+      <button class="portal-button" type="button" id="paper-reset">清除筛选</button>
+    </div>
+  </div>
+</main>
+<footer class="portal-width portal-footer">
+  <span>Bin哥的知识地图</span>
+  <a href="https://www.silencebin.com">关于 Bin哥</a>
+</footer>
+<script src="library.js" defer></script>
+</body>
+</html>

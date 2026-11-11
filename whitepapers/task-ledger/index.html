@@ -1,0 +1,1047 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Agent 与工程 · v2.0">
+  <title>从对话到可信交付：AI 任务账本方法论、实施与商业落地白皮书 | Bin哥的知识地图</title>
+  <link rel="stylesheet" href="../../assets/portal.css">
+</head>
+<body class="portal-page" id="top">
+<main class="portal-width whitepaper">
+  <header class="whitepaper-header">
+    <a class="portal-text-link" href="../">← 返回白皮书库</a>
+    <h1>从对话到可信交付：AI 任务账本方法论、实施与商业落地白皮书</h1>
+    <p class="paper-meta">Agent 与工程 · v2.0</p>
+    <a class="portal-text-link" href="v3.html">阅读 v3.0 原版网页 ↗</a>
+
+  </header>
+  <div class="whitepaper-layout">
+    <nav class="whitepaper-toc" id="contents" aria-label="章节目录" tabindex="0">
+      <h2>章节目录</h2>
+      <ul><li><a href="#section-1">1. 为什么聊天记录不能代替任务系统</a></li>
+<li><a href="#section-2">2. 核心价值</a></li>
+<li><a href="#section-3">3. 典型客户</a></li>
+<li><a href="#section-4">4. 产品边界</a></li>
+<li><a href="#section-5">5. 设计原则</a></li>
+<li><a href="#section-6">6. 商业表达建议</a></li>
+<li><a href="#section-7">7. 功能需求总表</a></li>
+<li><a href="#section-8">8. 系统架构</a></li>
+<li><a href="#section-9">9. 数据分层</a></li>
+<li><a href="#section-10">10. 状态与同会话规则</a></li>
+<li><a href="#section-11">11. 来源、用户和设备</a></li>
+<li><a href="#section-12">12. 多设备与双链</a></li>
+<li><a href="#section-13">13. 安装前清单</a></li>
+<li><a href="#section-14">14. 获取和校验仓库</a></li>
+<li><a href="#section-15">15. 注册来源和设备</a></li>
+<li><a href="#section-16">16. 安装顺序</a></li>
+<li><a href="#section-17">17. 配置备份</a></li>
+<li><a href="#section-18">18. 客户端安装位置</a></li>
+<li><a href="#section-19">19. 跨设备切换</a></li>
+<li><a href="#section-20">20. 安装完成定义</a></li>
+<li><a href="#section-21">21. 共用规则</a></li>
+<li><a href="#section-22">22. Codex</a></li>
+<li><a href="#section-23">23. Claude App / Claude Code</a></li>
+<li><a href="#section-24">24. Hermes Agent</a></li>
+<li><a href="#section-25">25. 可复制的 v2 账本提示词</a></li>
+<li><a href="#section-26">26. 通用系统提示词建议</a></li>
+<li><a href="#section-27">27. 每日开始</a></li>
+<li><a href="#section-28">28. 收到需求</a></li>
+<li><a href="#section-29">29. 执行与阶段回写</a></li>
+<li><a href="#section-30">30. 交付与关闭</a></li>
+<li><a href="#section-31">31. 动态统计</a></li>
+<li><a href="#section-32">32. 验收矩阵</a></li>
+<li><a href="#section-33">33. 标准冒烟</a></li>
+<li><a href="#section-34">34. 常见故障</a></li>
+<li><a href="#section-35">35. 安全和恢复</a></li>
+<li><a href="#section-36">36. 产品包组成</a></li>
+<li><a href="#section-37">37. 交付套餐建议</a></li>
+<li><a href="#section-38">38. 客户环境表</a></li>
+<li><a href="#section-39">39. 实施责任分工</a></li>
+<li><a href="#section-40">40. 隐私与法律边界</a></li>
+<li><a href="#section-41">41. 上线和维护</a></li>
+<li><a href="#section-42">42. 对外演示脚本</a></li>
+<li><a href="#section-43">43. 路线图</a></li>
+<li><a href="#section-44">A. 最小任务卡</a></li>
+<li><a href="#section-45">B. 常用 CLI</a></li>
+<li><a href="#section-46">C. v1 升级 v2</a></li>
+<li><a href="#section-47">D. 客户验收记录</a></li>
+<li><a href="#section-48">E. 日终检查</a></li>
+<li><a href="#section-49">F. 术语</a></li></ul>
+    </nav>
+    <article class="whitepaper-body">
+      <ul>
+<li>版本：v2.0</li>
+<li>基准日期：2026-08-28</li>
+<li>产品形态：本地优先的跨 Agent 任务审计、实施与交付方案</li>
+<li>事实口径：已实现、当前机已验证、历史已验证、待客户机验证、规划中</li>
+</ul>
+<hr>
+<h2 id="section-1">1. 为什么聊天记录不能代替任务系统</h2>
+<p>AI 工作从对话开始，但交付通常落在代码、文档、图片、网页、命令和外部系统。聊天记录能解释上下文，却很难稳定回答：今天正式承诺了哪些工作；哪项只是讨论；同一个需求是否被重复建卡；实现、测试和用户验收分别到了哪一步；换电脑或换 Agent 后从哪里继续。</p>
+<p>传统待办工具也存在空白。它往往只保存标题和截止时间，无法自动保留客户端来源、设备、会话、项目、工具调用、完成证据和跨设备轨迹。把每句话都变成待办又会制造大量噪声。</p>
+<p>AI 任务账本在对话和交付之间增加一层可审计协议：先保留候选入口，再识别正式任务；用不可变事件记录变化；由可重建视图服务人类阅读；用证据而不是模型语气决定完成度。</p>
+<h2 id="section-2">2. 核心价值</h2>
+<h3>2.1 不漏</h3>
+<p>客户端 Hook 捕获用户提交、第一次工具调用和回合结束。即使 Agent 忘记手工写卡，也有候选和轻量自动登记入口。</p>
+<h3>2.2 不重复</h3>
+<p>同会话的同义改述、修正、追问或补充复用原任务；新增要求追加到原目标，不另建近义卡。</p>
+<h3>2.3 不假完成</h3>
+<p>“代码写完”“测试通过”“客户确认”和“另一台电脑已同步”是不同证据层。任务状态只使用待开始、进行中、待验证、已完成、阻塞。</p>
+<h3>2.4 可跨端、跨设备继续</h3>
+<p>任务记录创建来源、参与来源、创建设备、参与设备。来源表示客户端，不表示触发角色；Codex 自动化仍是 <code>codex</code>，Claude App 中的用户消息仍是 <code>claude</code>。</p>
+<h3>2.5 可恢复</h3>
+<p>正式任务权威事件按文件分片进入 Git。本机 SQLite、日报和 STATUS 生成页损坏时，可从分片重新构建。</p>
+<h2 id="section-3">3. 典型客户</h2>
+<ul>
+<li>同时使用 Codex、Claude App 和 Hermes 的个人开发者或内容团队；</li>
+<li>在台式机和笔记本之间切换的多设备用户；</li>
+<li>需要用任务卡、测试和提交证据向客户交付的工作室；</li>
+<li>希望保留本地隐私，不把完整聊天上传到额外 SaaS 的团队；</li>
+<li>已有项目任务规范，希望增加跨项目总账而非替换项目管理的组织。</li>
+</ul>
+<p>不建议直接用于强监管审计、多人高并发工单、细粒度企业权限或需要中心化 SLA 的场景。此类客户应在本地方案上增加服务端数据库、身份、权限和审计保留策略。</p>
+<h2 id="section-4">4. 产品边界</h2>
+<table>
+<thead>
+<tr>
+<th>能力</th>
+<th>当前成熟度</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>v2 不可变任务事件、重建、五态和证据门禁</td>
+<td>已实现</td>
+<td>自动测试和实际账本持续使用</td>
+</tr>
+<tr>
+<td>Codex Hook</td>
+<td>当前机已验证</td>
+<td>客户机仍需信任并真实触发</td>
+</tr>
+<tr>
+<td>Claude App / Claude Code Hook</td>
+<td>部分实机已验证</td>
+<td>UserPromptSubmit、PreToolUse、Stop 已真实触发；子目录 Stop 修复已自动回归，新的端到端复验待补充</td>
+</tr>
+<tr>
+<td>Hermes Hook</td>
+<td>仓库已实现、历史设备验证</td>
+<td>当前交付机未安装时不得写成本机已验收</td>
+</tr>
+<tr>
+<td>来源/设备注册 FR-18</td>
+<td>已实现</td>
+<td>跨客户环境需逐台注册和校验</td>
+</tr>
+<tr>
+<td>来源 × 设备管理统计 FR-19</td>
+<td>部分实现</td>
+<td>快照与命令可动态统计，产品化矩阵/Web 页未完成</td>
+</tr>
+<tr>
+<td>自动 Git 网络同步</td>
+<td>不提供</td>
+<td>Hook 不 pull、commit 或 push</td>
+</tr>
+<tr>
+<td>自动敏感信息脱敏</td>
+<td>不提供</td>
+<td>用户和实施人员必须遵守最小记录原则</td>
+</tr>
+</tbody></table>
+<h2 id="section-5">5. 设计原则</h2>
+<ol>
+<li>采集、判断、存储、展示分层；</li>
+<li>同一实质任务只有一个主任务编号；</li>
+<li>状态结论必须能回到证据；</li>
+<li>不可变事件优于共享大文件；</li>
+<li>客户端来源和物理设备是两个独立维度；</li>
+<li>用户级 Hook 不随仓库假装同步；</li>
+<li>不确定时保守，不错误合并、不虚构完成；</li>
+<li>本地提交、远端同步、目标机验收分别陈述。</li>
+</ol>
+<h2 id="section-6">6. 商业表达建议</h2>
+<p>对外可以描述为“本地优先的跨 Agent 任务审计与交付系统”，而不是“完全自动的 AI 项目经理”。前者与当前实现一致：它能捕获、登记、续办、流转、重建和验证；后者会暗示尚未具备的资源调度、权限中心、自动排期和多人实时协同。</p>
+<hr>
+<h2 id="section-7">7. 功能需求总表</h2>
+<table>
+<thead>
+<tr>
+<th>编号</th>
+<th>需求</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>FR-01</td>
+<td>捕获用户消息、工具开始、回合结束和生命周期事件</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-02</td>
+<td>实质请求先登记为待开始</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-03</td>
+<td>第一次工具调用转为进行中</td>
+<td>已实现并有真实 Claude 事件</td>
+</tr>
+<tr>
+<td>FR-04</td>
+<td>确认、闲聊、纯提问和简单编号不建任务</td>
+<td>已实现为轻量规则</td>
+</tr>
+<tr>
+<td>FR-05</td>
+<td>同会话同义改述/补充复用原任务并追加需求</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-06</td>
+<td>不同 macOS Home 识别同一项目</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-07</td>
+<td>记录创建/参与来源和设备</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-08</td>
+<td>未知未来来源不阻断写入</td>
+<td>已实现，注册校验报告异常</td>
+</tr>
+<tr>
+<td>FR-09</td>
+<td>五状态约束</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-10</td>
+<td>已完成必须有证据</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-11</td>
+<td>Agent 结束先到待验证，子目录也能收口根项目</td>
+<td>已实现；新 Claude App 端到端复验待补充</td>
+</tr>
+<tr>
+<td>FR-12</td>
+<td>同会话验收或独立新任务完成最近前项</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-13</td>
+<td>跨会话不自动完成旧任务</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-14</td>
+<td>多设备低冲突同步权威数据</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-15</td>
+<td>缓存和视图从事件重建</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-16</td>
+<td>全局任务与项目任务双链</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-17</td>
+<td>绑定任务活动设备门禁和交接</td>
+<td>已实现</td>
+</tr>
+<tr>
+<td>FR-18</td>
+<td>显式注册来源和设备</td>
+<td>已实现，客户机待验收</td>
+</tr>
+<tr>
+<td>FR-19</td>
+<td>按实际来源/设备生成产品化统计矩阵</td>
+<td>部分实现</td>
+</tr>
+</tbody></table>
+<h2 id="section-8">8. 系统架构</h2>
+<pre><code class="language-mermaid">flowchart TB
+    A[Codex] --&gt; H[用户级 Hook]
+    B[Claude App / Claude Code] --&gt; H
+    C[Hermes Agent] --&gt; H
+    H --&gt; D[三端适配器]
+    D --&gt; E[候选审计 本机 SQLite]
+    D --&gt; F[任务记录器 CLI]
+    F --&gt; G[主任务不可变事件]
+    F --&gt; L[双链不可变事件]
+    F --&gt; R[注册表不可变事件]
+    G --&gt; V[任务卡/日报/STATUS 生成视图]
+    L --&gt; V
+    R --&gt; V
+    G --&gt; Git[受控 Git 仓库]
+    L --&gt; Git
+    R --&gt; Git
+</code></pre>
+<p>Hook 做快速、确定、失败开放的工作；适配器把不同客户端负载转换为统一字段；记录器负责幂等、状态、事件写入和视图重建；当前 Agent 负责完整语义拆分、纠偏和证据判断。</p>
+<h2 id="section-9">9. 数据分层</h2>
+<table>
+<thead>
+<tr>
+<th>数据</th>
+<th>默认位置</th>
+<th>Git</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>候选与缓存</td>
+<td><code>Tasks/.task-ledger.sqlite3</code></td>
+<td>忽略</td>
+<td>原始入口、运行缓存</td>
+</tr>
+<tr>
+<td>主任务事件</td>
+<td><code>Tasks/Ledger/events/</code></td>
+<td>跟踪</td>
+<td>主任务权威数据</td>
+</tr>
+<tr>
+<td>双链事件</td>
+<td><code>Tasks/Ledger/link-events/</code></td>
+<td>跟踪</td>
+<td>项目链接和设备交接权威</td>
+</tr>
+<tr>
+<td>注册事件</td>
+<td><code>Tasks/Ledger/registry-events/</code></td>
+<td>跟踪</td>
+<td>来源/设备注册权威</td>
+</tr>
+<tr>
+<td>任务卡</td>
+<td><code>Tasks/TASK-*.md</code></td>
+<td>跟踪</td>
+<td>共享可读投影</td>
+</tr>
+<tr>
+<td>日报/生成状态</td>
+<td><code>Tasks/Daily/</code>、<code>Tasks/STATUS.generated.md</code></td>
+<td>忽略</td>
+<td>本机生成视图</td>
+</tr>
+<tr>
+<td>v1 同步索引</td>
+<td><code>Tasks/task-ledger.sync.json</code></td>
+<td>历史保留</td>
+<td>v2 非活跃真源</td>
+</tr>
+</tbody></table>
+<p>每个 v2 事件以 <code>sha256(event_id)</code> 命名。相同 ID、相同内容重放保持幂等；相同 ID、不同内容快速失败。禁止直接改写或删除既有分片，纠错通过新事件表达。</p>
+<h2 id="section-10">10. 状态与同会话规则</h2>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; 待开始: 实质请求
+    待开始 --&gt; 进行中: 第一次工具调用
+    进行中 --&gt; 待验证: 形成交付和证据
+    进行中 --&gt; 阻塞: 缺授权/输入/外部条件
+    待验证 --&gt; 已完成: 同会话明确验收
+    进行中 --&gt; 已完成: 确认开启独立新任务且前项已有证据
+    待验证 --&gt; 已完成: 确认开启独立新任务
+</code></pre>
+<p>在同一会话收到后续消息时，先分类：</p>
+<ul>
+<li>同一任务：同义改述、修正、追问或补充，调用 <code>continue --supplement</code>；</li>
+<li>独立新任务：创建新任务，并完成最近的待验证/进行中前项；</li>
+<li>不确定：不新建、不完成，交由 Agent 结合完整对话判断；</li>
+<li>阻塞或跨会话旧任务：不自动完成。</li>
+</ul>
+<p>Agent 结束不直接等于完成。Stop/PostLlmCall 只收口到待验证或阻塞。Claude App 可能在设计流程切到项目子目录；收口允许祖先项目匹配，但仍要求结构化任务 ID、会话和项目关系一致。</p>
+<h2 id="section-11">11. 来源、用户和设备</h2>
+<p><code>origin</code> 表示写入任务的客户端或明确的人工入口：</p>
+<ul>
+<li><code>codex</code>：Codex Desktop、CLI、自动化及其后续对话；</li>
+<li><code>claude</code>：Claude App 内置 Claude Code、Claude Code CLI/IDE；</li>
+<li><code>hermes</code>：Hermes CLI/Gateway；</li>
+<li><code>webui</code>：任务看板应用发起的写入；</li>
+<li><code>user</code>：用户通过明确人工/管理命令直接写入。</li>
+</ul>
+<p><code>webui</code> 不是 <code>user</code> 的别名。前者说明写入经过哪个应用，后者说明人工直接入口；两者需要独立统计和权限治理。触发消息的角色仍可在候选或业务字段表达，但不应污染来源 ID。</p>
+<p>设备通过规范 ID、显示名、类型、别名和状态管理。选择顺序是显式 <code>--device-id</code>、<code>TASK_LEDGER_DEVICE</code>、macOS ComputerName、hostname、unknown。GUI 应用未必继承 shell 环境，因此客户交付必须检查真实事件中的设备值。</p>
+<h2 id="section-12">12. 多设备与双链</h2>
+<p>不同设备新增不同事件文件，降低共享大 JSON 的 Git 冲突。开始工作仍需人工 <code>git pull --ff-only</code>；失败时停止，不能自动 stash、reset 或强行合并。绑定到项目任务卡后，只有活动设备可写，并可使用交接请求和接受事件转移控制权。</p>
+<p>这种架构适合个人和小团队串行协作。多人同时编辑同一业务任务时，Git 可以保存事件，不能替人解决语义冲突；需要高并发时应升级为带身份和事务的服务端。</p>
+<hr>
+<h2 id="section-13">13. 安装前清单</h2>
+<p>客户需要准备：受支持的 macOS、Python 3、Git 仓库权限、目标客户端、可修改用户级配置的本机账号，以及每台设备的规范 ID。记录真实值：</p>
+<pre><code class="language-bash">whoami
+scutil --get ComputerName
+python3 --version
+git --version
+</code></pre>
+<p>设定占位符：</p>
+<pre><code class="language-text">&lt;AI_OS_ROOT&gt; = /Users/&lt;USER&gt;/AI_OS
+&lt;DEVICE_ID&gt;  = 客户批准的稳定设备 ID
+</code></pre>
+<p>不要把真实 API Key、OAuth token、Cookie 或客户敏感任务写入安装文档。</p>
+<h2 id="section-14">14. 获取和校验仓库</h2>
+<pre><code class="language-bash">git clone &lt;REPO_URL&gt; &lt;AI_OS_ROOT&gt;
+cd &lt;AI_OS_ROOT&gt;
+git switch main
+git pull --ff-only
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; sync
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; validate
+</code></pre>
+<p>已有仓库先执行 <code>git status --short --branch</code>。<code>pull --ff-only</code> 失败时停止，由人处理本地修改、未推送提交或分支差异；安装程序不得自动 stash 或覆盖。</p>
+<p>运行回归：</p>
+<pre><code class="language-bash">PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover \
+  -s Tools/task-ledger/tests -p &#39;test_*.py&#39;
+</code></pre>
+<p>验收以退出码 0、全部测试 <code>OK</code> 和 <code>validate=true</code> 为准，不把历史测试数量写死为产品指标。</p>
+<h2 id="section-15">15. 注册来源和设备</h2>
+<pre><code class="language-bash">python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; source-list
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; device-list
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; registry-validate
+</code></pre>
+<p>新设备登记：</p>
+<pre><code class="language-bash">python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; device-register \
+  --registry-device-id &#39;&lt;DEVICE_ID&gt;&#39; \
+  --label &#39;&lt;DEVICE_LABEL&gt;&#39; \
+  --kind computer \
+  --event-id &#39;registry:device:&lt;DEVICE_ID&gt;:v1&#39; \
+  --origin user \
+  --device-id &#39;&lt;CURRENT_DEVICE_ID&gt;&#39;
+</code></pre>
+<p>同一设备的新 ComputerName 使用 <code>device-alias</code>，不要重复注册为另一台物理设备。未知来源/设备不会阻断历史兼容写入，但会被注册校验报告，必须在交付前说明或治理。</p>
+<h2 id="section-16">16. 安装顺序</h2>
+<ol>
+<li>记录器：sync、validate、测试；</li>
+<li>注册表：来源和设备可解析；</li>
+<li>Codex：合并 Hook 和 AGENTS；</li>
+<li>Claude App：合并 settings 和 CLAUDE；</li>
+<li>Hermes：安装后合并 config 和 SOUL；</li>
+<li>每端分别真实冒烟；</li>
+<li>目标设备间 Git 同步验收。</li>
+</ol>
+<p>用户级配置不在 AI_OS Git 中，每台电脑都要单独备份、安装、重启、授权和验收。</p>
+<h2 id="section-17">17. 配置备份</h2>
+<p>修改前创建时间戳备份。若文件不存在，只创建对应目录，不制造空备份：</p>
+<pre><code class="language-bash">backup_stamp=$(date +%Y%m%d-%H%M%S)
+test ! -f ~/.codex/hooks.json || cp ~/.codex/hooks.json ~/.codex/hooks.json.&quot;$backup_stamp&quot;.bak
+test ! -f ~/.codex/AGENTS.md || cp ~/.codex/AGENTS.md ~/.codex/AGENTS.md.&quot;$backup_stamp&quot;.bak
+test ! -f ~/.claude/settings.json || cp ~/.claude/settings.json ~/.claude/settings.json.&quot;$backup_stamp&quot;.bak
+test ! -f ~/.claude/CLAUDE.md || cp ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.&quot;$backup_stamp&quot;.bak
+test ! -f ~/.hermes/config.yaml || cp ~/.hermes/config.yaml ~/.hermes/config.yaml.&quot;$backup_stamp&quot;.bak
+test ! -f ~/.hermes/SOUL.md || cp ~/.hermes/SOUL.md ~/.hermes/SOUL.md.&quot;$backup_stamp&quot;.bak
+</code></pre>
+<p>只合并账本条目，保留客户已有 MCP、权限、模型、提示词和其他 Hook。回滚只恢复本次配置变更；已经产生的 v2 事件不删除，通过纠正事件处理。</p>
+<h2 id="section-18">18. 客户端安装位置</h2>
+<table>
+<thead>
+<tr>
+<th>客户端</th>
+<th>Hook</th>
+<th>提示词/规则</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Codex</td>
+<td><code>~/.codex/hooks.json</code></td>
+<td><code>~/.codex/AGENTS.md</code></td>
+<td>重启后 <code>/hooks</code> 审核信任</td>
+</tr>
+<tr>
+<td>Claude App / Code</td>
+<td><code>~/.claude/settings.json</code></td>
+<td><code>~/.claude/CLAUDE.md</code></td>
+<td>Claude App 是主要验收入口</td>
+</tr>
+<tr>
+<td>Hermes</td>
+<td><code>~/.hermes/config.yaml</code></td>
+<td><code>~/.hermes/SOUL.md</code></td>
+<td>逐项授权，Gateway 不能弹窗时先在交互 CLI 处理</td>
+</tr>
+</tbody></table>
+<p>完整配置见下一篇。所有 Hook 命令使用真实绝对路径；Hermes 不经过 shell 展开，不能依赖 <code>~</code> 或 <code>$HOME</code>。</p>
+<h2 id="section-19">19. 跨设备切换</h2>
+<p>离开设备 A 前：更新状态与证据、validate、查看 Git 范围、只提交相关事件和交付物。只有收到明确推送指令或约定的离机动作时才 pull/push。</p>
+<p>设备 B：先看工作区，<code>git pull --ff-only</code>，再 <code>sync</code>、<code>validate</code>，确认本机用户级 Hook 和设备身份，最后继续任务。若绑定任务在另一设备活跃，必须完成 handoff，不能绕过门禁。</p>
+<h2 id="section-20">20. 安装完成定义</h2>
+<p>配置文件存在只是 L1。真正“安装成功”至少需要：客户端发现 Hook、命令已授权、实质请求进入待开始、首次工具进入进行中、Agent 结束进入待验证、用户确认进入已完成、来源设备正确、validate 为 true。双设备产品还必须在目标机 pull + sync 后看到同一任务轨迹。</p>
+<hr>
+<h2 id="section-21">21. 共用规则</h2>
+<p>把 <code>&lt;AI_OS_ROOT&gt;</code> 替换为客户机真实绝对路径。已有配置只能合并，不能整文件覆盖。每条命令的 <code>TASK_LEDGER_ROOT</code> 必须显式设置，不能依赖适配器中的开发机默认值。</p>
+<h2 id="section-22">22. Codex</h2>
+<p>安装位置：<code>~/.codex/hooks.json</code>。</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;UserPromptSubmit&quot;: [{
+      &quot;hooks&quot;: [{
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;command&quot;: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/codex_hook.py user-prompt&quot;,
+        &quot;timeout&quot;: 5
+      }]
+    }],
+    &quot;PreToolUse&quot;: [{
+      &quot;hooks&quot;: [{
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;command&quot;: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/codex_hook.py pre-tool&quot;,
+        &quot;timeout&quot;: 5
+      }]
+    }],
+    &quot;Stop&quot;: [{
+      &quot;hooks&quot;: [{
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;command&quot;: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/codex_hook.py stop&quot;,
+        &quot;timeout&quot;: 5
+      }]
+    }],
+    &quot;SessionEnd&quot;: [{
+      &quot;hooks&quot;: [{
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;command&quot;: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/codex_hook.py session-end&quot;,
+        &quot;timeout&quot;: 5
+      }]
+    }]
+  }
+}
+</code></pre>
+<p>校验 <code>jq empty ~/.codex/hooks.json</code>，完全重启 Codex，使用 <code>/hooks</code> 查看并信任四个事件。JSON 合法只证明语法，不能证明客户端已加载。</p>
+<h2 id="section-23">23. Claude App / Claude Code</h2>
+<p>Claude App 是本方案主要使用入口。它的内置 Claude Code 运行时与 CLI/IDE 共用 <code>~/.claude/settings.json</code>。内部来源统一为 <code>claude</code>，不因入口不同拆分来源。</p>
+<pre><code class="language-json">{
+  &quot;hooks&quot;: {
+    &quot;UserPromptSubmit&quot;: [{
+      &quot;hooks&quot;: [{
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;command&quot;: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/claude_hook.py user-prompt&quot;,
+        &quot;timeout&quot;: 5
+      }]
+    }],
+    &quot;PreToolUse&quot;: [{
+      &quot;hooks&quot;: [{
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;command&quot;: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/claude_hook.py pre-tool&quot;,
+        &quot;timeout&quot;: 5
+      }]
+    }],
+    &quot;Stop&quot;: [{
+      &quot;hooks&quot;: [{
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;command&quot;: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/claude_hook.py stop&quot;,
+        &quot;timeout&quot;: 5
+      }]
+    }],
+    &quot;SessionEnd&quot;: [{
+      &quot;hooks&quot;: [{
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;command&quot;: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/claude_hook.py session-end&quot;,
+        &quot;timeout&quot;: 5
+      }]
+    }],
+    &quot;TaskCompleted&quot;: [{
+      &quot;hooks&quot;: [{
+        &quot;type&quot;: &quot;command&quot;,
+        &quot;command&quot;: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/claude_hook.py task-completed&quot;,
+        &quot;timeout&quot;: 5
+      }]
+    }]
+  }
+}
+</code></pre>
+<p>校验 <code>jq empty ~/.claude/settings.json</code>，完全退出并重启 Claude App。真实验收必须至少覆盖 UserPromptSubmit、PreToolUse、Stop；再从项目子目录结束一次任务，确认根项目任务能进入待验证。若模型请求返回 401，应单独修复登录；OAuth 失败与 Hook 是否触发是两条证据链。</p>
+<h2 id="section-24">24. Hermes Agent</h2>
+<p>安装位置：<code>~/.hermes/config.yaml</code>。Hermes 按参数拆分命令，不做 shell 展开；必须使用绝对路径。</p>
+<pre><code class="language-yaml">hooks:
+  pre_llm_call:
+    - command: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/hermes_hook.py pre-llm&quot;
+      timeout: 5
+  pre_tool_call:
+    - command: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/hermes_hook.py pre-tool&quot;
+      timeout: 5
+  post_llm_call:
+    - command: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/hermes_hook.py post-llm&quot;
+      timeout: 5
+  on_session_start:
+    - command: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/hermes_hook.py session-start&quot;
+      timeout: 5
+  on_session_end:
+    - command: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/hermes_hook.py session-end&quot;
+      timeout: 5
+  on_session_finalize:
+    - command: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/hermes_hook.py session-finalize&quot;
+      timeout: 5
+  on_session_reset:
+    - command: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/hermes_hook.py session-reset&quot;
+      timeout: 5
+  subagent_stop:
+    - command: &quot;/usr/bin/env TASK_LEDGER_ROOT=&lt;AI_OS_ROOT&gt; /usr/bin/python3 &lt;AI_OS_ROOT&gt;/Tools/task-ledger/adapters/hermes_hook.py subagent-stop&quot;
+      timeout: 5
+hooks_auto_accept: false
+</code></pre>
+<p>当前适配器还支持可选 <code>subagent_start</code>，但它不属于历史 8/8 验收范围。保持 <code>hooks_auto_accept: false</code>，逐项审阅，运行 <code>hermes hooks list</code>、<code>hermes hooks doctor</code> 和三个核心事件测试。非交互 Gateway 不能弹出首次授权时，应先在交互 CLI 完成授权。</p>
+<h2 id="section-25">25. 可复制的 v2 账本提示词</h2>
+<p>Codex 安装到 <code>~/.codex/AGENTS.md</code>，Claude 安装到 <code>~/.claude/CLAUDE.md</code>。Hermes 由 PreLlmCall 动态注入任务上下文，<code>SOUL.md</code> 至少保留证据、状态、隐私和 Git 边界。</p>
+<pre><code class="language-markdown">## 跨项目任务账本（全局，v2）
+
+每次用户消息由客户端 Hook 写入本机候选审计。Hook 可以用轻量规则把简单、明确、可执行的请求登记为“待开始”；确认、闲聊、纯提问和已拒绝事项不形成正式任务。
+
+- 收到候选上下文后，按语义识别独立原子任务；误登记、复合需求和近义重复由当前 Agent 使用账本 CLI 纠正。
+- 来源表示客户端而非触发者：Codex 为 `codex`，Claude App / Claude Code 为 `claude`，Hermes Agent 为 `hermes`；不得改写为 `automation` 或 `user`。
+- `--project` 使用真实 cwd。跨 Mac 项目身份会把 `/Users/&lt;用户名&gt;/...` 归一为同一相对项目。
+- 同会话的同义改述、修正、追问和补充必须续办原任务，并把新增内容追加为“补充需求”；不得新建近义任务。
+- 只有独立可验收事项才新建任务。关系不确定时不新建、不完成前项，先结合完整对话判断。
+- 第一次工具调用后应进入“进行中”；实现完成但尚未人工验收时进入“待验证”。
+- Agent 在项目子目录结束时可收口根项目任务，但结构化任务 ID、会话和祖先项目关系必须匹配。
+- 同会话明确验收完成最近的待验证任务；确认开启独立新任务时，完成最近的待验证或进行中前项；阻塞和跨会话任务不自动完成。
+- 状态只使用：待开始、进行中、待验证、已完成、阻塞。已完成必须有文件、命令、测试、提交号、链接或明确验收等证据。
+- 权威主数据是 `Tasks/Ledger/events/` 不可变事件分片。SQLite、日报和生成状态页是本机缓存或视图；`task-ledger.sync.json` 是 v1 遗留文件。
+- 正式任务目标和证据会进入 Git。不得写入密钥、密码、Token、Cookie 或不应同步的隐私原文。
+- 项目自己的任务文件和 STATUS 仍需遵守；全局账本补充而不替代项目记录。
+
+## 双设备账本与 Git（v2）
+
+- 使用稳定设备 ID。显式 `--device-id` 优先，其次是 `TASK_LEDGER_DEVICE` 和 macOS ComputerName。
+- 开始工作前在 AI_OS 根目录执行 `git pull --ff-only`；失败时停止，不自动 stash、覆盖或强行合并。
+- 拉取后运行 `python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; sync` 和 `validate`。
+- 交付时只暂存本任务事件、任务卡和确认交付物；不得捎带其他修改。
+- 本地提交、远端 push、另一设备验收分别记录。只有用户明确要求时才 push；Hook 不执行 Git 网络操作。
+</code></pre>
+<h2 id="section-26">26. 通用系统提示词建议</h2>
+<p>账本协议之外，建议统一要求：主要任务先复述确认；事实断言附证据；不确定写“待补充”；开发任务更新项目任务卡和 STATUS；测试、构建、部署、人工验收分别记录；最终答复包含任务编号、状态、交付物、验证和下一步。</p>
+<p>通用规范可以按客户管理制度调整，但不能删除五态、完成证据、同会话复用、来源/设备语义、隐私边界和禁止 Hook 自动 push 等核心约束。</p>
+<hr>
+<h2 id="section-27">27. 每日开始</h2>
+<pre><code class="language-bash">cd &lt;AI_OS_ROOT&gt;
+git status --short --branch
+git pull --ff-only
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; sync
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; validate
+</code></pre>
+<p>确认工作项目、当前客户端和设备。<code>sync_file=null</code> 在 v2 是正常现象；它表示没有继续写 v1 同步索引，不代表丢失数据。</p>
+<h2 id="section-28">28. 收到需求</h2>
+<ol>
+<li>排除确认、闲聊、纯提问、单独编号和已拒绝事项；</li>
+<li>把能独立验收的事项拆成原子任务；</li>
+<li>判断同会话最近任务是同一、独立还是不确定；</li>
+<li>同一任务续办并追加补充；独立事项登记新任务；</li>
+<li>说明本轮目标，但不把“已登记”说成“已完成”。</li>
+</ol>
+<p>自动轻量规则不是完整语义模型。Agent 仍需发现漏建、误建和复合需求，使用 CLI 显式纠正。</p>
+<h2 id="section-29">29. 执行与阶段回写</h2>
+<p>首次工具调用后应进入进行中。每次完成阶段、运行测试、出现风险、需要决策或准备交付时，记录文件、命令、结果、提交或链接。未知信息写“待补充”。</p>
+<p>Agent 完成自己的工作时进入待验证；若缺登录、授权、外部数据或客户决定，则进入阻塞。不能因为模型输出“完成”就跳过人工验收。</p>
+<h2 id="section-30">30. 交付与关闭</h2>
+<p>关闭前核对目标、验收标准、证据和风险。用户在同一会话明确验收后，最近待验证任务可转已完成；用户确认开启一个独立新任务时，最近待验证或进行中前项可完成。阻塞任务、跨会话旧任务和关系不确定的任务不得自动关闭。</p>
+<p>最终交付说明：任务编号、当前状态、文件路径、验证结果、未验证项、本地提交、是否 push、下一步。</p>
+<h2 id="section-31">31. 动态统计</h2>
+<p>来源和设备数量不能写死。临时统计可从快照聚合：</p>
+<pre><code class="language-bash">python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; snapshot | \
+jq &#39;.events | sort_by(.origin) | group_by(.origin) |
+  map({source: .[0].origin, events: length,
+       tasks: (map(.task_id) | map(select(. != null)) | unique | length)})&#39;
+</code></pre>
+<p>设备把 <code>.origin</code> 替换为 <code>.device_id</code>；矩阵使用 <code>group_by([.origin, .device_id])</code>。这些命令按历史原值统计，规范实体和异常另看 <code>snapshot.registry</code> 或 <code>registry-validate</code>。FR-19 完成前，不把临时 <code>jq</code> 输出宣传为正式管理后台。</p>
+<h2 id="section-32">32. 验收矩阵</h2>
+<table>
+<thead>
+<tr>
+<th>层级</th>
+<th>检查</th>
+<th>通过标准</th>
+<th>不能推断</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文件</td>
+<td>JSON/YAML/路径</td>
+<td>解析成功、文件存在</td>
+<td>客户端已加载</td>
+</tr>
+<tr>
+<td>代码</td>
+<td>全量测试</td>
+<td>退出码 0、全部 OK</td>
+<td>客户机 Hook 已安装</td>
+</tr>
+<tr>
+<td>主账本</td>
+<td><code>validate</code></td>
+<td><code>valid=true</code>、<code>mode=v2</code></td>
+<td>双链全部健康</td>
+</tr>
+<tr>
+<td>注册表</td>
+<td><code>registry-validate</code></td>
+<td>valid 且异常已解释</td>
+<td>历史原值已改写</td>
+</tr>
+<tr>
+<td>双链</td>
+<td><code>validate-links</code></td>
+<td>逐项健康或缺口明确</td>
+<td>主账本失败</td>
+</tr>
+<tr>
+<td>客户端</td>
+<td>Hook 列表/授权</td>
+<td>命令可见且已审阅</td>
+<td>业务流转正确</td>
+</tr>
+<tr>
+<td>真实链路</td>
+<td>小任务</td>
+<td>待开始→进行中→待验证</td>
+<td>用户已验收</td>
+</tr>
+<tr>
+<td>人工验收</td>
+<td>明确确认</td>
+<td>待验证→已完成</td>
+<td>另一设备已同步</td>
+</tr>
+<tr>
+<td>跨设备</td>
+<td>push/pull/sync</td>
+<td>同一任务轨迹完整</td>
+<td>所有客户端都已验收</td>
+</tr>
+</tbody></table>
+<h2 id="section-33">33. 标准冒烟</h2>
+<p>在隔离目录发出：“创建一个只包含当前日期的 smoke-test.txt，读取确认后汇报，先不要标记已完成。”检查：</p>
+<ol>
+<li>用户消息后出现待开始任务；</li>
+<li>第一次工具调用进入进行中；</li>
+<li>最终回复提供文件和读取证据；</li>
+<li>Stop 后进入待验证；</li>
+<li>补充一句要求，任务不重复并出现补充需求；</li>
+<li>用户开启独立新任务，最近前项完成；</li>
+<li>阻塞项不因新任务完成；</li>
+<li>来源和设备与真实环境一致；</li>
+<li>用户验收后才完成。</li>
+</ol>
+<h2 id="section-34">34. 常见故障</h2>
+<h3>34.1 缺少 <code>--root</code></h3>
+<p><code>--root</code> 是顶层参数，必须写在子命令前：<code>task_ledger.py --root &lt;AI_OS_ROOT&gt; validate</code>。</p>
+<h3>34.2 配置正确但 Hook 未触发</h3>
+<p>依次检查配置所在 Home、绝对路径、Python 可执行性、客户端重启、Hook 列表、信任/allowlist、超时和 stderr。直接适配器探针只能证明适配器，不代替真实客户端。</p>
+<h3>34.3 Claude 一直待开始</h3>
+<p>检查 <code>~/.claude/settings.json</code> 是否包含 PreToolUse。若 Claude App 先报 401，重新登录后再测真实工具调用；不要把认证故障写成 FR-03 失败。</p>
+<h3>34.4 Claude App 最终仍在进行中</h3>
+<p>检查 Stop 候选 cwd、结构化任务 ID 和会话。新版允许任务项目是 Stop cwd 的祖先，但不允许兄弟项目、跨项目或跨会话。结构化标记未匹配时应有 stderr，而不是静默成功。</p>
+<h3>34.5 <code>webui</code> 与 <code>user</code></h3>
+<p>两者不是同一来源。<code>webui</code> 是任务看板应用，<code>user</code> 是人工直接管理入口。只有确认是拼写或历史别名时才通过 <code>source-alias</code> 归一。</p>
+<h3>34.6 设备多名</h3>
+<p>新 ComputerName 属于同一物理设备时添加别名；真正的新电脑才注册新设备。历史事件保持不可变，不做批量替换。</p>
+<h3>34.7 <code>validate-links</code> 为 false</h3>
+<p>主账本 <code>validate=true</code> 与双链存在历史 missing 可以同时发生。逐项说明，不把双链缺口误写成 Hook 安装失败，也不声称全部健康。</p>
+<h2 id="section-35">35. 安全和恢复</h2>
+<p>Hook 以当前用户权限运行，按可执行代码审阅；不在任务字段保存凭据；不自动 Git 网络操作；不修改既有事件分片；修改用户配置前备份；演示和支持日志脱敏。</p>
+<p>缓存或视图异常先保存现状，再从事件运行 <code>sync</code>。配置回滚不删除已经生成的正式事件；错误业务状态用新的纠正事件表达。</p>
+<hr>
+<h2 id="section-36">36. 产品包组成</h2>
+<p>标准交付包括任务账本代码、三端配置模板、系统提示词、需求/架构/安装/运维文档和验收记录模板。可选实施包括客户机安装、历史迁移、设备命名治理、项目双链、培训和维护。</p>
+<p>这是一套本地优先的软件与实施方案，不天然等于托管 SaaS。许可证、设备数、维护期、SLA、价格、退款和二次分发必须在合同中明确，不能由技术白皮书替代。</p>
+<h2 id="section-37">37. 交付套餐建议</h2>
+<table>
+<thead>
+<tr>
+<th>套餐</th>
+<th>包含</th>
+<th>建议验收层级</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>文档模板版</td>
+<td>白皮书、配置、提示词、验收表</td>
+<td>L1/L2</td>
+</tr>
+<tr>
+<td>单机实施版</td>
+<td>模板版 + 一台设备、约定客户端安装</td>
+<td>L5</td>
+</tr>
+<tr>
+<td>双设备实施版</td>
+<td>单机版 + Git 同步和第二台设备</td>
+<td>L6</td>
+</tr>
+<tr>
+<td>团队定制版</td>
+<td>来源/设备治理、项目双链、培训、定制适配</td>
+<td>按合同逐项</td>
+</tr>
+</tbody></table>
+<p>FR-19 产品化统计页、团队权限和云端 API 属于新增范围，不应默认包含在 v2 标准版。</p>
+<h2 id="section-38">38. 客户环境表</h2>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>客户/项目</td>
+<td><code>&lt;CUSTOMER_NAME&gt;</code></td>
+</tr>
+<tr>
+<td>AI_OS 路径</td>
+<td><code>&lt;AI_OS_ROOT&gt;</code></td>
+</tr>
+<tr>
+<td>Git 远端</td>
+<td><code>&lt;REPO_URL&gt;</code></td>
+</tr>
+<tr>
+<td>设备规范 ID</td>
+<td><code>&lt;DEVICE_ID&gt;</code></td>
+</tr>
+<tr>
+<td>ComputerName</td>
+<td><code>&lt;COMPUTER_NAME&gt;</code></td>
+</tr>
+<tr>
+<td>客户端与入口</td>
+<td><code>&lt;CLIENT_AND_ENTRYPOINT&gt;</code></td>
+</tr>
+<tr>
+<td>客户端版本</td>
+<td><code>&lt;CLIENT_VERSION&gt;</code></td>
+</tr>
+<tr>
+<td>Python/macOS</td>
+<td><code>&lt;RUNTIME_VERSIONS&gt;</code></td>
+</tr>
+<tr>
+<td>实施人</td>
+<td><code>&lt;IMPLEMENTER&gt;</code></td>
+</tr>
+<tr>
+<td>验收人/日期</td>
+<td><code>&lt;ACCEPTOR_AND_DATE&gt;</code></td>
+</tr>
+</tbody></table>
+<h2 id="section-39">39. 实施责任分工</h2>
+<p>交付方负责：提供受支持版本、配置合并说明、真实冒烟、证据记录和已知限制。客户负责：第三方账号和 OAuth、Git 权限、设备访问、密钥安全、仓库访问控制、敏感任务规范和最终验收。</p>
+<p>第三方客户端或模型服务升级可能改变 Hook 行为。支持期内先复现并判断是产品缺陷、环境问题还是新增需求，不把所有 401、网络和登录故障都归为账本缺陷。</p>
+<h2 id="section-40">40. 隐私与法律边界</h2>
+<p>候选原文默认留在本机 SQLite，但正式任务的目标、证据、项目路径和部分会话元数据会进入 Git 事件。客户应控制仓库访问权限，并规定哪些业务内容不得进入正式任务。</p>
+<p>交付演示使用隔离数据。若支持过程需要获取日志或配置，应先脱敏并取得授权。许可证、隐私条款、责任限制和合规声明应由专业法律人员审阅；本文只提供实施建议。</p>
+<h2 id="section-41">41. 上线和维护</h2>
+<p>上线前冻结交付提交号，记录各客户端版本和验收结果。第三方客户端升级时，先在非关键设备回归：Hook 列表、三阶段流转、同会话补充、前项完成、阻塞保护、来源设备和 validate。</p>
+<p>支持请求分类：</p>
+<ul>
+<li>产品缺陷：受支持版本可复现；</li>
+<li>环境问题：登录、权限、网络、客户端配置；</li>
+<li>新需求：新来源、统计后台、团队服务、云端桥接；</li>
+<li>使用咨询：提示词和 SOP 执行问题。</li>
+</ul>
+<h2 id="section-42">42. 对外演示脚本</h2>
+<ol>
+<li>用 Codex 或 Claude App 创建隔离任务；</li>
+<li>展示第一次工具调用自动进入进行中；</li>
+<li>补充需求，展示同一任务不重复；</li>
+<li>展示 Agent 结束只到待验证；</li>
+<li>用户发起独立新任务，最近前项完成；</li>
+<li>切换客户端或设备，展示参与来源/设备；</li>
+<li>展示不可变事件、任务卡和注册表；</li>
+<li>解释本地测试、真实客户端、人工验收和跨设备验收的差别。</li>
+</ol>
+<p>演示重点是“可信交付”，不要展示真实客户任务，也不要把 FR-19 规划功能包装为现成管理后台。</p>
+<h2 id="section-43">43. 路线图</h2>
+<p>可选后续版本：规范化来源/设备统计层、来源 × 设备矩阵、日报周报聚合、Web 管理页、客户级导入导出、敏感字段策略、服务端 API/MCP、团队身份与权限。每项应独立编写需求、测试和商业范围。</p>
+<hr>
+<h2 id="section-44">A. 最小任务卡</h2>
+<pre><code class="language-markdown"># TASK-时间戳：任务标题
+
+- 状态：待开始 / 进行中 / 待验证 / 已完成 / 阻塞
+- 项目：&lt;PROJECT&gt;
+- 创建来源：&lt;SOURCE&gt;
+- 参与来源：&lt;SOURCES&gt;
+- 创建设备：&lt;DEVICE&gt;
+- 参与设备：&lt;DEVICES&gt;
+
+## 目标
+
+一句话描述可验收结果。
+
+## 补充需求
+
+- 后续同会话新增要求。
+
+## 证据
+
+- 文件：&lt;PATH&gt;
+- 命令：&lt;COMMAND&gt;
+- 结果：&lt;RESULT&gt;
+- 提交/链接：&lt;COMMIT_OR_URL&gt;
+</code></pre>
+<h2 id="section-45">B. 常用 CLI</h2>
+<pre><code class="language-bash"># 重建和校验
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; sync
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; validate
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; validate-links
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; registry-validate
+
+# 来源和设备
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; source-list
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; device-list
+
+# 当前会话任务
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; active \
+  --project &#39;&lt;PROJECT&gt;&#39; --session-id &#39;&lt;SESSION_ID&gt;&#39; --limit 20
+</code></pre>
+<p>登记任务：</p>
+<pre><code class="language-bash">python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; register \
+  --event-id &#39;&lt;SOURCE&gt;:&lt;SESSION&gt;:&lt;TURN&gt;:register&#39; \
+  --origin &#39;&lt;SOURCE&gt;&#39; \
+  --session-id &#39;&lt;SESSION&gt;&#39; \
+  --turn-id &#39;&lt;TURN&gt;&#39; \
+  --project &#39;&lt;PROJECT&gt;&#39; \
+  --title &#39;&lt;TITLE&gt;&#39; \
+  --goal &#39;&lt;GOAL&gt;&#39; \
+  --status &#39;待开始&#39; \
+  --device-id &#39;&lt;DEVICE_ID&gt;&#39;
+</code></pre>
+<p>续办和追加补充：</p>
+<pre><code class="language-bash">python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; continue \
+  --task-id &#39;&lt;TASK_ID&gt;&#39; \
+  --event-id &#39;&lt;SOURCE&gt;:&lt;SESSION&gt;:&lt;TURN&gt;:continue&#39; \
+  --origin &#39;&lt;SOURCE&gt;&#39; \
+  --session-id &#39;&lt;SESSION&gt;&#39; \
+  --turn-id &#39;&lt;TURN&gt;&#39; \
+  --device-id &#39;&lt;DEVICE_ID&gt;&#39; \
+  --note &#39;&lt;NOTE&gt;&#39; \
+  --supplement &#39;&lt;ADDITIONAL_REQUIREMENT&gt;&#39;
+</code></pre>
+<p>状态流转：</p>
+<pre><code class="language-bash">python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; transition \
+  --task-id &#39;&lt;TASK_ID&gt;&#39; \
+  --status &#39;待验证&#39; \
+  --event-id &#39;&lt;SOURCE&gt;:&lt;SESSION&gt;:&lt;TURN&gt;:transition&#39; \
+  --origin &#39;&lt;SOURCE&gt;&#39; \
+  --session-id &#39;&lt;SESSION&gt;&#39; \
+  --turn-id &#39;&lt;TURN&gt;&#39; \
+  --device-id &#39;&lt;DEVICE_ID&gt;&#39; \
+  --evidence &#39;&lt;FILES_COMMANDS_RESULTS&gt;&#39;
+</code></pre>
+<h2 id="section-46">C. v1 升级 v2</h2>
+<p>升级前备份仓库和本机 SQLite，确认工作区边界。按版本实际帮助输出核对参数：</p>
+<pre><code class="language-bash">python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; migrate-v2 --dry-run
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; migrate-v2
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; validate
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; cutover-v2
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; sync
+python3 Tools/task-ledger/task_ledger.py --root &lt;AI_OS_ROOT&gt; validate
+</code></pre>
+<p>切换前如果 v1/v2 投影不一致，工具应拒绝切换。不要删除 v1 历史文件来绕过检查。</p>
+<h2 id="section-47">D. 客户验收记录</h2>
+<pre><code class="language-markdown"># AI 任务账本客户验收
+
+- 客户：&lt;CUSTOMER_NAME&gt;
+- 交付版本：v2.0
+- AI_OS 提交：&lt;COMMIT&gt;
+- 设备：&lt;DEVICE_ID&gt;
+- 客户端：&lt;CLIENT&gt;
+- 使用入口：Desktop / CLI / IDE / Gateway
+- 实施日期：&lt;DATE&gt;
+
+## 验证
+
+- [ ] 配置文件语法正确
+- [ ] 客户端发现并授权 Hook
+- [ ] 实质请求进入待开始
+- [ ] 第一次工具调用进入进行中
+- [ ] Agent 结束进入待验证
+- [ ] 同义改述/补充复用原任务
+- [ ] 独立新任务完成最近前项
+- [ ] 阻塞项不自动完成
+- [ ] 用户验收后进入已完成
+- [ ] 来源和设备正确
+- [ ] validate 为 true
+- [ ] 跨设备 pull + sync 通过（如合同包含）
+
+## 结论
+
+- 状态：待验证 / 已完成 / 阻塞
+- 证据：&lt;EVIDENCE&gt;
+- 阻塞：&lt;BLOCKERS&gt;
+- 验收人：&lt;ACCEPTOR&gt;
+</code></pre>
+<h2 id="section-48">E. 日终检查</h2>
+<ul>
+<li><input disabled="" type="checkbox"> 当天重要交办均形成正式任务；</li>
+<li><input disabled="" type="checkbox"> 近义补充没有重复建卡；</li>
+<li><input disabled="" type="checkbox"> 待验证和阻塞原因清楚；</li>
+<li><input disabled="" type="checkbox"> 已完成均有证据；</li>
+<li><input disabled="" type="checkbox"> 候选 SQLite 未加入 Git；</li>
+<li><input disabled="" type="checkbox"> 没有暂存无关修改；</li>
+<li><input disabled="" type="checkbox"> 用户未授权时没有 push；</li>
+<li><input disabled="" type="checkbox"> 客户机验收与本地测试分开记录。</li>
+</ul>
+<h2 id="section-49">F. 术语</h2>
+<table>
+<thead>
+<tr>
+<th>术语</th>
+<th>定义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>候选</td>
+<td>Hook 捕获的交互入口，不一定是正式任务</td>
+</tr>
+<tr>
+<td>正式任务</td>
+<td>经规则或 Agent 确认、可独立验收的工作</td>
+</tr>
+<tr>
+<td>正式事件</td>
+<td>创建、续办、流转等不可变记录</td>
+</tr>
+<tr>
+<td>来源</td>
+<td>产生账本事件的客户端/应用/人工管理入口</td>
+</tr>
+<tr>
+<td>设备</td>
+<td>发生事件的物理或受控执行环境</td>
+</tr>
+<tr>
+<td>待验证</td>
+<td>交付物已有，仍缺人工或外部验收</td>
+</tr>
+<tr>
+<td>幂等</td>
+<td>同一事件重放不重复写入</td>
+</tr>
+<tr>
+<td>双链</td>
+<td>全局任务与项目任务记录的受控绑定</td>
+</tr>
+<tr>
+<td>FR-18</td>
+<td>来源和设备显式注册治理</td>
+</tr>
+<tr>
+<td>FR-19</td>
+<td>产品化来源/设备动态统计与矩阵</td>
+</tr>
+</tbody></table>
+
+    </article>
+  </div>
+</main>
+<footer class="portal-width portal-footer">
+  <a href="../">返回白皮书库</a>
+  <a href="#top">回到顶部</a>
+</footer>
+</body>
+</html>
