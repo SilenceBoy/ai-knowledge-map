@@ -35,13 +35,12 @@ try {
 
   await page.getByRole('link', { name: '浏览白皮书' }).click();
   assert.equal(new URL(page.url()).pathname, '/whitepapers/');
-  assert.equal(await visibleEntries().count(), 6);
+  assert.equal(await visibleEntries().count(), 7);
   await screenshot('whitepaper-library-desktop.png');
 
   await page.getByRole('combobox', { name: '白皮书排序' }).selectOption('recent');
-  assert.match(await visibleEntries().first().innerText(), /AI 写真自动化白皮书/);
+  assert.match(await visibleEntries().first().innerText(), /Personal Agent 使用与落地白皮书/);
   await page.getByRole('combobox', { name: '白皮书排序' }).selectOption('featured');
-  assert.match(await visibleEntries().first().innerText(), /AI 时代超级个体白皮书/);
 
   await page.getByRole('button', { name: 'AI 应用', exact: true }).click();
   assert.equal(await visibleEntries().count(), 1);
@@ -53,7 +52,7 @@ try {
   assert.equal(await visibleEntries().count(), 0);
   assert.equal(await page.locator('#paper-empty').isVisible(), true);
   await page.getByRole('button', { name: '清除筛选' }).click();
-  assert.equal(await visibleEntries().count(), 6);
+  assert.equal(await visibleEntries().count(), 7);
   assert.equal(await search.inputValue(), '');
 
   await page.getByRole('button', { name: 'AI 写真', exact: true }).click();
@@ -63,6 +62,24 @@ try {
   assert.match(await visibleEntries().first().innerText(), /AI 写真自动化白皮书/);
   await search.fill('');
   await page.getByRole('button', { name: '全部', exact: true }).click();
+
+  await page.getByRole('button', { name: 'Agent 与工程', exact: true }).click();
+  await search.fill('个人 AI 助理');
+  assert.equal(await visibleEntries().count(), 1);
+  await visibleEntries().getByRole('link', { name: /Personal Agent 使用与落地白皮书/ }).click();
+  assert.equal(new URL(page.url()).pathname, '/whitepapers/personal-agent/');
+  assert.equal(await page.locator('figure svg').count(), 7);
+  const toc = page.getByRole('navigation', { name: '全书目录' });
+  assert.equal(await toc.getByRole('link').count(), 12);
+  await toc.getByRole('link', { name: /第 1 章/ }).click();
+  assert.equal(new URL(page.url()).hash, '#chapter-1');
+  await page.locator('a.term-link').first().click();
+  await page.locator('#backReading.show').waitFor();
+  await page.locator('#backReading').click();
+  await page.setViewportSize({ width: 390, height: 844 });
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+  await page.setViewportSize({ width: 1440, height: 1080 });
+  await page.getByRole('navigation', { name: '白皮书导航' }).getByRole('link', { name: /返回白皮书库/ }).click();
 
   for (const [href, title] of [
     ['coding-methodology/', '编程方法论白皮书'],
@@ -157,7 +174,7 @@ try {
     }
   }
   assert.deepEqual(errors, [], '本地资源与页面脚本应无报错');
-  console.log('PASS: 六份白皮书、主题与搜索、原版目录和插图、账本版本互链、窄屏布局');
+  console.log('PASS: 七份白皮书、主题与搜索、原版目录和插图、账本版本互链、窄屏布局');
 } finally {
   await browser.close();
 }
